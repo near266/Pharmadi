@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.Core.Api" Version="2.47.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-preview.1.23110.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+    <PackageReference Include="protobuf-net.Grpc.ClientFactory" Version="1.0.152" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Jhipster.gRPC.Contracts.Shared\Jhipster.gRPC.Contracts.Shared.csproj" />
+    <ProjectReference Include="..\..\Jhipster.gRPC\Jhipster.gRPC.csproj" />
+    <ProjectReference Include="..\..\Jhipster.Module\CatalogManagement\Module.Catalog.gRPC\Module.Catalog.gRPC.csproj" />
+    <ProjectReference Include="..\..\Jhipster.Module\CatalogManagement\Module.Catalog\Module.Catalog.csproj" />
+    <ProjectReference Include="..\..\Jhipster.Module\FactorManagement\Module.Factor.gRPC\Module.Factor.gRPC.csproj" />
+    <ProjectReference Include="..\..\Jhipster.Module\FactorManagement\Module.Factor\Module.Factor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\OrderingSvc\" />
+  </ItemGroup>
+
+</Project>
