@@ -10,6 +10,7 @@
     <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
   </ItemGroup>
   <ItemGroup>
+	  <PackageReference Include="Microsoft.NETCore.Targets" Version="4.3.0" PrivateAssets="all" />
     <ProjectReference Include="..\Jhipster.Domain.Services\Jhipster.Domain.Services.csproj" />
     <ProjectReference Include="..\Jhipster.gRPC.Contracts.Shared\Jhipster.gRPC.Contracts.Shared.csproj" />
   </ItemGroup>
