@@ -101,6 +101,21 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("GetListCategory")]
+        public async Task<ActionResult<PagedListC<CategorySearchResponse>>> GetListCatelory ([FromBody] GetListCataloryRequest request)
+        {
+            _logger.LogInformation($"REST request get list Category : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _service.GetListCatalory(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to get list Category by fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
 

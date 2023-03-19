@@ -9,6 +9,7 @@ namespace Module.Catalog.Application.Persistences
         Task<int> Update(Category request);
         Task<int> Delete(Guid id);
         Task<PagedList<Category>> GetAllAdmin(int page, int pageSize);
+        Task<PagedList<Category>> GetListCategories();
         Task<IEnumerable<Category>> Search(string? keyword);
     }
 }

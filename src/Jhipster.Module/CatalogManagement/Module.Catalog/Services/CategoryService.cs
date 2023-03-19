@@ -126,6 +126,23 @@ namespace Module.Catalog.Services
             }
         }
 
+        public async Task<PagedListC<CategoryGetAllAdminResponse>> GetListCatalory(GetListCataloryRequest request, CallContext context = default)
+        {
+            try
+            {
+                _logger.LogInformation($"GRPC request to get list category : {JsonConvert.SerializeObject(request)}");
+                var command = _mapper.Map<GetListCategotyQuery>(request);
+                var temp = await _mediator.Send(command);
+                var result = _mapper.Map<PagedListC<CategoryGetAllAdminResponse>>(temp);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error to search category", ex);
+                return null;
+            }
+        }
     }
+    
 }
 

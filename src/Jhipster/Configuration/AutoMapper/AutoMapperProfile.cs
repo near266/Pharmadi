@@ -92,6 +92,9 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<Category, CategoryGetAllAdminResponse>();
             CreateMap<PagedList<Category>, PagedListC<CategoryGetAllAdminResponse>>();
 
+            CreateMap<GetListCataloryRequest, GetListCategotyQuery>().ReverseMap();
+
+
             //Brand
             CreateMap<BrandAddRequest, BrandAddCommand>();
             CreateMap<BrandAddCommand, Brand>();
