@@ -6,6 +6,8 @@ using Module.Catalog.Shared.Utilities;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
+
+
     public class CategoryRepository : ICategoryRepository
     {
         private readonly CatalogDbContext _context;
@@ -66,6 +68,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return query;
         }
 
+        public async Task<PagedList<Category>> GetListCategories()
+        {
 
+            var result = new PagedList<Category>();
+            var query1 = _context.Categories.AsQueryable();
+            var data = await query1 .ToListAsync();
+            result.TotalCount = query1.Count();
+            return result;
+        }
     }
 }

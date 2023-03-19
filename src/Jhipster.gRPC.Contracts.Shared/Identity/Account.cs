@@ -5,15 +5,9 @@ using Jhipster.Crosscutting.Constants;
 using Newtonsoft.Json;
 using ProtoBuf.Grpc;
 using ProtoBuf.Grpc.Configuration;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Jhipster.gRPC.Contracts.Shared.Identity
 {

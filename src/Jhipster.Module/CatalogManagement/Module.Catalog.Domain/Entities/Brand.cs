@@ -10,6 +10,7 @@ namespace Module.Catalog.Domain.Entities
         //[Column("Ten thuong hieu")]
         public string BrandName { get; set; }
         public Guid GroupBrandId { get; set; }
+        public string LogoBrand { get; set; }
         public GroupBrand? GroupBrand { get; set; }
     }
 }

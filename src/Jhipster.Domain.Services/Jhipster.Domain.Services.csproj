@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>Jhipster.Domain.Services</RootNamespace>
         <OutputType>Library</OutputType>
     </PropertyGroup>
@@ -20,6 +20,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Jhipster.Infrastructure\Jhipster.Infrastructure.csproj" />
+		<PackageReference Include="Microsoft.NETCore.Targets" Version="4.3.0" PrivateAssets="all" />
         <ProjectReference Include="..\Jhipster.Domain\Jhipster.Domain.csproj" />
         <ProjectReference Include="..\Jhipster.Crosscutting\Jhipster.Crosscutting.csproj" />
     </ItemGroup>

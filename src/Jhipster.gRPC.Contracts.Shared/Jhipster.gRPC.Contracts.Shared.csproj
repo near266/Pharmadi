@@ -14,5 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Jhipster.Crosscutting\Jhipster.Crosscutting.csproj" />
+	  <PackageReference Include="Microsoft.NETCore.Targets" Version="4.3.0" PrivateAssets="all" />
   </ItemGroup>
 </Project>

@@ -125,7 +125,9 @@ namespace Module.Catalog.gRPC.Contracts
         public string CategoryName { get; set; }
         [DataMember(Order = 3, IsRequired = false)]
         public IEnumerable<CategoryC> Categorys { get; set; }
-       
+
     }
+    [DataContract]
+    public class GetListCataloryRequest { }
 
 }

@@ -14,5 +14,7 @@ namespace Module.Catalog.gRPC.Persistences
         Task<CategoryBaseResponse> Delete(CategoryDeleteRequest request, CallContext context = default);
         Task<IEnumerable<CategorySearchResponse>> Search(CategorySearchRequest request, CallContext context = default);
         Task<PagedListC<CategoryGetAllAdminResponse>> GetAllAdmin(CategoryGetAllAdminRequest request, CallContext context = default);
+        Task<PagedListC<CategoryGetAllAdminResponse>> GetListCatalory(GetListCataloryRequest request, CallContext context = default);
+
     }
 }
