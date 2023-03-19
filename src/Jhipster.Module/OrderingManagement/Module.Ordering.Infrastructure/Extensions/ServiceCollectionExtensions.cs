@@ -23,6 +23,8 @@ namespace Module.Ordering.Infrastructure.Extensions
 
             //// Đăng kí repository
             services.AddScoped(typeof(ICartRepostitory), typeof(CartRepository));
+            services.AddScoped(typeof(IOrderItemRepostitory), typeof(OrderItemRepository));
+            services.AddScoped(typeof(IPurchaseOrderRepostitory), typeof(PurchaseOrderRepository));
             return services;
         }
            

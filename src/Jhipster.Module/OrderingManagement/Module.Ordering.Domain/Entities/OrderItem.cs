@@ -9,10 +9,10 @@ namespace Module.Ordering.Domain.Entities
     public class OrderItem
     {
         public Guid Id { get; set; }
-        public Guid OrderingId { get; set; }
+        public Guid PurchaseOrderId { get; set; }
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }
         public Product Product { get; set; }
-        public Ordering Ordering { get; set; }
+        public PurchaseOrder PurchaseOrder { get; set; }
     }
 }

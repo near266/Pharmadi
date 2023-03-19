@@ -59,19 +59,19 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<Merchant, Merchant>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             #region 2.Module permission
-            CreateMap<Function, FunctionDTO>().ReverseMap();
-            CreateMap<FunctionTypeDTO, FunctionType>().ReverseMap();
-            CreateMap<Function, Functiondto>().ReverseMap();
-            CreateMap<FunctionType, FunctionTypedto>().ReverseMap();
-            CreateMap<Module.Permission.Core.Entities.Role, RoleDTO>().ReverseMap();
-            CreateMap<RoleFunction, RoleFunctionDTO>().ReverseMap();
-            CreateMap<RoleFunction, RoleFunctiondto>().ReverseMap();
-            CreateMap<Function, FunctionAddCommand>().ReverseMap();
-            CreateMap<Function, FunctionUpdateCommand>().ReverseMap();
-            CreateMap<FunctionType, FunctionTypeAddCommand>().ReverseMap();
-            CreateMap<FunctionType, FunctionTypeUpdateCommand>().ReverseMap();
-            CreateMap<Module.Permission.Core.Entities.Role, RoleAddCommand>().ReverseMap();
-            CreateMap<Module.Permission.Core.Entities.Role, RoleUpdateCommand>().ReverseMap();
+            //CreateMap<Function, FunctionDTO>().ReverseMap();
+            //CreateMap<FunctionTypeDTO, FunctionType>().ReverseMap();
+            //CreateMap<Function, Functiondto>().ReverseMap();
+            //CreateMap<FunctionType, FunctionTypedto>().ReverseMap();
+            //CreateMap<Module.Permission.Core.Entities.Role, RoleDTO>().ReverseMap();
+            //CreateMap<RoleFunction, RoleFunctionDTO>().ReverseMap();
+            //CreateMap<RoleFunction, RoleFunctiondto>().ReverseMap();
+            //CreateMap<Function, FunctionAddCommand>().ReverseMap();
+            //CreateMap<Function, FunctionUpdateCommand>().ReverseMap();
+            //CreateMap<FunctionType, FunctionTypeAddCommand>().ReverseMap();
+            //CreateMap<FunctionType, FunctionTypeUpdateCommand>().ReverseMap();
+            //CreateMap<Module.Permission.Core.Entities.Role, RoleAddCommand>().ReverseMap();
+            //CreateMap<Module.Permission.Core.Entities.Role, RoleUpdateCommand>().ReverseMap();
             #endregion
 
             #region 3.CatalogSvc

@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\OrderingSvc\**" />
+    <EmbeddedResource Remove="Controllers\OrderingSvc\**" />
+    <None Remove="Controllers\OrderingSvc\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Grpc.Core.Api" Version="2.47.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-preview.1.23110.8" />
@@ -21,10 +27,7 @@
     <ProjectReference Include="..\..\Jhipster.Module\CatalogManagement\Module.Catalog\Module.Catalog.csproj" />
     <ProjectReference Include="..\..\Jhipster.Module\FactorManagement\Module.Factor.gRPC\Module.Factor.gRPC.csproj" />
     <ProjectReference Include="..\..\Jhipster.Module\FactorManagement\Module.Factor\Module.Factor.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\OrderingSvc\" />
+    <ProjectReference Include="..\..\Jhipster.Module\OrderingManagement\Module.Ordering\Module.Ordering.csproj" />
   </ItemGroup>
 
 </Project>

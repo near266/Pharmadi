@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Module.Ordering.Domain.Entities
 {
-    public class Ordering:BaseEntity<Guid>
+    public class PurchaseOrder:BaseEntity<Guid>
     {
         public Guid MerchantId { get; set; }
         public Decimal ShippingFee { get; set; }

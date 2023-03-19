@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Jhipster.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Jhipster.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    partial class ApplicationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20230319030113_Init2")]
+    partial class Init2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -962,118 +964,6 @@ namespace Jhipster.Infrastructure.Migrations
                     b.ToTable("Orderings");
                 });
 
-            modelBuilder.Entity("Module.Permission.Core.Entities.Function", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<Guid?>("FunctionTypeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<bool?>("Status")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FunctionTypeId");
-
-                    b.ToTable("Functions");
-                });
-
-            modelBuilder.Entity("Module.Permission.Core.Entities.FunctionType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FunctionTypes");
-                });
-
-            modelBuilder.Entity("Module.Permission.Core.Entities.RoleFunction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("FunctionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("text");
-
-                    b.Property<bool?>("Status")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FunctionId");
-
-                    b.ToTable("RoleFunctions");
-                });
-
             modelBuilder.Entity("Jhipster.Domain.UserRole", b =>
                 {
                     b.HasOne("Jhipster.Domain.Role", "Role")
@@ -1313,24 +1203,6 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Navigation("Merchant");
                 });
 
-            modelBuilder.Entity("Module.Permission.Core.Entities.Function", b =>
-                {
-                    b.HasOne("Module.Permission.Core.Entities.FunctionType", "FunctionType")
-                        .WithMany("Function")
-                        .HasForeignKey("FunctionTypeId");
-
-                    b.Navigation("FunctionType");
-                });
-
-            modelBuilder.Entity("Module.Permission.Core.Entities.RoleFunction", b =>
-                {
-                    b.HasOne("Module.Permission.Core.Entities.Function", "Function")
-                        .WithMany()
-                        .HasForeignKey("FunctionId");
-
-                    b.Navigation("Function");
-                });
-
             modelBuilder.Entity("Jhipster.Domain.Role", b =>
                 {
                     b.Navigation("UserRoles");
@@ -1360,11 +1232,6 @@ namespace Jhipster.Infrastructure.Migrations
             modelBuilder.Entity("Module.Ordering.Domain.Entities.PurchaseOrder", b =>
                 {
                     b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("Module.Permission.Core.Entities.FunctionType", b =>
-                {
-                    b.Navigation("Function");
                 });
 #pragma warning restore 612, 618
         }

@@ -10,11 +10,12 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Module.Ordering.Domain.Entities;
 using Module.Catalog.Domain.Entities;
+using Module.Permission.Core.Entities;
 
 namespace Jhipster.Infrastructure.Data
 {
     public class ApplicationDatabaseContext : IdentityDbContext<
-        User, Role, string,
+        User, Domain.Role, string,
         IdentityUserClaim<string>,
         UserRole,
         IdentityUserLogin<string>,
@@ -50,12 +51,20 @@ namespace Jhipster.Infrastructure.Data
 
         public DbSet<Cart> Carts { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Ordering> Orderings { get; set; }
+        public DbSet<PurchaseOrder> Orderings { get; set; }
         #endregion
+
 
         #region 3. Factor module
         public DbSet<Module.Factor.Domain.Entities.Merchant> Merchants { get; set; }
         #endregion
+
+        #region 4. Permission module
+        public DbSet<Function> Functions { get; set; }
+        public DbSet<FunctionType> FunctionTypes { get; set; }
+        public DbSet<RoleFunction> RoleFunctions { get; set; }
+        #endregion
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -63,7 +72,7 @@ namespace Jhipster.Infrastructure.Data
             builder.Entity<UserRole>().Ignore(c => c.User);
             // Rename AspNet default tables
             builder.Entity<User>().ToTable("Users");
-            builder.Entity<Role>().ToTable("Roles");
+            builder.Entity<Domain.Role>().ToTable("Roles");
             builder.Entity<UserRole>().ToTable("UserRoles");
             builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
             builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
@@ -92,10 +101,10 @@ namespace Jhipster.Infrastructure.Data
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Ordering>()
+            builder.Entity<PurchaseOrder>()
                .HasMany(e => e.OrderItems)
                .WithOne()
-               .HasForeignKey(e => e.OrderingId)
+               .HasForeignKey(e => e.PurchaseOrderId)
                .IsRequired()
                .OnDelete(DeleteBehavior.Cascade);
 

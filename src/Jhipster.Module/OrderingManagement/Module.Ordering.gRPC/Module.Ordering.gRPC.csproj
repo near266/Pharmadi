@@ -12,4 +12,8 @@
 		<PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
 		<PackageReference Include="ServiceModel.Grpc.AspNetCore" Version="1.4.8" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\CatalogManagement\Module.Catalog.gRPC\Module.Catalog.gRPC.csproj" />
+	</ItemGroup>
 </Project>
