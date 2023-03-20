@@ -2,11 +2,15 @@
 using BFF.Web.DTOs;
 using Jhipster.Domain.Services.Interfaces;
 using Jhipster.gRPC.Contracts.Shared.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Module.Factor.Application.Commands.MerchantCm;
 using Module.Factor.Application.Persistences;
+using Module.Factor.Application.Queries.MerchantQ;
 using Module.Factor.Domain.Entities;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace BFF.Web.Controllers.FactorSvc
 {
@@ -20,9 +24,11 @@ namespace BFF.Web.Controllers.FactorSvc
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IAccountService _accountService;
-        public MerchantController(IMerchantRepository service, ILogger<MerchantController> logger,IUserService userService, IMapper mapper, IAccountService accountService)
+        private readonly IMediator _mediator;
+        public MerchantController(IMerchantRepository service, IMediator mediator,ILogger<MerchantController> logger,IUserService userService, IMapper mapper, IAccountService accountService)
         {
             _service = service;
+            _mediator = mediator;
             _logger = logger;
             _userService = userService;
             _mapper = mapper;
@@ -88,6 +94,71 @@ namespace BFF.Web.Controllers.FactorSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpDelete("DeleteMerchant")]
+        public async Task<IActionResult> DeleteMerchant([FromBody] MerchantDeleteCommand request)
+        {
+            _logger.LogDebug($"REST request DeleteMerchant : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                return Ok(await _mediator.Send(request));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to RegisterByAdmin fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+        [HttpPut("MerchantUpdate")]
+        public async Task<IActionResult> MerchantUpdate([FromBody] MerchantUpdateCommand request)
+        {
+            _logger.LogDebug($"REST request MerchantUpdate : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                return Ok(await _mediator.Send(request));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to MerchantUpdate fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+        [HttpGet("MerchantGetAllAdmin")]
+        public async Task<IActionResult> MerchantGetAllAdmin([FromQuery] MerchantGetAllAdminQuery request)
+        {
+            _logger.LogDebug($"REST request MerchantGetAllAdmin : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                return Ok(await _mediator.Send(request));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to MerchantGetAllAdmin fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+        [HttpGet("MerchantViewDetail")]
+        public async Task<IActionResult> MerchantViewDetail([FromQuery] MerchantViewDetailQuery request)
+        {
+            _logger.LogDebug($"REST request MerchantViewDetail : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                return Ok(await _mediator.Send(request));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to MerchantViewDetail fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
     }
 }
 
