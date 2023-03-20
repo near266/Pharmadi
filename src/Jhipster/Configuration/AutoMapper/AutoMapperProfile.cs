@@ -6,7 +6,6 @@ using Module.Catalog.Application.Commands.CategoryCm;
 using Module.Catalog.Domain.Entities;
 using BFF.Web.DTOs;
 using Jhipster.gRPC.Contracts.Shared.Identity;
-using Module.Factor.gRPC.Contracts;
 using Module.Factor.Application.Commands.MerchantCm;
 using Module.Factor.Domain.Entities;
 using Module.Catalog.Application.Commands.ProductCm;
@@ -37,15 +36,15 @@ namespace Jhipster.Configuration.AutoMapper
 
             
             CreateMap<RegisterByUserDTO, RegisterRequest>();
-            CreateMap<RegisterByUserDTO, MerchantAddRequest>();
+            CreateMap<RegisterByUserDTO, Merchant>();
             CreateMap<RegisterByAdminDTO, RegisterAdminRequest>();
-            CreateMap<RegisterByAdminDTO, MerchantAddRequest>();
+            CreateMap<RegisterByAdminDTO, Merchant>();
 
             CreateMap<RegisterRequest, User>();
             CreateMap<RegisterAdminRequest, User>();
 
             //merchant
-            CreateMap<MerchantAddRequest, MerchantAddCommand>();
+            CreateMap<Merchant, MerchantAddCommand>();
             CreateMap<MerchantAddCommand, Merchant>();
             CreateMap<Merchant, Merchant>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 

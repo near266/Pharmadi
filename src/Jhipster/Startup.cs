@@ -10,15 +10,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Jhipster.Infrastructure.Shared;
 using Serilog;
-using ProtoBuf.Grpc.Server;
 using Module.Catalog;
 using MediatR;
 using System.Reflection;
-using BFF.Web;
-using Module.Factor;
-using Module.Factor.Services;
 using Module.Permission;
 using Module.Ordering;
+using Module.Factor;
+using Jhipster.gRPC.Contracts.Shared.Identity;
+using Jhipster.gRPC.Contracts.Shared.Services;
 
 [assembly: ApiController]
 
@@ -80,7 +79,7 @@ namespace Jhipster
                 .UseApplicationDatabase(serviceProvider, env)
                 .UseApplicationIdentity(serviceProvider);
 
-            AddAppModule(app);
+            
         }
 
         protected virtual void AddDatabase(IServiceCollection services)
@@ -98,26 +97,14 @@ namespace Jhipster
             services.AddFactorModule(Configuration);
             services.AddPermissionModule(Configuration);
             services.AddOrderingModule(Configuration);
+            services.AddScoped(typeof(IAccountService), typeof(AccountServices));
+
             //services.AddBasketModule(Configuration);
             //// Redis
             //services.AddRedisModule(Configuration);
         }
 
-        protected virtual void AddAppModule(IApplicationBuilder app)
-        {
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGrpcService<MerchantService>();
 
-                //endpoints.MapGrpcService<BasketService>();
-                //endpoints.MapGrpcService<CatalogService>();
-
-                //endpoints.MapGrpcService<OrderingService>();
-                //endpoints.MapGrpcService<OrderItemService>();
-                ////endpoints.MapGrpcReflectionService();
-                endpoints.MapCodeFirstGrpcReflectionService();
-            });
-        }
 
         protected virtual void AddBffGateway(IServiceCollection services)
         {
