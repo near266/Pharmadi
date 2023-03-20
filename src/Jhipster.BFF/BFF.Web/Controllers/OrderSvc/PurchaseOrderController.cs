@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Jhipster.Service.Utilities;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Module.Catalog.gRPC.Contracts;
-using Module.Catalog.gRPC.Contracts.PagedListC;
-using Module.Catalog.gRPC.Persistences;
-using Module.Ordering.gRPC.Contracts;
-using Module.Ordering.gRPC.Persistences;
+using Module.Factor.Application.Queries.PurchaseOrderQ;
+using Module.Ordering.Application.Commands.PurchaseOrderCm;
+using Module.Ordering.Domain.Entities;
 using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
@@ -13,23 +13,23 @@ namespace BFF.Web.ProductSvc
     [Route("gw/[controller]")]
     public class PurchaseOrderController : ControllerBase
     {
-        private readonly IPurchaseOrderService _service;
+        private readonly IMediator _mediator;
         private readonly ILogger<PurchaseOrderController> _logger;
 
-        public PurchaseOrderController(IPurchaseOrderService service, ILogger<PurchaseOrderController> logger)
+        public PurchaseOrderController(IMediator mediator, ILogger<PurchaseOrderController> logger)
         {
-            _service = service;
+            _mediator = mediator;
             _logger = logger;
         }
         [HttpPost("Add")]
-        public async Task<ActionResult<PurchaseOrderBaseResponse>> Add([FromBody] PurchaseOrderAddRequest request)
+        public async Task<ActionResult<int>> Add([FromBody] PurchaseOrderAddCommand request)
         {
             _logger.LogInformation($"REST request add PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
-                var result = await _service.Add(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -40,13 +40,13 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] PurchaseOrderUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody] PurchaseOrderUpdateCommand request)
         {
             _logger.LogInformation($"REST request update PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.LastModifiedDate = DateTime.Now;
-                var result = await _service.Update(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -57,12 +57,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete([FromBody] PurchaseOrderDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] PurchaseOrderDeleteCommand request)
         {
             _logger.LogInformation($"REST request delete PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Delete(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -73,12 +73,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("GetAllPurchaseOrderByAdmin")]
-        public async Task<ActionResult<PagedListC<PurchaseOrderInforAdmin>>> GetAllPurchaseOrderByAdmin([FromBody] PurchaseOrderGetAllAdminRequest request)
+        public async Task<ActionResult<PagedList<PurchaseOrder>>> GetAllPurchaseOrderByAdmin([FromBody] PurchaseOrderGetAllByAdminQuery request)
         {
             _logger.LogInformation($"REST request GetAllPurchaseOrderByAdmin : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.GetAllPurchaseOrderByAdmin(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -90,12 +90,12 @@ namespace BFF.Web.ProductSvc
 
 
         [HttpPost("GetAllPurchaseOrderByUser")]
-        public async Task<IActionResult> GetAllPurchaseOrderByUser([FromBody] PurchaseOrderGetAllUserRequest request)
+        public async Task<IActionResult> GetAllPurchaseOrderByUser([FromBody] PurchaseOrderGetAllByUserQuery request)
         {
             _logger.LogInformation($"REST request GetAllPurchaseOrderByUser : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.GetAllPurchaseOrderByUser(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -106,12 +106,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpGet("ViewDetailPurchaseOrder")]
-        public async Task<IActionResult> ViewDetailPurchaseOrder(PurchaseOrderViewDetailRequest request)
+        public async Task<IActionResult> ViewDetailPurchaseOrder(PurchaseOrderViewDetailQuery request)
         {
             _logger.LogInformation($"REST request ViewDetailPurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.ViewDetailPurchaseOrder(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)

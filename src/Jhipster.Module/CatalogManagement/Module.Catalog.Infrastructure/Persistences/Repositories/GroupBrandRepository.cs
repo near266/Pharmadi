@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
-using Module.Catalog.Shared.Utilities;
+using Jhipster.Service.Utilities;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {

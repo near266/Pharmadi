@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Jhipster.Service.Utilities;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Module.Catalog.gRPC.Contracts;
-using Module.Catalog.gRPC.Contracts.PagedListC;
-using Module.Catalog.gRPC.Persistences;
+using Module.Catalog.Application.Commands.LabelCm;
+using Module.Catalog.Application.Queries.LabelQ;
+using Module.Catalog.Domain.Entities;
+
+
 using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
@@ -11,23 +15,23 @@ namespace BFF.Web.ProductSvc
     [Route("gw/[controller]")]
     public class LabelController : ControllerBase
     {
-        private readonly ILabelService _service;
+        private readonly IMediator _mediator;
         private readonly ILogger<LabelController> _logger;
 
-        public LabelController(ILabelService service, ILogger<LabelController> logger)
+        public LabelController(IMediator mediator, ILogger<LabelController> logger)
         {
-            _service = service;
+            _mediator = mediator;
             _logger = logger;
         }
         [HttpPost("Add")]
-        public async Task<ActionResult<LabelBaseResponse>> Add([FromBody] LabelAddRequest request)
+        public async Task<ActionResult<int>> Add([FromBody] LabelAddCommand request)
         {
             _logger.LogInformation($"REST request add Label : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
-                var result = await _service.Add(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -38,13 +42,13 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] LabelUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody] LabelUpdateCommand request)
         {
             _logger.LogInformation($"REST request update Label : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.LastModifiedDate = DateTime.Now;
-                var result = await _service.Update(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -55,12 +59,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete([FromBody] LabelDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] LabelDeleteCommand request)
         {
             _logger.LogInformation($"REST request delete Label : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Delete(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -71,12 +75,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Search")]
-        public async Task<ActionResult<IEnumerable<LabelSearchResponse>>> Search([FromBody] LabelSearchRequest request)
+        public async Task<ActionResult<IEnumerable<Label>>> Search([FromBody] LabelSearchQuery request)
         {
             _logger.LogInformation($"REST request search Label : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Search(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -87,12 +91,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("GetAllAdmin")]
-        public async Task<ActionResult<PagedListC<LabelSearchResponse>>> GetAllAdmin([FromBody] LabelGetAllAdminRequest request)
+        public async Task<ActionResult<PagedList<Label>>> GetAllAdmin([FromBody] LabelGetAllAdminQuery request)
         {
             _logger.LogInformation($"REST request get all Label by Admin : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.GetAllAdmin(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)

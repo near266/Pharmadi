@@ -7,9 +7,14 @@ namespace Module.Ordering.Application.Commands.PurchaseOrderCm
     public class PurchaseOrderAddCommand : IRequest<int>
     {
         public Guid Id { get; set; }
-        public Guid PurchaseOrderId { get; set; }
-        public Guid ProductId { get; set; }
-        public int Quantity { get; set; }
+        public Guid MerchantId { get; set; }
+        public Decimal ShippingFee { get; set; }
+        public Decimal TotalPrice { get; set; }
+        public Decimal TotalPayment { get; set; }
+        public int Status { get; set; }
+        public Guid? CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+
     }
     public class PurchaseOrderAddCommandHandler : IRequestHandler<PurchaseOrderAddCommand, int>
     {

@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Jhipster.Service.Utilities;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Module.Catalog.gRPC.Contracts.PagedListC;
-using Module.Ordering.gRPC.Contracts;
-using Module.Ordering.gRPC.Persistences;
+using Module.Factor.Application.Queries.OrderItemQ;
+using Module.Ordering.Application.Commands.OrderItemCm;
+using Module.Ordering.Domain.Entities;
 using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
@@ -11,22 +13,22 @@ namespace BFF.Web.ProductSvc
     [Route("gw/[controller]")]
     public class OrderItemController : ControllerBase
     {
-        private readonly IOrderItemService _service;
+        private readonly IMediator _mediator;
         private readonly ILogger<OrderItemController> _logger;
 
-        public OrderItemController(IOrderItemService service, ILogger<OrderItemController> logger)
+        public OrderItemController(IMediator mediator, ILogger<OrderItemController> logger)
         {
-            _service = service;
+            _mediator= mediator;
             _logger = logger;
         }
         [HttpPost("Add")]
-        public async Task<ActionResult<OrderItemBaseResponse>> Add([FromBody] OrderItemAddRequest request)
+        public async Task<ActionResult<int>> Add([FromBody] OrderItemAddCommand request)
         {
             _logger.LogInformation($"REST request add OrderItem : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.Id = Guid.NewGuid();
-                var result = await _service.Add(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -37,12 +39,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] OrderItemUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody] OrderItemUpdateCommand request)
         {
             _logger.LogInformation($"REST request update OrderItem : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Update(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -53,12 +55,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete([FromBody] OrderItemDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] OrderItemDeleteCommand request)
         {
             _logger.LogInformation($"REST request delete OrderItem : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Delete(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -69,12 +71,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("GetAllOrderItemByUser")]
-        public async Task<ActionResult<PagedListC<OrderItemInfor>>> GetAllOrderItemByUser(ItemGetAllByOrderRequest request)
+        public async Task<ActionResult<PagedList<OrderItem>>> GetAllOrderItemByUser(OrderItemGetAllByUserQuery request)
         {
             _logger.LogInformation($"REST request GetAllOrderItemByUser : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.ItemsGetAllByOrder(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)

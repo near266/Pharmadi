@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Module.Catalog.gRPC.Contracts;
-using Module.Catalog.gRPC.Contracts.PagedListC;
-using Module.Catalog.gRPC.Persistences;
+using Module.Catalog.Application.Commands.TagCm;
+using Module.Catalog.Application.Queries.TagQ;
+using Module.Catalog.Domain.Entities;
+using Jhipster.Service.Utilities;
 using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
@@ -11,23 +13,23 @@ namespace BFF.Web.ProductSvc
     [Route("gw/[controller]")]
     public class TagController : ControllerBase
     {
-        private readonly ITagService _service;
+        private readonly IMediator _mediator;
         private readonly ILogger<TagController> _logger;
 
-        public TagController(ITagService service, ILogger<TagController> logger)
+        public TagController(IMediator mediator, ILogger<TagController> logger)
         {
-            _service = service;
+            _mediator = mediator;
             _logger = logger;
         }
         [HttpPost("Add")]
-        public async Task<ActionResult<TagBaseResponse>> Add([FromBody] TagAddRequest request)
+        public async Task<ActionResult<int>> Add([FromBody] TagAddCommand request)
         {
             _logger.LogInformation($"REST request add Tag : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
-                var result = await _service.Add(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -38,13 +40,13 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] TagUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody] TagUpdateCommand request)
         {
             _logger.LogInformation($"REST request update Tag : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.LastModifiedDate = DateTime.Now;
-                var result = await _service.Update(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -55,12 +57,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete([FromBody] TagDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] TagDeleteCommand request)
         {
             _logger.LogInformation($"REST request delete Tag : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Delete(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -71,12 +73,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Search")]
-        public async Task<ActionResult<IEnumerable<TagSearchResponse>>> Search([FromBody] TagSearchRequest request)
+        public async Task<ActionResult<IEnumerable<Tag>>> Search([FromBody] TagSearchQuery request)
         {
             _logger.LogInformation($"REST request search Tag : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Search(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -87,12 +89,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("GetAllAdmin")]
-        public async Task<ActionResult<PagedListC<TagSearchResponse>>> GetAllAdmin([FromBody] TagGetAllAdminRequest request)
+        public async Task<ActionResult<PagedList<Tag>>> GetAllAdmin([FromBody] TagGetAllAdminQuery request)
         {
             _logger.LogInformation($"REST request get all Tag by Admin : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.GetAllAdmin(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)

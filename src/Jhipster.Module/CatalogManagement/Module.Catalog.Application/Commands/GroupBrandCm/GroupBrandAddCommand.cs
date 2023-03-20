@@ -14,7 +14,7 @@ namespace Module.Catalog.Application.Commands.GroupBrandCm
     public class GroupBrandAddCommand : IRequest<int>
     {
         [Required(ErrorMessage = "{0} is required.")]
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
         public string GroupBrandName { get; set; }
         public Guid? CreatedBy { get; set; }

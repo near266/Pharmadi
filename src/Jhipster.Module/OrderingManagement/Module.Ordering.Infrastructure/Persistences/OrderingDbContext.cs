@@ -8,7 +8,6 @@ namespace Module.Ordering.Infrastructure.Persistences
     public class OrderingDbContext: ModuleDbContext, IOrderingDbContext
     {
         public DbSet<Cart> Carts { get; set; }
-        public DbSet<Product> Products { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public OrderingDbContext(DbContextOptions<OrderingDbContext> options) : base(options)

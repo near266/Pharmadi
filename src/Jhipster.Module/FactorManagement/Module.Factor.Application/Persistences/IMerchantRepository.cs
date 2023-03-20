@@ -1,5 +1,5 @@
 ﻿using Module.Factor.Domain.Entities;
-using Module.Factor.Shared.Utilities;
+using Jhipster.Service.Utilities;
 
 namespace Module.Factor.Application.Persistences
 {

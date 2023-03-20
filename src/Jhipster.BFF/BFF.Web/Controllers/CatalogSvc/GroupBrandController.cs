@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Module.Catalog.gRPC.Contracts;
-using Module.Catalog.gRPC.Contracts.PagedListC;
-using Module.Catalog.gRPC.Persistences;
+using Module.Catalog.Application.Commands.GroupBrandCm;
+using Module.Catalog.Application.Queries.GroupBrandQ;
+using Module.Catalog.Domain.Entities;
+using Jhipster.Service.Utilities;
 using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
@@ -11,23 +13,23 @@ namespace BFF.Web.ProductSvc
     [Route("gw/[controller]")]
     public class GroupBrandController : ControllerBase
     {
-        private readonly IGroupBrandService _service;
+        private readonly IMediator _mediator;
         private readonly ILogger<GroupBrandController> _logger;
 
-        public GroupBrandController(IGroupBrandService service, ILogger<GroupBrandController> logger)
+        public GroupBrandController(IMediator mediator, ILogger<GroupBrandController> logger)
         {
-            _service = service;
+            _mediator = mediator;
             _logger = logger;
         }
         [HttpPost("Add")]
-        public async Task<ActionResult<GroupBrandBaseResponse>> Add([FromBody] GroupBrandAddRequest request)
+        public async Task<ActionResult<int>> Add([FromBody] GroupBrandAddCommand request)
         {
             _logger.LogInformation($"REST request add GroupBrand : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
-                var result = await _service.Add(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -38,13 +40,13 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] GroupBrandUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody] GroupBrandUpdateCommand request)
         {
             _logger.LogInformation($"REST request update GroupBrand : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.LastModifiedDate = DateTime.Now;
-                var result = await _service.Update(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -55,12 +57,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete([FromBody] GroupBrandDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] GroupBrandDeleteCommand request)
         {
             _logger.LogInformation($"REST request delete GroupBrand : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Delete(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -71,12 +73,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Search")]
-        public async Task<ActionResult<IEnumerable<GroupBrandSearchResponse>>> Search([FromBody] GroupBrandSearchRequest request)
+        public async Task<ActionResult<IEnumerable<GroupBrand>>> Search([FromBody] GroupBrandSearchQuery request)
         {
             _logger.LogInformation($"REST request search GroupBrand : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Search(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -87,12 +89,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("GetAllAdmin")]
-        public async Task<ActionResult<PagedListC<GroupBrandSearchResponse>>> GetAllAdmin([FromBody] GroupBrandGetAllAdminRequest request)
+        public async Task<ActionResult<PagedList<GroupBrand>>> GetAllAdmin([FromBody] GroupBrandGetAllAdminQuery request)
         {
             _logger.LogInformation($"REST request get all GroupBrand by Admin : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.GetAllAdmin(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)

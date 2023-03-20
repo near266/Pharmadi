@@ -1,5 +1,7 @@
-﻿using Module.Ordering.Domain.Entities;
-using Module.Ordering.Shared.Utilities;
+﻿using Jhipster.Service.Utilities;
+using Module.Ordering.Domain.Entities;
+
+
 
 namespace Module.Ordering.Application.Persistences
 {

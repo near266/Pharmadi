@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Jhipster.Service.Utilities;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Module.Catalog.gRPC.Contracts;
-using Module.Catalog.gRPC.Contracts.PagedListC;
-using Module.Catalog.gRPC.Persistences;
+using Module.Catalog.Application.Commands.CategoryCm;
+using Module.Catalog.Application.Queries.CategoryQ;
+using Module.Catalog.Domain.Entities;
+
+
+
 using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
@@ -11,23 +16,23 @@ namespace BFF.Web.ProductSvc
     [Route("gw/[controller]")]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryService _service;
+        private readonly IMediator _mediator;
         private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(ICategoryService service, ILogger<CategoryController> logger)
+        public CategoryController(IMediator mediator, ILogger<CategoryController> logger)
         {
-            _service = service;
+            _mediator = mediator;
             _logger = logger;
         }
         [HttpPost("Add")]
-        public async Task<ActionResult<CategoryBaseResponse>> Add([FromBody] CategoryAddRequest request)
+        public async Task<ActionResult<int>> Add([FromBody] CategoryAddCommand request)
         {
             _logger.LogInformation($"REST request add Category : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
-                var result = await _service.Add(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -38,13 +43,13 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] CategoryUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody] CategoryUpdateCommand request)
         {
             _logger.LogInformation($"REST request update Category : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.LastModifiedDate = DateTime.Now;
-                var result = await _service.Update(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -55,12 +60,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete([FromBody] CategoryDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] CategoryDeleteCommand request)
         {
             _logger.LogInformation($"REST request delete Category : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Delete(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -71,12 +76,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Search")]
-        public async Task<ActionResult<IEnumerable<CategorySearchResponse>>> Search([FromBody] CategorySearchRequest request)
+        public async Task<ActionResult<IEnumerable<Category>>> Search([FromBody] CategorySearchQuery request)
         {
             _logger.LogInformation($"REST request search Category : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Search(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -87,12 +92,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("GetAllAdmin")]
-        public async Task<ActionResult<PagedListC<CategorySearchResponse>>> GetAllAdmin([FromBody] CategoryGetAllAdminRequest request)
+        public async Task<ActionResult<PagedList<Category>>> GetAllAdmin([FromBody] CategoryGetAllAdminQuery request)
         {
             _logger.LogInformation($"REST request get all Category by Admin : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.GetAllAdmin(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -101,13 +106,14 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+
         [HttpPost("GetListCategory")]
-        public async Task<ActionResult<PagedListC<CategorySearchResponse>>> GetListCatelory ([FromBody] GetListCataloryRequest request)
+        public async Task<ActionResult<PagedList<Category>>> GetListCatelory([FromBody] GetListCategotyQuery request)
         {
             _logger.LogInformation($"REST request get list Category : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.GetListCatalory(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -118,5 +124,9 @@ namespace BFF.Web.ProductSvc
         }
     }
 }
+
+
+
+
 
 

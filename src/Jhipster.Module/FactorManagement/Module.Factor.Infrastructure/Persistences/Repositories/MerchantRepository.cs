@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Module.Factor.Application.Persistences;
 using Module.Factor.Domain.Entities;
 using Module.Factor.Infrastructure.Persistences;
-using Module.Factor.Shared.Utilities;
+using Jhipster.Service.Utilities;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {

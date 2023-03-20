@@ -2,7 +2,7 @@
 using MediatR;
 using Module.Ordering.Application.Persistences;
 using Module.Ordering.Domain.Entities;
-using Module.Ordering.Shared.Utilities;
+using Jhipster.Service.Utilities;
 
 namespace Module.Factor.Application.Queries.PurchaseOrderQ
 {

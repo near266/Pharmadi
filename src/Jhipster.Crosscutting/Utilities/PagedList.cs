@@ -1,4 +1,6 @@
-﻿namespace Module.Catalog.Shared.Utilities
+﻿using System.Collections.Generic;
+
+namespace Jhipster.Service.Utilities
 {
     public class PagedList<T> where T : class
     {

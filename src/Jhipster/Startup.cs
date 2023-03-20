@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Jhipster.Infrastructure.Shared;
 using Serilog;
-using Module.Catalog.Services;
 using ProtoBuf.Grpc.Server;
 using Module.Catalog;
 using MediatR;
@@ -19,6 +18,7 @@ using BFF.Web;
 using Module.Factor;
 using Module.Factor.Services;
 using Module.Permission;
+using Module.Ordering;
 
 [assembly: ApiController]
 
@@ -97,7 +97,7 @@ namespace Jhipster
             services.AddCatalogModule(Configuration);
             services.AddFactorModule(Configuration);
             services.AddPermissionModule(Configuration);
-            //services.AddOrderingModule(Configuration);
+            services.AddOrderingModule(Configuration);
             //services.AddBasketModule(Configuration);
             //// Redis
             //services.AddRedisModule(Configuration);
@@ -107,13 +107,7 @@ namespace Jhipster
         {
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<CategoryService>();
                 endpoints.MapGrpcService<MerchantService>();
-                endpoints.MapGrpcService<BrandService>();
-                endpoints.MapGrpcService<ProductService>();
-                endpoints.MapGrpcService<GroupBrandService>();
-                endpoints.MapGrpcService<LabelService>();
-                endpoints.MapGrpcService<TagService>();
 
                 //endpoints.MapGrpcService<BasketService>();
                 //endpoints.MapGrpcService<CatalogService>();
@@ -127,8 +121,8 @@ namespace Jhipster
 
         protected virtual void AddBffGateway(IServiceCollection services)
         {
-            services.AddBFFWebModule(Configuration);
-            services.AddCodeFirstGrpcReflection();
+            //services.AddBFFWebModule(Configuration);
+            //services.AddCodeFirstGrpcReflection();
         }
     }
 }

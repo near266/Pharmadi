@@ -1,4 +1,6 @@
-﻿namespace Module.Ordering.Domain.Entities
+﻿using Module.Catalog.Domain.Entities;
+
+namespace Module.Ordering.Domain.Entities
 {
     public class Cart
     {

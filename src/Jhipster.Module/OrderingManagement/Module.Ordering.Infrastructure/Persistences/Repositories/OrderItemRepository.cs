@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Jhipster.Service.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Module.Ordering.Application.Persistences;
 using Module.Ordering.Domain.Entities;
 using Module.Ordering.Infrastructure.Persistences;
-using Module.Ordering.Shared.Utilities;
+
+
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {

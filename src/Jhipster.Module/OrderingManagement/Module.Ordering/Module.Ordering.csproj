@@ -14,7 +14,6 @@
 
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Module.Ordering.gRPC\Module.Ordering.gRPC.csproj" />
 	  <ProjectReference Include="..\Module.Ordering.Infrastructure\Module.Ordering.Infrastructure.csproj" />
 	</ItemGroup>
 

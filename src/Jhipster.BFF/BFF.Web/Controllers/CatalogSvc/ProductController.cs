@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Module.Catalog.gRPC.Contracts;
-using Module.Catalog.gRPC.Contracts.PagedListC;
-using Module.Catalog.gRPC.Persistences;
+using Module.Catalog.Application.Commands.ProductCm;
+using Module.Catalog.Application.Queries.ProductQ;
+using Module.Catalog.Domain.Entities;
+using Jhipster.Service.Utilities;
 using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
@@ -11,16 +13,16 @@ namespace BFF.Web.ProductSvc
     [Route("gw/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly IProductService _service;
+        private readonly IMediator _mediator;
         private readonly ILogger<ProductController> _logger;
 
-        public ProductController(IProductService service, ILogger<ProductController> logger)
+        public ProductController(IMediator mediator, ILogger<ProductController> logger)
         {
-            _service = service;
+            _mediator = mediator;
             _logger = logger;
         }
         [HttpPost("Add")]
-        public async Task<ActionResult<ProductBaseResponse>> Add([FromBody] ProductAddRequest request)
+        public async Task<ActionResult<int>> Add([FromBody] ProductAddCommand request)
         {
             _logger.LogInformation($"REST request add Product : {JsonConvert.SerializeObject(request)}");
             try
@@ -28,7 +30,7 @@ namespace BFF.Web.ProductSvc
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
                 request.Status = 1;
-                var result = await _service.Add(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -39,13 +41,13 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] ProductUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody] ProductUpdateCommand request)
         {
             _logger.LogInformation($"REST request update Product : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.LastModifiedDate = DateTime.Now;
-                var result = await _service.Update(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -56,12 +58,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete([FromBody] ProductDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] ProductDeleteCommand request)
         {
             _logger.LogInformation($"REST request delete Product : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Delete(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -72,12 +74,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpGet("ViewDetail")]
-        public async Task<ActionResult<ProductInforSearchResponse>> ViewDetail([FromQuery] ProductViewDetailRequest request)
+        public async Task<ActionResult<Product>> ViewDetail([FromQuery] ProductViewDetailQuery request)
         {
             _logger.LogInformation($"REST request view detail Product : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.ViewDetail(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -88,12 +90,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Search")]
-        public async Task<ActionResult<PagedListC<ProductInforSearchResponse>>> Search([FromBody] ProductSearchRequest request)
+        public async Task<ActionResult<PagedList<Product>>> Search([FromBody] SearchProductQuery request)
         {
             _logger.LogInformation($"REST request search Product : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Search(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -104,12 +106,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("GetAllAdmin")]
-        public async Task<ActionResult<PagedListC<ProductGetAllAdminResponse>>> GetAllAdmin([FromBody] ProductGetAllAdminRequest request)
+        public async Task<ActionResult<PagedList<Product>>> GetAllAdmin([FromBody] ProductGetAllAdminQuery request)
         {
             _logger.LogInformation($"REST request get all Product by Admin : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.GetAllAdmin(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -120,12 +122,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("ViewProductForU")]
-        public async Task<IActionResult> ViewProductForU([FromBody] ProductSearchListRequest request)
+        public async Task<IActionResult> ViewProductForU([FromBody] ViewProductForUQuery request)
         {
             _logger.LogInformation($"REST request ViewProductForU  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.ViewProductForU(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -136,12 +138,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("ViewProductBestSale")]
-        public async Task<IActionResult> ViewProductBestSale([FromBody] ProductSearchListRequest request)
+        public async Task<IActionResult> ViewProductBestSale([FromBody] ViewProductBestSaleQuery request)
         {
             _logger.LogInformation($"REST request ViewProductBestSale  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.ViewProductForU(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -152,12 +154,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("ViewProductNew")]
-        public async Task<IActionResult> ViewProductNew([FromBody] ProductSearchListRequest request)
+        public async Task<IActionResult> ViewProductNew([FromBody] ViewProductNewQuery request)
         {
             _logger.LogInformation($"REST request ViewProductNew  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.ViewProductNew(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -168,12 +170,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("ViewProductPromotion")]
-        public async Task<IActionResult> ViewProductPromotion([FromBody] ProductSearchListRequest request)
+        public async Task<IActionResult> ViewProductPromotion([FromBody] ViewProductPromotionQuery request)
         {
             _logger.LogInformation($"REST request ViewProductPromotion  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.ViewProductPromotion(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)

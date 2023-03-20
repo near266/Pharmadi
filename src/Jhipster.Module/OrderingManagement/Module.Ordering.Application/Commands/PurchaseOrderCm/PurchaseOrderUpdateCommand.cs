@@ -14,9 +14,13 @@ namespace Module.Ordering.Application.Commands.PurchaseOrderCm
     public class PurchaseOrderUpdateCommand : IRequest<int>
     {
         public Guid Id { get; set; }
-        public Guid PurchaseOrderId { get; set; }
-        public Guid ProductId { get; set; }
-        public int Quantity { get; set; }
+        public Guid MerchantId { get; set; }
+        public Decimal ShippingFee { get; set; }
+        public Decimal TotalPrice { get; set; }
+        public Decimal TotalPayment { get; set; }
+        public int Status { get; set; }
+        public Guid? LastModifiedBy { get; set; }
+        public DateTime LastModifiedDate { get; set; }
     }
     public class PurchaseOrderUpdateCommandHandler : IRequestHandler<PurchaseOrderUpdateCommand, int>
     {

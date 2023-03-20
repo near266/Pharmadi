@@ -1,10 +1,10 @@
 ﻿
 
 using AutoMapper;
+using Jhipster.Service.Utilities;
 using MediatR;
 using Module.Factor.Application.Persistences;
 using Module.Factor.Domain.Entities;
-using Module.Factor.Shared.Utilities;
 
 namespace Module.Factor.Application.Queries.MerchantQ
 {

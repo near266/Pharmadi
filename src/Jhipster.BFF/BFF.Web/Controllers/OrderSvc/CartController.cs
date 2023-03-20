@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Jhipster.Service.Utilities;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Module.Catalog.gRPC.Contracts;
-using Module.Catalog.gRPC.Contracts.PagedListC;
-using Module.Catalog.gRPC.Persistences;
-using Module.Ordering.gRPC.Contracts;
-using Module.Ordering.gRPC.Persistences;
+using Module.Factor.Application.Queries.CartQ;
+using Module.Ordering.Application.Commands.CartCm;
+using Module.Ordering.Domain.Entities;
 using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
@@ -13,22 +13,22 @@ namespace BFF.Web.ProductSvc
     [Route("gw/[controller]")]
     public class CartController : ControllerBase
     {
-        private readonly ICartService _service;
+        private readonly IMediator _mediator;
         private readonly ILogger<CartController> _logger;
 
-        public CartController(ICartService service, ILogger<CartController> logger)
+        public CartController(IMediator mediator, ILogger<CartController> logger)
         {
-            _service = service;
+            _mediator = mediator;
             _logger = logger;
         }
         [HttpPost("Add")]
-        public async Task<ActionResult<CartBaseResponse>> Add([FromBody] CartAddRequest request)
+        public async Task<ActionResult<int>> Add([FromBody] CartAddCommand request)
         {
             _logger.LogInformation($"REST request add Cart : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.Id = Guid.NewGuid();
-                var result = await _service.Add(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -39,12 +39,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] CartUpdateRequest request)
+        public async Task<IActionResult> Update([FromBody] CartUpdateCommand request)
         {
             _logger.LogInformation($"REST request update Cart : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Update(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -55,12 +55,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete([FromBody] CartDeleteRequest request)
+        public async Task<IActionResult> Delete([FromBody] CartDeleteCommand request)
         {
             _logger.LogInformation($"REST request delete Cart : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.Delete(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -71,12 +71,12 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("GetAllCartByUser")]
-        public async Task<ActionResult<PagedListC<CartInfor>>> GetAllCartByUser(CartGetAllByUserRequest request)
+        public async Task<ActionResult<PagedList<Cart>>> GetAllCartByUser(CartGetAllByUserQuery request)
         {
             _logger.LogInformation($"REST request GetAllCartByUser : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _service.GetAllCartByUser(request);
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
