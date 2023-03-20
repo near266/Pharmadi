@@ -29,6 +29,12 @@ namespace Module.Catalog.Domain.Entities
         public Brand? Brand { get; set; }
         public int Status { get; set; }
         public Guid? PostContentId { get; set; }
+        public bool? HideProduct { get; set; }
+        //[Column("Nganh Hang")]
+        public string? Industry { get; set; }
+        public string? Effect { get;set; }
+        public string? Preserve { get; set; }
+        public string? Dosage { get; set; }
         public PostContent? PostContent { get; set; }
         public IEnumerable<LabelProduct> LabelProducts { get; set; }
         public IEnumerable<TagProduct> TagProducts { get; set; }
