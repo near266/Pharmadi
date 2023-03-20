@@ -14,6 +14,10 @@ using Module.Catalog.Application.Commands.BrandCm;
 using Module.Catalog.Application.Commands.GroupBrandCm;
 using Module.Catalog.Application.Commands.LabelCm;
 using Module.Catalog.Application.Commands.TagCm;
+using Module.Catalog.Application.Queries.ProductQ;
+using BFF.Web.DTOs.CatalogSvc;
+using Org.BouncyCastle.Asn1.X509;
+using System.Collections.Generic;
 
 namespace Jhipster.Configuration.AutoMapper
 {
@@ -155,7 +159,10 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<ProductUpdateCommand, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             //CreateMap<ProductDeleteRequest, ProductDeleteCommand>();
 
+            CreateMap<ViewProductListQuery, Product>();
+            CreateMap<ProductListDTO, Product>().ReverseMap();
 
+        
             //CreateMap<ProductSearchRequest, SearchProductQuery>();
             //CreateMap<Product, ProductInforSearchResponse>();
             //CreateMap<PagedList<Product>, PagedListC<ProductInforSearchResponse>>();
@@ -174,6 +181,7 @@ namespace Jhipster.Configuration.AutoMapper
             //CreateMap<Product, ProductInforSearchResponse>();
 
             CreateMap<Product, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             #endregion
         }
     }

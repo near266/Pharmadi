@@ -311,6 +311,9 @@ namespace Jhipster.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool?>("Pin")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GroupBrandId");
@@ -538,6 +541,9 @@ namespace Jhipster.Infrastructure.Migrations
 
                     b.Property<bool?>("HideProduct")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("text");
 
                     b.Property<string>("Industry")
                         .HasColumnType("text");

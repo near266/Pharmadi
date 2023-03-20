@@ -133,5 +133,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             result.TotalCount = query1.Count();
             return result;
         }
+
+        public async Task<IEnumerable<Product>> ViewProductList(Guid Id)
+        {
+          
+            var query= _context.Products.AsQueryable();
+            var data= await query.AsNoTracking().IgnoreAutoIncludes().Where(c=>c.Id==Id).ToListAsync();
+          
+            return data;
+        }
     }
 }

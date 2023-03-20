@@ -30,6 +30,7 @@ namespace Module.Catalog.Domain.Entities
         public int Status { get; set; }
         public Guid? PostContentId { get; set; }
         public bool? HideProduct { get; set; }
+        public string? Image { get; set; }
         //[Column("Nganh Hang")]
         public string? Industry { get; set; }
         public string? Effect { get;set; }

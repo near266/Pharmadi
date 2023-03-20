@@ -6,6 +6,8 @@ using Module.Catalog.Application.Queries.ProductQ;
 using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
 using Newtonsoft.Json;
+using BFF.Web.DTOs.CatalogSvc;
+using AutoMapper;
 
 namespace BFF.Web.ProductSvc
 {
@@ -15,6 +17,7 @@ namespace BFF.Web.ProductSvc
     {
         private readonly IMediator _mediator;
         private readonly ILogger<ProductController> _logger;
+        private readonly IMapper _mapper;
 
         public ProductController(IMediator mediator, ILogger<ProductController> logger)
         {
@@ -181,6 +184,29 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to ViewProductPromotion fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("ViewProductList")]
+        public async Task<ActionResult<ViewListProductDTo>> ViewProductList ([FromBody] ViewProductListQuery request)
+        {
+            _logger.LogInformation($"REST request ViewProductList : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var temp = await _mediator.Send(request);
+                var result = _mapper.Map<List<ProductListDTO>>(temp);
+                var res = new ViewListProductDTo
+                {
+                    ProductList= result,
+                };
+
+
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to ViewProductList fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

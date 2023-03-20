@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Jhipster.Infrastructure.Migrations
 {
-    public partial class Init : Migration
+    public partial class ProductAddProperty : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -34,6 +34,23 @@ namespace Jhipster.Infrastructure.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FunctionTypes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    CreatedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    LastModifiedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FunctionTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,7 +98,7 @@ namespace Jhipster.Infrastructure.Migrations
                     ContactName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     GPPNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastModifiedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     LastModifiedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -201,12 +218,39 @@ namespace Jhipster.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Functions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    FunctionTypeId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Status = table.Column<bool>(type: "boolean", nullable: true),
+                    CreatedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    LastModifiedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Functions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Functions_FunctionTypes_FunctionTypeId",
+                        column: x => x.FunctionTypeId,
+                        principalTable: "FunctionTypes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Brands",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     BrandName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     GroupBrandId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LogoBrand = table.Column<string>(type: "text", nullable: false),
+                    Intro = table.Column<string>(type: "text", nullable: false),
+                    Pin = table.Column<bool>(type: "boolean", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastModifiedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
@@ -362,6 +406,29 @@ namespace Jhipster.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RoleFunctions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<string>(type: "text", nullable: true),
+                    FunctionId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Status = table.Column<bool>(type: "boolean", nullable: true),
+                    CreatedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    LastModifiedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleFunctions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoleFunctions_Functions_FunctionId",
+                        column: x => x.FunctionId,
+                        principalTable: "Functions",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -373,12 +440,17 @@ namespace Jhipster.Infrastructure.Migrations
                     SalePrice = table.Column<decimal>(type: "numeric", nullable: true),
                     Description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
                     UnitName = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    Status = table.Column<int>(type: "integer", nullable: false),
                     BrandId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Product_Status = table.Column<int>(type: "integer", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
                     PostContentId = table.Column<Guid>(type: "uuid", nullable: true),
+                    HideProduct = table.Column<bool>(type: "boolean", nullable: true),
+                    Image = table.Column<string>(type: "text", nullable: true),
+                    Industry = table.Column<string>(type: "text", nullable: true),
+                    Effect = table.Column<string>(type: "text", nullable: true),
+                    Preserve = table.Column<string>(type: "text", nullable: true),
+                    Dosage = table.Column<string>(type: "text", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastModifiedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     LastModifiedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -473,23 +545,23 @@ namespace Jhipster.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    OrderingId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PurchaseOrderId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
                     Quantity = table.Column<int>(type: "integer", nullable: false),
-                    OrderingId1 = table.Column<Guid>(type: "uuid", nullable: false)
+                    PurchaseOrderId1 = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OrderItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Orderings_OrderingId",
-                        column: x => x.OrderingId,
+                        name: "FK_OrderItems_Orderings_PurchaseOrderId",
+                        column: x => x.PurchaseOrderId,
                         principalTable: "Orderings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Orderings_OrderingId1",
-                        column: x => x.OrderingId1,
+                        name: "FK_OrderItems_Orderings_PurchaseOrderId1",
+                        column: x => x.PurchaseOrderId1,
                         principalTable: "Orderings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -578,6 +650,11 @@ namespace Jhipster.Infrastructure.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Functions_FunctionTypeId",
+                table: "Functions",
+                column: "FunctionTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LabelProducts_LabelId",
                 table: "LabelProducts",
                 column: "LabelId");
@@ -593,19 +670,19 @@ namespace Jhipster.Infrastructure.Migrations
                 column: "MerchantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_OrderingId",
-                table: "OrderItems",
-                column: "OrderingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_OrderingId1",
-                table: "OrderItems",
-                column: "OrderingId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_ProductId",
                 table: "OrderItems",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_PurchaseOrderId",
+                table: "OrderItems",
+                column: "PurchaseOrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_PurchaseOrderId1",
+                table: "OrderItems",
+                column: "PurchaseOrderId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostContents_CategoryId",
@@ -626,6 +703,11 @@ namespace Jhipster.Infrastructure.Migrations
                 name: "IX_RoleClaims_RoleId",
                 table: "RoleClaims",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleFunctions_FunctionId",
+                table: "RoleFunctions",
+                column: "FunctionId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -703,6 +785,9 @@ namespace Jhipster.Infrastructure.Migrations
                 name: "RoleClaims");
 
             migrationBuilder.DropTable(
+                name: "RoleFunctions");
+
+            migrationBuilder.DropTable(
                 name: "TagProducts");
 
             migrationBuilder.DropTable(
@@ -727,6 +812,9 @@ namespace Jhipster.Infrastructure.Migrations
                 name: "Orderings");
 
             migrationBuilder.DropTable(
+                name: "Functions");
+
+            migrationBuilder.DropTable(
                 name: "Tags");
 
             migrationBuilder.DropTable(
@@ -743,6 +831,9 @@ namespace Jhipster.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Merchants");
+
+            migrationBuilder.DropTable(
+                name: "FunctionTypes");
 
             migrationBuilder.DropTable(
                 name: "Brands");
