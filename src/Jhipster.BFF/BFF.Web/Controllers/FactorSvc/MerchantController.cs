@@ -4,8 +4,8 @@ using Jhipster.Domain.Services.Interfaces;
 using Jhipster.gRPC.Contracts.Shared.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Module.Factor.gRPC.Contracts;
-using Module.Factor.gRPC.Persistences;
+using Module.Factor.Application.Persistences;
+using Module.Factor.Domain.Entities;
 using Newtonsoft.Json;
 
 namespace BFF.Web.Controllers.FactorSvc
@@ -15,12 +15,12 @@ namespace BFF.Web.Controllers.FactorSvc
     [Route("gw/[controller]")]
     public class MerchantController : ControllerBase
     {
-        private readonly IMerchantService _service;
+        private readonly IMerchantRepository _service;
         private readonly ILogger<MerchantController> _logger;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IAccountService _accountService;
-        public MerchantController(IMerchantService service, ILogger<MerchantController> logger,IUserService userService, IMapper mapper, IAccountService accountService)
+        public MerchantController(IMerchantRepository service, ILogger<MerchantController> logger,IUserService userService, IMapper mapper, IAccountService accountService)
         {
             _service = service;
             _logger = logger;
@@ -45,8 +45,8 @@ namespace BFF.Web.Controllers.FactorSvc
 
                 if(step1!=null)
                 {
-                    var temp2 = _mapper.Map<MerchantAddRequest>(request);
-                    var result = _service.Add(temp2);
+                    var temp2 = _mapper.Map<Merchant>(request);
+                    var result =await _service.Add(temp2);
                     return Ok(result);
                 }
                 return null;
@@ -75,8 +75,8 @@ namespace BFF.Web.Controllers.FactorSvc
 
                 if (step1 != null)
                 {
-                    var temp2 = _mapper.Map<MerchantAddRequest>(request);
-                    var result = _service.Add(temp2);
+                    var temp2 = _mapper.Map<Merchant>(request);
+                    var result =await _service.Add(temp2);
                     return Ok(result);
                 }
                 return null;

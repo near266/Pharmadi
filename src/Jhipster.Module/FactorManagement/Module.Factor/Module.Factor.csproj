@@ -10,8 +10,10 @@
 		<PackageReference Include="MediatR" Version="11.0.0" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\Module.Factor.gRPC\Module.Factor.gRPC.csproj" />
 	  <ProjectReference Include="..\Module.Factor.Infrastructure\Module.Factor.Infrastructure.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Services\" />
 	</ItemGroup>
 
 </Project>
