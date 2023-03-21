@@ -6,7 +6,11 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using Jhipster.Domain;
+using Jhipster.Domain.Repositories.Interfaces;
 using Jhipster.Infrastructure.Configuration;
+using LanguageExt;
+using LanguageExt.Pipes;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -40,25 +44,29 @@ namespace Jhipster.Security.Jwt
 
         private long _tokenValidityInSecondsForRememberMe;
 
-
-        public TokenProvider(ILogger<TokenProvider> log, IOptions<SecuritySettings> securitySettings, IMediator mediator)
+        private readonly IJwtRepository _jwtRepository;
+        public TokenProvider(ILogger<TokenProvider> log,IJwtRepository jwtRepository, IOptions<SecuritySettings> securitySettings, IMediator mediator)
         {
             _log = log;
             _securitySettings = securitySettings.Value;
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
             _mediator = mediator;
+            _jwtRepository = jwtRepository;
             Init();
         }
 
         public async Task<string> CreateToken(IPrincipal principal, bool rememberMe)
         {
             var roles = GetRoles(principal);
+            var claimsIdentity = principal.Identity as ClaimsIdentity;
+            var s=claimsIdentity.Name;
+            var id = await _jwtRepository.GetIdUser(s);
             var authValue = string.Join(",", roles.Map(it => it.Value));
 
             var req = new RoleFunctionGetQuery { roles = authValue };
             var function_name = await _mediator.Send(req);
 
-            var subject = CreateSubject(principal, function_name);
+            var subject = CreateSubject(principal, function_name, id);
             var validity =
                 DateTime.UtcNow.AddSeconds(rememberMe
                     ? _tokenValidityInSecondsForRememberMe
@@ -118,7 +126,7 @@ namespace Jhipster.Security.Jwt
                 _securitySettings.Authentication.Jwt.TokenValidityInSecondsForRememberMe;
         }
 
-        private static ClaimsIdentity CreateSubject(IPrincipal principal, string function)
+        private static ClaimsIdentity CreateSubject(IPrincipal principal, string function, string UserId)
         {
             var username = principal.Identity.Name;
             var roles = GetRoles(principal);
@@ -127,7 +135,8 @@ namespace Jhipster.Security.Jwt
             return new ClaimsIdentity(new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(AuthoritiesKey, authValue),
-                new Claim("function_name", function)
+                new Claim("function_name", function),
+                new Claim("UserId",UserId)
             });
         }
 
