@@ -195,7 +195,7 @@ namespace BFF.Web.ProductSvc
             try
             {
                 var temp = await _mediator.Send(request);
-                var result = _mapper.Map<List<ProductListDTO>>(temp);
+                var result = _mapper.Map<IEnumerable<ProductListDTO>>(temp);
                 var res = new ViewListProductDTo
                 {
                     ProductList= result,
