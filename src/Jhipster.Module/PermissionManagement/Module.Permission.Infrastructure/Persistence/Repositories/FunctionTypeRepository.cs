@@ -45,7 +45,7 @@ namespace Module.Permission.Infrastructure.Persistence.Repositories
             }
 
             var functionTypes = await functionTypeQuery
-                .Skip(pagesize * page)
+                .Skip(pagesize *( page-1))
                 .Take(pagesize)
                 .OrderByDescending(i => i.CreatedDate)
                 .ToListAsync();

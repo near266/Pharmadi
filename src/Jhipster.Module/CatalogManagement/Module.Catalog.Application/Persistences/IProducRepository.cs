@@ -15,5 +15,6 @@ namespace Module.Catalog.Application.Persistences
         Task<IEnumerable<Product>> ViewProductNew(int page, int pageSize);
         Task<IEnumerable<Product>> ViewProductPromotion(string keyword,int page, int pageSize);
         Task<PagedList<Product>> SearchProduct(string? keyword, List<Guid?>? categoryIds, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize);
+        Task<int> UpdataStatusProduct(Guid id ,int status);
     }
 }

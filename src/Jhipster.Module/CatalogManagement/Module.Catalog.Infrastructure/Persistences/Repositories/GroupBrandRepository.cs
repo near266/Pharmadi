@@ -50,7 +50,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<GroupBrand>();
             var query1 = _context.GroupBrands.AsQueryable();
             var data = await query1
-                        .Skip(pageSize * page)
+                        .Skip(pageSize *( page-1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = data;
@@ -60,15 +60,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<GroupBrand>> Search(string? keyword)
         {
+            var query = _context.GroupBrands.AsQueryable();
             if(keyword != null)
             {
 
             keyword = keyword.ToLower();
-            var query = await _context.GroupBrands.Where(i => i.GroupBrandName.ToLower().Contains(keyword))
-                        .ToListAsync();
-            return query;
+             query = query.Where(i => i.GroupBrandName.ToLower().Contains(keyword));
             }
-            return null;
+            var result = query.AsEnumerable();
+            return result;
         }
 
     }

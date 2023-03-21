@@ -62,15 +62,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<Category>> Search(string? keyword)
         {
+            var query = _context.Categories.AsQueryable();
             if(keyword != null)
             {
 
             keyword = keyword.ToLower();
-            var query = await _context.Categories.Where(i => i.CategoryName.ToLower().Contains(keyword))
-                        .ToListAsync();
-            return query;
+            query =query.Where(i => i.CategoryName.ToLower().Contains(keyword));
             }
-            return null;
+            var reslut = query.AsEnumerable();
+            return reslut;
         }
 
         public async Task<PagedList<Category>> GetListCategories()

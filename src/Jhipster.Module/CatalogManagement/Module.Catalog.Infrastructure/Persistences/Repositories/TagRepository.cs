@@ -46,16 +46,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
         public async Task<IEnumerable<Tag>> Search(string? keyword)
         {
+            var query = _context.Tags.AsQueryable();
             if(keyword != null)
             {
             keyword = keyword.ToLower();
 
-            var query = await _context.Tags.Where(i=>i.TagName.ToLower().Contains(keyword))
-                        .ToListAsync();
-            return query;
+            query = query.Where(i=>i.TagName.ToLower().Contains(keyword));
             }
-            return null;
-
+             var result = query.AsEnumerable();
+            return result;
         }
 
         public async Task<PagedList<Tag>> GetAllAdmin(int page, int pageSize)
@@ -63,7 +62,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<Tag>();
             var query1 = _context.Tags.AsQueryable();
             var data = await query1
-                        .Skip(pageSize * page)
+                        .Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = data;

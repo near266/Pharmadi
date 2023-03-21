@@ -47,15 +47,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<Brand>> Search(string? keyword)
         {
-            if(keyword != null)
+            var query = _context.Brands.AsQueryable();
+            if (keyword != null)
             {
-
-            keyword = keyword.ToLower();
-            var query = await _context.Brands.Where(i => i.BrandName.ToLower().Contains(keyword))
-                        .ToListAsync();
-            return query;
+                keyword = keyword.ToLower();
+                query = query.Where(i => i.BrandName.ToLower().Contains(keyword));
             }
-            return null;
+            var result = query.AsEnumerable();
+            return result;
         }
 
         public async Task<PagedList<Brand>> GetAllAdmin(int page, int pageSize)
@@ -63,7 +62,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<Brand>();
             var query1 = _context.Brands.AsQueryable();
             var data = await query1
-                        .Skip(pageSize * page)
+                        .Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = data;

@@ -42,7 +42,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 query1 = query1.Where(i => i.SKU.ToLower().Contains(keyword) || i.ProductName.ToLower().Contains(keyword));
             }
             var data = await query1
-                        .Skip(pageSize * page)
+                        .Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = data;
@@ -129,7 +129,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 query1 = query1.Include(i => i.TagProducts).Where(i => i.TagProducts.Any(i => tagIds.Contains(i.TagId)));
             }
             var data = await query1
-                        .Skip(pageSize * page)
+                        .Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = data;
@@ -137,6 +137,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return result;
         }
 
-      
+        public async Task<int> UpdataStatusProduct(Guid id ,int status)
+        {
+            var check = await _context.Products.FirstOrDefaultAsync(i=> i.Id == id);
+            if (check != null)
+            {
+                check.Status = status;
+                return 1;
+            }
+            return  0;
+        }
     }
 }

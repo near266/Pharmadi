@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -34,14 +35,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<Label>> Search(string? keyword)
         {
+            var query =_context.Labels.AsQueryable();
             if (keyword != null)
             {
 
             keyword = keyword.ToLower();
-            var query = await _context.Labels.Where(i=>i.LabelName.ToLower().Contains(keyword)).ToListAsync();
-            return query;
+            query =  query.Where(i=>i.LabelName.ToLower().Contains(keyword));
             }
-            return null;
+            var result = query.AsEnumerable();
+            return result;
         }
 
         public async Task<PagedList<Label>> GetAllAdmin(int page, int pageSize)
@@ -49,7 +51,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<Label>();
             var query1 = _context.Labels.AsQueryable();
             var data = await query1
-                        .Skip(pageSize * page)
+                        .Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = data;

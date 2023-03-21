@@ -37,7 +37,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         {
             var query = _context.Carts.Include(i => i.Product).Where(i=>i.UserId==userId).AsQueryable();
             var data = await query
-                        .Skip(pageSize * page)
+                        .Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();
             var res = new PagedList<Cart>();

@@ -37,7 +37,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<Warehouse>();
             var query1 = _context.Warehouses.AsQueryable();
             var data = await query1
-                        .Skip(pageSize * page)
+                        .Skip(pageSize *( page-1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = data;

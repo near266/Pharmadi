@@ -37,7 +37,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<PostContent>();
             var query1 = _context.PostContents.AsQueryable();
             var data = await query1
-                        .Skip(pageSize * page)
+                        .Skip(pageSize *( page-1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = data;

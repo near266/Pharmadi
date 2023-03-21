@@ -187,6 +187,21 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("UpdateStatusProduct")]
+        public async Task<IActionResult> UpdateStatusProduct([FromBody] UpdateStatusProductCommand request)
+        {
+            _logger.LogInformation($"REST request UpdateStatusProduct  : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to UpdateStatusProduct fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
 
     }
 }

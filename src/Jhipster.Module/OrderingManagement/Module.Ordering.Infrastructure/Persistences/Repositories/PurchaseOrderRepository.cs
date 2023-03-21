@@ -42,7 +42,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 query = query.Where(i => i.Status == status);
             }
             var data = await query
-                        .Skip(pageSize * page)
+                        .Skip(pageSize *( page-1))
                         .Take(pageSize)
                         .ToListAsync();
             var result = new PagedList<PurchaseOrder>();
@@ -67,7 +67,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 query = query.Where(i => i.Status == status);
             }
             var data = await query
-                        .Skip(pageSize * page)
+                        .Skip(pageSize *( page-1))
                         .Take(pageSize)
                         .ToListAsync();
             var result = new PagedList<PurchaseOrder>();

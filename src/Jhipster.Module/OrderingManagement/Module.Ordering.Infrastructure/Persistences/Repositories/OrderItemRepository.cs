@@ -39,7 +39,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         {
             var query = _context.OrderItems.Include(i => i.Product).Where(i=>i.PurchaseOrderId==OrderId).AsQueryable();
             var data = await query
-                        .Skip(pageSize * page)
+                        .Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();
             var res = new PagedList<OrderItem>();
