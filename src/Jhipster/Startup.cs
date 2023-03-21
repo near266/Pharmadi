@@ -18,6 +18,10 @@ using Module.Ordering;
 using Module.Factor;
 using Jhipster.gRPC.Contracts.Shared.Identity;
 using Jhipster.gRPC.Contracts.Shared.Services;
+using Module.Factor.Application.Persistences;
+using Module.Factor.Infrastructure.Persistence.Repositories;
+using Jhipster.Domain.Repositories.Interfaces;
+using Jhipster.Infrastructure.Data.Repositories;
 
 [assembly: ApiController]
 
@@ -91,7 +95,7 @@ namespace Jhipster
         {
             // General Infras
             services.AddSharedInfrastructure(Configuration);
-
+            services.AddScoped(typeof(IJwtRepository), typeof(JwtRepository));
             // Module
             services.AddCatalogModule(Configuration);
             services.AddFactorModule(Configuration);
