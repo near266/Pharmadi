@@ -36,9 +36,9 @@ namespace Jhipster.Domain.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public virtual async Task<User> CreateUser(User userToCreate)
+        public virtual async Task<User> CreateUser(User userToCreate,string Password)
         {
-            var password = RandomUtil.GeneratePassword();
+            var password = Password;
             var user = new User
             {
                 Id = userToCreate.Id,
