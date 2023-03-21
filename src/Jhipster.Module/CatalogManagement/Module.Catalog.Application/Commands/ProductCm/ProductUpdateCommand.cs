@@ -13,7 +13,7 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public string? SKU { get; set; }
         public string? ProductName { get; set; }
         public string? Function { get; set; }
-        public decimal? ListPrice { get; set; }
+        public decimal? Price { get; set; }
         public decimal? SalePrice { get; set; }
         public string? Description { get; set; }
         public string? UnitName { get; set; }
@@ -26,7 +26,6 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public string? Effect { get; set; }
         public string? Preserve { get; set; }
         public string? Dosage { get; set; }
-        public Guid? CategoryId { get; set; }
         public Guid? LastModifiedBy { get; set; }
         public DateTime? LastModifiedDate { get; set; }
     }

@@ -11,6 +11,8 @@ using AutoMapper;
 using Module.Catalog.Application.Queries.CategoryQ;
 using Module.Catalog.Application.Commands.CategoryCm;
 using Module.Catalog.Application.Commands.WarehouseCm;
+using Module.Catalog.Application.Commands.TagCm;
+using Module.Catalog.Application.Commands.LabelCm;
 
 namespace BFF.Web.ProductSvc
 {
@@ -39,25 +41,45 @@ namespace BFF.Web.ProductSvc
                 int result = 0;
 
                 //add product
-                var step1 = _mapper.Map<ProductAddCommand>(request);
+                //var step1 = _mapper.Map<ProductAddCommand>(request);
+                var step1 = new ProductAddCommand
+                {
+                    Id = request.Id,                    
+                    SKU = request.SKU,
+                    ProductName = request.ProductName,
+                    Function = request.Function,
+                    PostContentId = request.PostContentId,
+                    SalePrice = request.SalePrice,
+                    Price = request.Price,
+                    Description = request.Description,
+                    UnitName =request.UnitName,
+                    BrandId = request.BrandId,
+                    Status = request.Status,
+                    Image =request.Image,
+                    Industry =request.Industry,
+                    Effect = request.Effect,
+                    Preserve =request.Preserve,
+                    Dosage = request.Dosage,
+                    DosageForms = request.DosageForms,
+                    Country = request.Country,
+                    Ingredient = request.Country,
+                    Usage = request.Usage,
+                    Specification = request.Specification,
+                    Number = request.Number,
+                    CreatedBy = request.CreatedBy,
+                    CreatedDate = request.CreatedDate
+                };
                 await _mediator.Send(step1);
 
-                //get list id category reference
-                var step2 = new GetListIdReferQuery
-                {
-                    id = request.CategoryId
-                };
-                var tem2 = await _mediator.Send(step2);
-
-                //add category
-                foreach(var item in tem2)
+                //add categoryProduct
+                foreach(var item in request.CategoryIds)
                 {
                     var step3 = new CategoryProductAddCommand
                     {
                         Id = Guid.NewGuid(),
                         ProductId = request.Id,
                         CategoryId = item,
-                        Priority = (item == request.CategoryId) ? true : false
+                        Priority = true
                     };
                     await _mediator.Send(step3);
                 }
@@ -74,7 +96,33 @@ namespace BFF.Web.ProductSvc
                         AvailabelQuantity = item.AvailabelQuantity
 
                     };
-                    result = await _mediator.Send(step4);
+                    await _mediator.Send(step4);
+                }
+
+                //add tag product
+                foreach (var item in request.TagIds)
+                {
+                    var step5 = new TagProductAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = request.Id,
+                        TagId = item
+
+                    };
+                    await _mediator.Send(step5);
+                }
+
+                //add tag product
+                foreach (var item in request.LabelIds)
+                {
+                    var step6 = new LabelProductAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = request.Id,
+                        LabelId = item
+
+                    };
+                    await _mediator.Send(step6);
                 }
                 return Ok(result);
             }

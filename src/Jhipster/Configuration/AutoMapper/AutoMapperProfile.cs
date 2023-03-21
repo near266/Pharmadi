@@ -17,6 +17,7 @@ using Module.Catalog.Application.Queries.ProductQ;
 using BFF.Web.DTOs.CatalogSvc;
 using Org.BouncyCastle.Asn1.X509;
 using System.Collections.Generic;
+using Module.Catalog.Application.Commands.WarehouseCm;
 
 namespace Jhipster.Configuration.AutoMapper
 {
@@ -71,6 +72,10 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<Category,Category>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<CategoryUpdateCommand, Category>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<CategoryProductAddCommand, CategoryProduct>();
+            CreateMap<CategoryProduct, CategoryProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<CategoryProductUpdateCommand, CategoryProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             //Brand
             CreateMap<BrandAddCommand, Brand>();
             CreateMap<Brand, Brand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -86,11 +91,18 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<Label, Label>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<LabelUpdateCommand, Label>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<LabelProductAddCommand, LabelProduct>();
+            CreateMap<LabelProduct, LabelProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<LabelProductUpdateCommand, LabelProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             //Tag
             CreateMap<TagAddCommand, Tag>();
             CreateMap<Tag, Tag>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<TagUpdateCommand, Tag>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<TagProductAddCommand, TagProduct>();
+            CreateMap<TagProduct, TagProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<TagProductUpdateCommand, TagProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             //product
             CreateMap<ProductAddRequest, ProductAddCommand>();
             CreateMap<ProductAddCommand, Product>();
@@ -100,7 +112,12 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<ViewProductListQuery, Product>();
             CreateMap<ProductListDTO, Product>().ReverseMap();
 
-        
+            //warehouse
+            CreateMap<WarehouseProductAddCommand, WarehouseProduct>();
+            CreateMap<WarehouseProduct, WarehouseProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<WarehouseProductUpdateCommand, WarehouseProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+
             //CreateMap<ProductSearchRequest, SearchProductQuery>();
             //CreateMap<Product, ProductInforSearchResponse>();
             //CreateMap<PagedList<Product>, PagedListC<ProductInforSearchResponse>>();
