@@ -109,13 +109,14 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("GetAllAdmin")]
-        public async Task<ActionResult<PagedList<Product>>> GetAllAdmin([FromBody] ProductGetAllAdminQuery request)
+        public async Task<ActionResult<PagedList<GetAllAminDTO>>> GetAllAdmin([FromBody] ProductGetAllAdminQuery request)
         {
             _logger.LogInformation($"REST request get all Product by Admin : {JsonConvert.SerializeObject(request)}");
             try
             {
                 var result = await _mediator.Send(request);
-                return Ok(result);
+                var res = _mapper.Map<PagedList<GetAllAminDTO>>(result);
+                return Ok(res);
             }
             catch (Exception ex)
             {
@@ -199,6 +200,36 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to UpdateStatusProduct fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpPost("ViewProductWithBrand")]
+        public async Task<IActionResult> ViewProductWithBrand ([FromBody] ViewProductWithBrandQuery request)
+        {
+            _logger.LogInformation($"REST request ViewProductWithBrand : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to ViewProductWithBrand fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpPost("ViewProductSimilar")]
+        public async Task<IActionResult> ViewProductSimilarCategory([FromBody] ViewProductSimilarQuery request)
+        {
+            _logger.LogInformation($"REST request ViewProductSimilarCategory : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to ViewProductSimilarCategory fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

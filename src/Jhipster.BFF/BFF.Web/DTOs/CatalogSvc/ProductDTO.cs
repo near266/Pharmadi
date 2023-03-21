@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Module.Catalog.Domain.Entities;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,7 +70,30 @@ namespace BFF.Web.DTOs.CatalogSvc
         public string DateExp { get; set; }
         public int AvailabelQuantity { get; set; }
     }
+    public class SearchProductInforDTO {
+        public Guid Id { get; set; }
+        public string ProductName { get; set; }
+        public string? Specification { get; set; }
+        public decimal? Price { get; set; }
+        public decimal? SalePrice { get; set; }
+        public string? Description { get; set; }
+        public int?Quantitysold { get; set; }
+        public string? UnitName { get; set; }
+        public int Status { get; set; }
+        public List<string>? Image { get; set; }
+    }
 
+    public class GetAllAminDTO
+    {
+        public Guid Id { get; set; }
+        public string SKU { get; set; }
+        public string ProductName { get; set; }
+        public string? Function { get; set; }
+        public decimal? Price { get; set; }
+        public decimal? SalePrice { get; set; }
+        public int Status { get; set; }
+        public int Number { get; set; }  
+    }
     //public class ProductUpdateRequest
     //{
     //    public Guid Id { get; set; }
@@ -95,6 +120,6 @@ namespace BFF.Web.DTOs.CatalogSvc
     //    public Guid? CategoryId { get; set; }
     //}
 
-   
+
 
 }
