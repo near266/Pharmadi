@@ -23,7 +23,6 @@ namespace BFF.Web.ProductSvc
             _mediator = mediator;
             _logger = logger;
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] PurchaseOrderAddCommand request)
@@ -42,7 +41,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] PurchaseOrderUpdateCommand request)
@@ -60,7 +58,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] PurchaseOrderDeleteCommand request)
@@ -77,7 +74,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("GetAllPurchaseOrderByAdmin")]
         public async Task<ActionResult<PagedList<PurchaseOrder>>> GetAllPurchaseOrderByAdmin([FromBody] PurchaseOrderGetAllByAdminQuery request)
@@ -94,7 +90,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
 
 
         [HttpPost("GetAllPurchaseOrderByUser")]
@@ -112,7 +107,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
 
 
         [HttpGet("ViewDetailPurchaseOrder")]

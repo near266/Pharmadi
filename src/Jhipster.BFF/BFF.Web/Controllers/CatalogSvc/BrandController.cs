@@ -28,7 +28,6 @@ namespace BFF.Web.ProductSvc
             _mediator = mediator;
             _logger = logger;
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] BrandAddCommand request)
         {
@@ -48,7 +47,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] BrandUpdateCommand request)
         {
@@ -67,7 +65,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] BrandDeleteCommand request)
@@ -84,7 +81,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Search")]
         public async Task<ActionResult<IEnumerable<Brand>>> Search([FromBody] BrandSearchQuery request)
@@ -101,7 +97,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("GetAllAdmin")]
         public async Task<ActionResult<PagedList<Brand>>> GetAllAdmin([FromBody] BrandGetAllAdminQuery request)

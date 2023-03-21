@@ -23,7 +23,6 @@ namespace BFF.Web.ProductSvc
             _mediator = mediator;
             _logger = logger;
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] CartAddCommand request)
@@ -41,7 +40,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] CartUpdateCommand request)
@@ -58,7 +56,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] CartDeleteCommand request)
@@ -75,7 +72,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("GetAllCartByUser")]
         public async Task<ActionResult<PagedList<Cart>>> GetAllCartByUser(CartGetAllByUserQuery request)

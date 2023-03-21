@@ -13,7 +13,6 @@ using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
 {
-    [Authorize]
     [ApiController]
     [Route("gw/[controller]")]
     public class LabelController : ControllerBase
@@ -30,7 +29,6 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("UserId")?.Value;
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] LabelAddCommand request)
@@ -51,7 +49,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] LabelUpdateCommand request)
@@ -71,7 +68,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] LabelDeleteCommand request)
@@ -88,7 +84,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Search")]
         public async Task<ActionResult<IEnumerable<Label>>> Search([FromBody] LabelSearchQuery request)
@@ -105,7 +100,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("GetAllAdmin")]
         public async Task<ActionResult<PagedList<Label>>> GetAllAdmin([FromBody] LabelGetAllAdminQuery request)
