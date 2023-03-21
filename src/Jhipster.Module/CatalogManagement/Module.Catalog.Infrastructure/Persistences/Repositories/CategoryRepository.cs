@@ -98,5 +98,23 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
 
         }
+
+        public async Task<IEnumerable<Category>> GetAllCategoriesLv1()
+        {
+            var listId1 = await _context.Categories.Where(i=>i.ParentId == null)
+                .AsNoTracking()
+                .IgnoreAutoIncludes()
+                .ToListAsync();
+            return listId1;
+        }
+
+        public async Task<IEnumerable<Category>> GetAllCategoriesLv2()
+        {
+            var listId2 = await _context.Categories.Where(i => i.ParentId != null)
+                .AsNoTracking()
+                .IgnoreAutoIncludes()
+                .ToListAsync();
+            return listId2;
+        }
     }
 }

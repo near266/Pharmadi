@@ -18,6 +18,7 @@ using BFF.Web.DTOs.CatalogSvc;
 using Org.BouncyCastle.Asn1.X509;
 using System.Collections.Generic;
 using Module.Catalog.Application.Commands.WarehouseCm;
+using Module.Catalog.Application.Queries.CategoryQ;
 
 namespace Jhipster.Configuration.AutoMapper
 {
@@ -76,6 +77,9 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<CategoryProduct, CategoryProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<CategoryProductUpdateCommand, CategoryProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<ViewListCategoryLv1Query, Category>();
+            CreateMap<ViewListCategoryLv2Query,Category>();
+
             //Brand
             CreateMap<BrandAddCommand, Brand>();
             CreateMap<Brand, Brand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -112,6 +116,7 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<ProductListDTO, Product>().ReverseMap();
             CreateMap<ViewProductWithBrandQuery, Product>();
             CreateMap<UpdateStatusProductCommand, Product>();
+
 
             CreateMap<ViewProductSimilarQuery, Product>();
             CreateMap<GetAllAminDTO,Product>().ReverseMap();

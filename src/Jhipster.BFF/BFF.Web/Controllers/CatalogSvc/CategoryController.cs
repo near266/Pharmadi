@@ -134,6 +134,37 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPost("GetListCategoryLv1")]
+        public async Task<ActionResult<PagedList<Category>>> GetListCateloryLv1 ([FromBody] ViewListCategoryLv1Query request)
+        {
+            _logger.LogInformation($"REST request get list Category lv1: {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to get list Category by fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpPost("GetListCategoryLv2")]
+        public async Task<ActionResult<PagedList<Category>>> GetListCateloryLv2([FromBody] ViewListCategoryLv2Query request)
+        {
+            _logger.LogInformation($"REST request get list Category lv2: {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to get list Category by fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
 
