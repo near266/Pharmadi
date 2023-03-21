@@ -55,7 +55,7 @@ namespace Jhipster.Domain.Services
                 Activated = true
             };
             await _userManager.CreateAsync(user);
-            //await CreateUserRoles(user, userToCreate.UserRoles.Select(iur => iur.Role.Name).ToHashSet());
+            await CreateUserRoles(user, userToCreate.UserRoles.Select(iur => iur.Role.Name).ToHashSet());
             _log.LogDebug($"Created Information for User: {user}");
             return user;
         }
