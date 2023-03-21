@@ -3,11 +3,13 @@ using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Module.Catalog.Application.Commands.ProductCm
 {
     public class ProductAddCommand : IRequest<int>
     {
+        [JsonIgnore]
         public Guid Id { get; set; }
         public string SKU { get; set; }
         public string ProductName { get; set; }
@@ -31,9 +33,9 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public string? Usage { get; set; }
         public string? Specification { get; set; }
         public int? Number { get; set; }
-        [System.Text.Json.Serialization.JsonIgnore]
+        [JsonIgnore]
         public Guid? CreatedBy { get; set; }
-        [System.Text.Json.Serialization.JsonIgnore]
+        [JsonIgnore]
         public DateTime CreatedDate { get; set; }
     }
     public class ProductAddCommandHandler : IRequestHandler<ProductAddCommand, int>

@@ -1,5 +1,7 @@
-﻿using Jhipster.Service.Utilities;
+﻿using BFF.Web.Constants;
+using Jhipster.Service.Utilities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Module.Factor.Application.Queries.OrderItemQ;
@@ -21,6 +23,8 @@ namespace BFF.Web.ProductSvc
             _mediator= mediator;
             _logger = logger;
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
+
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] OrderItemAddCommand request)
         {
@@ -37,6 +41,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] OrderItemUpdateCommand request)
@@ -53,6 +58,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] OrderItemDeleteCommand request)
@@ -69,6 +75,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("GetAllOrderItemByUser")]
         public async Task<ActionResult<PagedList<OrderItem>>> GetAllOrderItemByUser(OrderItemGetAllByUserQuery request)

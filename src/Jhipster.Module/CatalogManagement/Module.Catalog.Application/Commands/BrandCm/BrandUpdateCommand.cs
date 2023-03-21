@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Commands.BrandCm
@@ -18,7 +19,9 @@ namespace Module.Catalog.Application.Commands.BrandCm
         [Required(ErrorMessage = "{0} is required.")]
         public string BrandName { get; set; }
         public Guid? GroupBrandId { get; set; }
+        [JsonIgnore]
         public Guid? LastModifiedBy { get; set; }
+        [JsonIgnore]
         public DateTime? LastModifiedDate { get; set; }
     }
     public class BrandUpdateCommandHandler: IRequestHandler<BrandUpdateCommand, int>

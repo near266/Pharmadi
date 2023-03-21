@@ -3,6 +3,7 @@ using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Module.Catalog.Application.Commands.ProductCm
 {
@@ -26,7 +27,9 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public string? Effect { get; set; }
         public string? Preserve { get; set; }
         public string? Dosage { get; set; }
+        [JsonIgnore]
         public Guid? LastModifiedBy { get; set; }
+        [JsonIgnore]
         public DateTime? LastModifiedDate { get; set; }
     }
     public class ProductUpdateCommandHandler : IRequestHandler<ProductUpdateCommand, int>
