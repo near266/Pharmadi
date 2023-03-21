@@ -8,6 +8,7 @@ namespace Module.Catalog.Application.Commands.ProductCm
 {
     public class ProductAddCommand : IRequest<int>
     {
+        [Required(ErrorMessage = "{0} is required.")]
         public Guid Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
         public string SKU { get; set; }
@@ -20,9 +21,16 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public string? UnitName { get; set; }
         public Guid? BrandId { get; set; }
         public int Status { get; set; }
-
+        public Guid? PostContentId { get; set; }
+        public bool? HideProduct { get; set; }
+        public string? Image { get; set; }
+        public string? Industry { get; set; }
+        public string? Effect { get; set; }
+        public string? Preserve { get; set; }
+        public string? Dosage { get; set; }
         public Guid? CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
+        public Guid? CategoryId { get; set; }
     }
     public class ProductAddCommandHandler : IRequestHandler<ProductAddCommand, int>
     {

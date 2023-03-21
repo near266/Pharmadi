@@ -8,6 +8,9 @@ using Jhipster.Service.Utilities;
 using Newtonsoft.Json;
 using BFF.Web.DTOs.CatalogSvc;
 using AutoMapper;
+using Module.Catalog.Application.Queries.CategoryQ;
+using Module.Catalog.Application.Commands.CategoryCm;
+using Module.Catalog.Application.Commands.WarehouseCm;
 
 namespace BFF.Web.ProductSvc
 {
@@ -25,15 +28,54 @@ namespace BFF.Web.ProductSvc
             _logger = logger;
         }
         [HttpPost("Add")]
-        public async Task<ActionResult<int>> Add([FromBody] ProductAddCommand request)
+        public async Task<ActionResult<int>> Add([FromBody] ProductAddRequest request)
         {
             _logger.LogInformation($"REST request add Product : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
-                request.Status = 1;
-                var result = await _mediator.Send(request);
+
+                int result = 0;
+
+                //add product
+                var step1 = _mapper.Map<ProductAddCommand>(request);
+                await _mediator.Send(step1);
+
+                //get list id category reference
+                var step2 = new GetListIdReferQuery
+                {
+                    id = request.CategoryId
+                };
+                var tem2 = await _mediator.Send(step2);
+
+                //add category
+                foreach(var item in tem2)
+                {
+                    var step3 = new CategoryProductAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = request.Id,
+                        CategoryId = item,
+                        Priority = (item == request.CategoryId) ? true : false
+                    };
+                    await _mediator.Send(step3);
+                }
+
+                //add warehouse product
+                foreach (var item in request.warehouseProductAdds)
+                {
+                    var step4 = new WarehouseProductAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = request.Id,
+                        Lot = item.Lot,
+                        DateExp = item.DateExp,
+                        AvailabelQuantity = item.AvailabelQuantity
+
+                    };
+                    result = await _mediator.Send(step4);
+                }
                 return Ok(result);
             }
             catch (Exception ex)

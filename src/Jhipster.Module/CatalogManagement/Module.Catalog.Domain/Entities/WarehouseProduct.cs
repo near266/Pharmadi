@@ -9,10 +9,9 @@ namespace Module.Catalog.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public Guid ProductId { get; set; }
-        public Guid WarehouseId { get; set; }
-        [Column("Ton kho")]
+        public string Lot { get; set; }
+        public string DateExp { get; set; }
         public int AvailabelQuantity { get; set; }
         public Product? Product { get; set; }
-        public Warehouse? Warehouse { get; set; }
     }
 }

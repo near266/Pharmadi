@@ -67,97 +67,36 @@ namespace Jhipster.Configuration.AutoMapper
             #region 3.CatalogSvc
 
             //Category
-            //CreateMap<CategoryAddRequest, CategoryAddCommand>();
             CreateMap<CategoryAddCommand, Category>();
             CreateMap<Category,Category>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-            //CreateMap<CategoryUpdateRequest, CategoryUpdateCommand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<CategoryUpdateCommand, Category>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            //CreateMap<CategoryDeleteRequest, CategoryDeleteCommand>();
-
-            //CreateMap<CategorySearchRequest, CategorySearchQuery>();
-            //CreateMap<Category, CategorySearchResponse>();
-
-            //CreateMap<CategoryGetAllAdminRequest, CategoryGetAllAdminQuery>();
-            //CreateMap<Category, CategoryGetAllAdminResponse>();
-            //CreateMap<PagedList<Category>, PagedListC<CategoryGetAllAdminResponse>>();
-
-            //CreateMap<GetListCataloryRequest, GetListCategotyQuery>().ReverseMap();
-
 
             //Brand
-            //CreateMap<BrandAddRequest, BrandAddCommand>();
             CreateMap<BrandAddCommand, Brand>();
             CreateMap<Brand, Brand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-            //CreateMap<BrandUpdateRequest, BrandUpdateCommand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<BrandUpdateCommand, Brand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            //CreateMap<BrandDeleteRequest, BrandDeleteCommand>();
-
-            //CreateMap<BrandSearchRequest, BrandSearchQuery>();
-            //CreateMap<Brand, BrandSearchResponse>();
-
-            //CreateMap<BrandGetAllAdminRequest, BrandGetAllAdminQuery>();
-            //CreateMap<Brand, BrandGetAllAdminResponse>();
-            //CreateMap<PagedList<Brand>, PagedListC<BrandGetAllAdminResponse>>();
-
 
             //GroupBrand
-            //CreateMap<GroupBrandAddRequest, GroupBrandAddCommand>();
             CreateMap<GroupBrandAddCommand, GroupBrand>();
             CreateMap<GroupBrand, GroupBrand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-            //CreateMap<GroupBrandUpdateRequest, GroupBrandUpdateCommand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<GroupBrandUpdateCommand, GroupBrand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            //CreateMap<GroupBrandDeleteRequest, GroupBrandDeleteCommand>();
-
-            //CreateMap<GroupBrandSearchRequest, GroupBrandSearchQuery>();
-            //CreateMap<GroupBrand, GroupBrandSearchResponse>();
-
-            //CreateMap<GroupBrandGetAllAdminRequest, GroupBrandGetAllAdminQuery>();
-            //CreateMap<GroupBrand, GroupBrandGetAllAdminResponse>();
-            //CreateMap<PagedList<GroupBrand>, PagedListC<GroupBrandGetAllAdminResponse>>();
 
             //Label
-            //CreateMap<LabelAddRequest, LabelAddCommand>();
             CreateMap<LabelAddCommand, Label>();
             CreateMap<Label, Label>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-            //CreateMap<LabelUpdateRequest, LabelUpdateCommand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<LabelUpdateCommand, Label>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            //CreateMap<LabelDeleteRequest, LabelDeleteCommand>();
-
-            //CreateMap<LabelSearchRequest, LabelSearchQuery>();
-            //CreateMap<Label, LabelSearchResponse>();
-
-            //CreateMap<LabelGetAllAdminRequest, LabelGetAllAdminQuery>();
-            //CreateMap<Label, LabelGetAllAdminResponse>();
-            //CreateMap<PagedList<Label>, PagedListC<LabelGetAllAdminResponse>>();
 
             //Tag
-            //CreateMap<TagAddRequest, TagAddCommand>();
             CreateMap<TagAddCommand, Tag>();
             CreateMap<Tag, Tag>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
-            //CreateMap<TagUpdateRequest, TagUpdateCommand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<TagUpdateCommand, Tag>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            //CreateMap<TagDeleteRequest, TagDeleteCommand>();
-
-            //CreateMap<TagSearchRequest, TagSearchQuery>();
-            //CreateMap<Tag, TagSearchResponse>();
-
-            //CreateMap<TagGetAllAdminRequest, TagGetAllAdminQuery>();
-            //CreateMap<Tag, TagGetAllAdminResponse>();
-            //CreateMap<PagedList<Tag>, PagedListC<TagGetAllAdminResponse>>();
 
             //product
-            //CreateMap<ProductAddRequest, ProductAddCommand>();
+            CreateMap<ProductAddRequest, ProductAddCommand>();
             CreateMap<ProductAddCommand, Product>();
-
-            //CreateMap<ProductUpdateRequest, ProductUpdateCommand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<ProductUpdateCommand, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            //CreateMap<ProductDeleteRequest, ProductDeleteCommand>();
-
+            CreateMap<Product, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            
             CreateMap<ViewProductListQuery, Product>();
             CreateMap<ProductListDTO, Product>().ReverseMap();
 
