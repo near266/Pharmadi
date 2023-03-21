@@ -1,5 +1,7 @@
-﻿using Jhipster.Service.Utilities;
+﻿using BFF.Web.Constants;
+using Jhipster.Service.Utilities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Module.Catalog.Application.Commands.CategoryCm;
@@ -12,6 +14,7 @@ using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
 {
+    [Authorize]
     [ApiController]
     [Route("gw/[controller]")]
     public class CategoryController : ControllerBase
@@ -24,6 +27,12 @@ namespace BFF.Web.ProductSvc
             _mediator = mediator;
             _logger = logger;
         }
+        private string GetUserIdFromContext()
+        {
+            return User.FindFirst("UserId")?.Value;
+        }
+        [Authorize(Roles = RolesConstants.ADMIN)]
+
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] CategoryAddCommand request)
         {
@@ -32,6 +41,8 @@ namespace BFF.Web.ProductSvc
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
+                var UserId = new Guid(GetUserIdFromContext());
+                request.CreatedBy = UserId;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -41,6 +52,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] CategoryUpdateCommand request)
@@ -49,6 +61,8 @@ namespace BFF.Web.ProductSvc
             try
             {
                 request.LastModifiedDate = DateTime.Now;
+                var UserId = new Guid(GetUserIdFromContext());
+                request.LastModifiedBy = UserId;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -58,6 +72,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] CategoryDeleteCommand request)
@@ -74,6 +89,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Search")]
         public async Task<ActionResult<IEnumerable<Category>>> Search([FromBody] CategorySearchQuery request)
@@ -90,6 +106,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("GetAllAdmin")]
         public async Task<ActionResult<PagedList<Category>>> GetAllAdmin([FromBody] CategoryGetAllAdminQuery request)
@@ -106,6 +123,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("GetListCategory")]
         public async Task<ActionResult<PagedList<Category>>> GetListCatelory([FromBody] GetListCategotyQuery request)

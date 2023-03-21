@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using BFF.Web.Constants;
 using BFF.Web.DTOs;
 using Jhipster.Domain.Services.Interfaces;
 using Jhipster.gRPC.Contracts.Shared.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Module.Factor.Application.Commands.MerchantCm;
@@ -14,7 +16,7 @@ using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace BFF.Web.Controllers.FactorSvc
 {
-
+   
     [ApiController]
     [Route("gw/[controller]")]
     public class MerchantController : ControllerBase
@@ -40,9 +42,12 @@ namespace BFF.Web.Controllers.FactorSvc
             _logger.LogInformation($"REST request RegisterByUser : {JsonConvert.SerializeObject(request)}");
             try
             {
+               var AddRole = new HashSet<string>();
+                AddRole.Add("ROLE_MERCHANT");
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
                 request.LangKey = "en";
+                request.Roles =AddRole;
                 //request.Roles.Add("")
                 var tem1 = _mapper.Map<RegisterRequest>(request);
                 tem1.Id = request.Id.ToString();
@@ -64,7 +69,7 @@ namespace BFF.Web.Controllers.FactorSvc
                 return StatusCode(500, ex.Message);
             }
         }
-
+        [Authorize(Roles = RolesConstants.ADMIN)]
         [HttpPost("RegisterByAdmin")]
         public async Task<IActionResult> RegisterByAdmin([FromBody] RegisterByAdminDTO request)
         {
@@ -94,6 +99,8 @@ namespace BFF.Web.Controllers.FactorSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
+
         [HttpDelete("DeleteMerchant")]
         public async Task<IActionResult> DeleteMerchant([FromBody] MerchantDeleteCommand request)
         {
@@ -110,6 +117,8 @@ namespace BFF.Web.Controllers.FactorSvc
             }
 
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
+
         [HttpPut("MerchantUpdate")]
         public async Task<IActionResult> MerchantUpdate([FromBody] MerchantUpdateCommand request)
         {
@@ -126,6 +135,8 @@ namespace BFF.Web.Controllers.FactorSvc
             }
 
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
+
         [HttpGet("MerchantGetAllAdmin")]
         public async Task<IActionResult> MerchantGetAllAdmin([FromQuery] MerchantGetAllAdminQuery request)
         {
@@ -142,6 +153,8 @@ namespace BFF.Web.Controllers.FactorSvc
             }
 
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
+
         [HttpGet("MerchantViewDetail")]
         public async Task<IActionResult> MerchantViewDetail([FromQuery] MerchantViewDetailQuery request)
         {

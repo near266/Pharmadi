@@ -6,15 +6,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Commands.TagCm
 {
     public class TagAddCommand : IRequest<int>
     {
+        [JsonIgnore]
         public Guid Id { get; set; }
         public string TagName { get; set; }
+        [JsonIgnore]
         public Guid? CreatedBy { get; set; }
+        [JsonIgnore]
         public DateTime CreatedDate { get; set; }
     }
     public class TagAddCommandHandler : IRequestHandler<TagAddCommand, int>

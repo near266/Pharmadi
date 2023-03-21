@@ -3,6 +3,7 @@ using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Module.Catalog.Application.Commands.TagCm
 {
@@ -12,7 +13,9 @@ namespace Module.Catalog.Application.Commands.TagCm
         public Guid Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
         public string TagName { get; set; }
+        [JsonIgnore]
         public Guid? LastModifiedBy { get; set; }
+        [JsonIgnore]
         public DateTime? LastModifiedDate { get; set; }
     }
     public class TagUpdateCommandHandler : IRequestHandler<TagUpdateCommand, int>

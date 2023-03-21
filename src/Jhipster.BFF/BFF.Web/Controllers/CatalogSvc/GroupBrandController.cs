@@ -6,9 +6,12 @@ using Module.Catalog.Application.Queries.GroupBrandQ;
 using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
+using BFF.Web.Constants;
 
 namespace BFF.Web.ProductSvc
 {
+    [Authorize]
     [ApiController]
     [Route("gw/[controller]")]
     public class GroupBrandController : ControllerBase
@@ -21,6 +24,12 @@ namespace BFF.Web.ProductSvc
             _mediator = mediator;
             _logger = logger;
         }
+        private string GetUserIdFromContext()
+        {
+            return User.FindFirst("UserId")?.Value;
+        }
+        [Authorize(Roles = RolesConstants.ADMIN)]
+
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] GroupBrandAddCommand request)
         {
@@ -29,6 +38,8 @@ namespace BFF.Web.ProductSvc
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
+                var UserId = new Guid(GetUserIdFromContext());
+                request.CreatedBy=UserId;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -38,6 +49,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] GroupBrandUpdateCommand request)
@@ -46,6 +58,8 @@ namespace BFF.Web.ProductSvc
             try
             {
                 request.LastModifiedDate = DateTime.Now;
+                var UserId = new Guid(GetUserIdFromContext());
+                request.LastModifiedBy=UserId;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -55,6 +69,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] GroupBrandDeleteCommand request)
@@ -71,6 +86,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Search")]
         public async Task<ActionResult<IEnumerable<GroupBrand>>> Search([FromBody] GroupBrandSearchQuery request)
@@ -87,6 +103,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("GetAllAdmin")]
         public async Task<ActionResult<PagedList<GroupBrand>>> GetAllAdmin([FromBody] GroupBrandGetAllAdminQuery request)

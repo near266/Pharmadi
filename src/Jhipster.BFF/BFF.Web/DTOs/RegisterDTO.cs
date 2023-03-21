@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BFF.Web.Constants;
+using Newtonsoft.Json;
 
 namespace BFF.Web.DTOs
 {
@@ -26,6 +27,7 @@ namespace BFF.Web.DTOs
         public string? CreatedBy { get; set; }
         [System.Text.Json.Serialization.JsonIgnore]
         public DateTime? CreatedDate { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
         public ISet<string>? Roles { get; set; }
 
         public const int PasswordMinLength = 4;
