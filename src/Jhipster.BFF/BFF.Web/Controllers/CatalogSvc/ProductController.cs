@@ -8,9 +8,12 @@ using Jhipster.Service.Utilities;
 using Newtonsoft.Json;
 using BFF.Web.DTOs.CatalogSvc;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using BFF.Web.Constants;
 
 namespace BFF.Web.ProductSvc
 {
+    [Authorize]
     [ApiController]
     [Route("gw/[controller]")]
     public class ProductController : ControllerBase
@@ -24,6 +27,12 @@ namespace BFF.Web.ProductSvc
             _mediator = mediator;
             _logger = logger;
         }
+        private string GetUserIdFromContext()
+        {
+            return User.FindFirst("UserId")?.Value;
+        }
+        [Authorize(Roles = RolesConstants.ADMIN)]
+
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] ProductAddCommand request)
         {
@@ -32,6 +41,8 @@ namespace BFF.Web.ProductSvc
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
+                var UserId = Guid.Parse(GetUserIdFromContext());
+                request.CreatedBy = UserId;
                 request.Status = 1;
                 var result = await _mediator.Send(request);
                 return Ok(result);
@@ -42,6 +53,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] ProductUpdateCommand request)
@@ -50,6 +62,8 @@ namespace BFF.Web.ProductSvc
             try
             {
                 request.LastModifiedDate = DateTime.Now;
+                var UserId = Guid.Parse(GetUserIdFromContext());
+                request.LastModifiedBy = UserId;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -59,6 +73,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] ProductDeleteCommand request)
@@ -75,6 +90,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpGet("ViewDetail")]
         public async Task<ActionResult<Product>> ViewDetail([FromQuery] ProductViewDetailQuery request)
@@ -91,6 +107,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Search")]
         public async Task<ActionResult<PagedList<Product>>> Search([FromBody] SearchProductQuery request)
@@ -107,6 +124,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("GetAllAdmin")]
         public async Task<ActionResult<PagedList<Product>>> GetAllAdmin([FromBody] ProductGetAllAdminQuery request)
@@ -139,6 +157,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("ViewProductBestSale")]
         public async Task<IActionResult> ViewProductBestSale([FromBody] ViewProductBestSaleQuery request)
@@ -155,6 +174,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("ViewProductNew")]
         public async Task<IActionResult> ViewProductNew([FromBody] ViewProductNewQuery request)
@@ -171,6 +191,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("ViewProductPromotion")]
         public async Task<IActionResult> ViewProductPromotion([FromBody] ViewProductPromotionQuery request)

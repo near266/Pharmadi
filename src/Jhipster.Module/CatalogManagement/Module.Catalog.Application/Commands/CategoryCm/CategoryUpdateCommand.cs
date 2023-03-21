@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Commands.CategoryCm
@@ -20,7 +21,9 @@ namespace Module.Catalog.Application.Commands.CategoryCm
         public string? Descripton { get; set; }
         public Guid? ParentId { get; set; }
         public bool IsLeaf { get; set; }
+        [JsonIgnore]
         public Guid? LastModifiedBy { get; set; }
+        [JsonIgnore]
         public DateTime? LastModifiedDate { get; set; }
     }
     public class CategoryUpdateCommandHandler: IRequestHandler<CategoryUpdateCommand, int>

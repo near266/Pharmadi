@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Commands.BrandCm
@@ -14,6 +15,7 @@ namespace Module.Catalog.Application.Commands.BrandCm
     public class BrandAddCommand: IRequest<int>
     {
         [Required(ErrorMessage = "{0} is required.")]
+        [JsonIgnore]
         public Guid Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
         public string BrandName { get; set; }
@@ -21,7 +23,9 @@ namespace Module.Catalog.Application.Commands.BrandCm
         public string LogoBrand { get; set; }
         public string Intro { get; set; }
         public bool? Pin { get; set; }
+        [JsonIgnore]
         public Guid? CreatedBy { get; set; }
+        [JsonIgnore]
         public DateTime CreatedDate { get; set; }
     }
     public class BrandAddCommandHandler: IRequestHandler<BrandAddCommand, int>

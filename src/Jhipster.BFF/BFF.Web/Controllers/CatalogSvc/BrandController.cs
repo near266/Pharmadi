@@ -6,21 +6,29 @@ using Module.Catalog.Application.Queries.BrandQ;
 using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
+using BFF.Web.Constants;
 
 namespace BFF.Web.ProductSvc
 {
+    [Authorize]
     [ApiController]
     [Route("gw/[controller]")]
     public class BrandController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly ILogger<BrandController> _logger;
+        private string GetUserIdFromContext()
+        {
+            return User.FindFirst("UserId")?.Value;
+        }
 
         public BrandController(IMediator mediator, ILogger<BrandController> logger)
         {
             _mediator = mediator;
             _logger = logger;
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] BrandAddCommand request)
         {
@@ -29,6 +37,8 @@ namespace BFF.Web.ProductSvc
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
+                var UserId= new Guid(GetUserIdFromContext());
+                request.CreatedBy= UserId;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -38,7 +48,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-
+        [Authorize(Roles = RolesConstants.ADMIN)]
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] BrandUpdateCommand request)
         {
@@ -46,6 +56,8 @@ namespace BFF.Web.ProductSvc
             try
             {
                 request.LastModifiedDate = DateTime.Now;
+                var UserId = new Guid(GetUserIdFromContext());
+                request.LastModifiedBy = UserId;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -55,6 +67,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] BrandDeleteCommand request)
@@ -71,6 +84,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Search")]
         public async Task<ActionResult<IEnumerable<Brand>>> Search([FromBody] BrandSearchQuery request)
@@ -87,6 +101,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("GetAllAdmin")]
         public async Task<ActionResult<PagedList<Brand>>> GetAllAdmin([FromBody] BrandGetAllAdminQuery request)
