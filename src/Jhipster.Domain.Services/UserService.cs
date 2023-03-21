@@ -9,6 +9,7 @@ using Jhipster.Domain.Services.Interfaces;
 using Jhipster.Dto;
 using Jhipster.Dto.Authentication;
 using Jhipster.Service.Utilities;
+using LanguageExt.Pipes;
 using LanguageExt.UnitsOfMeasure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -198,6 +199,7 @@ namespace Jhipster.Domain.Services
                 //TODO manage authorities
             };
             await _userManager.CreateAsync(newUser);
+            await CreateUserRoles(newUser, userToRegister.UserRoles.Select(iur => iur.Role.Name).ToHashSet());
             _log.LogDebug($"Created Information for User: {newUser}");
             return newUser;
         }
