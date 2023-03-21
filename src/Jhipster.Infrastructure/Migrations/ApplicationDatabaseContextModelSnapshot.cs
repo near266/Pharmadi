@@ -703,9 +703,8 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<int>("AvailabelQuantity")
                         .HasColumnType("integer");
 
-                    b.Property<string>("DateExp")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<DateTime>("DateExpire")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Lot")
                         .IsRequired()

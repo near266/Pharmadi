@@ -4,7 +4,7 @@ using Module.Ordering.Application.Persistences;
 using Module.Ordering.Domain.Entities;
 using Jhipster.Service.Utilities;
 
-namespace Module.Factor.Application.Queries.PurchaseOrderQ
+namespace Module.Ordering.Application.Queries.PurchaseOrderQ
 {
     public class PurchaseOrderGetAllByAdminQuery : IRequest<PagedList<PurchaseOrder>>
     {

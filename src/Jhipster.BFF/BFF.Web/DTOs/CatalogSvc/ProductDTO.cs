@@ -52,8 +52,8 @@ namespace BFF.Web.DTOs.CatalogSvc
         public Guid? CreatedBy { get; set; }
         [System.Text.Json.Serialization.JsonIgnore]
         public DateTime CreatedDate { get; set; }
-        public List<Guid> CategoryIds { get; set; }
-        public List<WarehouseProductAddRequest> warehouseProductAdds { get; set; }
+        public List<CategoryProductAddRequest>? categoryProductAdds { get; set; }
+        public List<WarehouseProductAddRequest>? warehouseProductAdds { get; set; }
         public List<Guid>? TagIds { get; set; }
         public List<Guid>? LabelIds { get; set; }
  
@@ -67,8 +67,18 @@ namespace BFF.Web.DTOs.CatalogSvc
         [System.Text.Json.Serialization.JsonIgnore]
         public Guid ProductId { get; set; }
         public string Lot { get; set; }
-        public string DateExp { get; set; }
+        public DateTime DateExpire { get; set; }
         public int AvailabelQuantity { get; set; }
+    }
+
+    public class CategoryProductAddRequest
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public Guid Id { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        public Guid ProductId { get; set; }
+        public Guid CategoryId { get; set; }
+        public bool Priority { get; set; }
     }
     public class SearchProductInforDTO {
         public Guid Id { get; set; }

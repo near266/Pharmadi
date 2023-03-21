@@ -6,7 +6,7 @@ using Module.Ordering.Domain.Entities;
 
 
 
-namespace Module.Factor.Application.Queries.PurchaseOrderQ
+namespace Module.Ordering.Application.Queries.PurchaseOrderQ
 {
     public class PurchaseOrderGetAllByUserQuery : IRequest<PagedList<PurchaseOrder>>
     {

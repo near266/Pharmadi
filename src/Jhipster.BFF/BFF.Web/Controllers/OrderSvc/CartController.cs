@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Module.Factor.Application.Queries.CartQ;
+using Module.Ordering.Application.Queries.CartQ;
 using Module.Ordering.Application.Commands.CartCm;
 using Module.Ordering.Domain.Entities;
 using Newtonsoft.Json;

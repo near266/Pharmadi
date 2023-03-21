@@ -2,12 +2,6 @@
 using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Commands.WarehouseCm
 {
@@ -16,7 +10,7 @@ namespace Module.Catalog.Application.Commands.WarehouseCm
         public Guid Id { get; set; }
         public Guid ProductId { get; set; }
         public string Lot { get; set; }
-        public string DateExp { get; set; }
+        public DateTime DateExpire { get; set; }
         public int AvailabelQuantity { get; set; }
     }
     public class WarehouseProductAddCommandHandler : IRequestHandler<WarehouseProductAddCommand, int>

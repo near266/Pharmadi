@@ -6,7 +6,7 @@ using Module.Ordering.Domain.Entities;
 
 
 
-namespace Module.Factor.Application.Queries.CartQ
+namespace Module.Ordering.Application.Queries.CartQ
 {
     public class CartGetAllByUserQuery : IRequest<PagedList<Cart>>
     {

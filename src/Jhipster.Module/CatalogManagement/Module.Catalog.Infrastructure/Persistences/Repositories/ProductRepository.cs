@@ -33,7 +33,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU,string ProductName,int? status)
+        public async Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU,string? ProductName,int? status)
         {
             var result = new PagedList<Product>();
             var query1 = _context.Products.AsQueryable();

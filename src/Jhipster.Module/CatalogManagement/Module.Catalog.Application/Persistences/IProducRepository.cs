@@ -8,7 +8,7 @@ namespace Module.Catalog.Application.Persistences
         Task<int> Add(Product request);
         Task<int> Update(Product request);
         Task<int> Delete(Guid id);
-        Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU, string ProductName, int? status);
+        Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU, string? ProductName, int? status);
         Task<Product> ViewDetail(Guid Id);
         Task<IEnumerable<Product>> ViewProductForU( string keyword,int page, int pageSize);
         Task<IEnumerable<Product>> ViewProductBestSale(int page, int pageSize);

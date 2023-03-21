@@ -10,7 +10,7 @@ namespace Module.Catalog.Application.Commands.WarehouseCm
         public Guid Id { get; set; }
         public Guid ProductId { get; set; }
         public string Lot { get; set; }
-        public string DateExp { get; set; }
+        public DateTime DateExpire { get; set; }
         public int AvailabelQuantity { get; set; }
     }
     public class WarehouseProductUpdateCommandHandler : IRequestHandler<WarehouseProductUpdateCommand, int>

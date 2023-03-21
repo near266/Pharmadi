@@ -11,5 +11,6 @@ namespace Module.Ordering.Application.Persistences
         Task<PagedList<PurchaseOrder>> GetAllAdmin(int page, int pageSize, int? status);
         Task<PagedList<PurchaseOrder>> GetAllByUser(int page, int pageSize, int? status, Guid userId);
         Task<PurchaseOrder> ViewDetail(Guid id);
+        Task<int> UpdateStatus(Guid Id, int Status);
     }
 }

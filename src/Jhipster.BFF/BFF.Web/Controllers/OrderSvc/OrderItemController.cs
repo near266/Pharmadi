@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Module.Factor.Application.Queries.OrderItemQ;
+using Module.Ordering.Application.Queries.OrderItemQ;
 using Module.Ordering.Application.Commands.OrderItemCm;
 using Module.Ordering.Domain.Entities;
 using Newtonsoft.Json;
@@ -73,10 +73,10 @@ namespace BFF.Web.ProductSvc
             }
         }
 
-        [HttpPost("GetAllOrderItemByUser")]
-        public async Task<ActionResult<PagedList<OrderItem>>> GetAllOrderItemByUser(OrderItemGetAllByUserQuery request)
+        [HttpPost("GetAllOrderItemByOrder")]
+        public async Task<ActionResult<PagedList<OrderItem>>> GetAllOrderItemByUser(OrderItemGetAllByOrderQuery request)
         {
-            _logger.LogInformation($"REST request GetAllOrderItemByUser : {JsonConvert.SerializeObject(request)}");
+            _logger.LogInformation($"REST request GetAllOrderItemByOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
                 var result = await _mediator.Send(request);
@@ -84,7 +84,7 @@ namespace BFF.Web.ProductSvc
             }
             catch (Exception ex)
             {
-                _logger.LogError($"REST request to GetAllOrderItemByUser  fail: {ex.Message}");
+                _logger.LogError($"REST request to GetAllOrderItemByOrder  fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

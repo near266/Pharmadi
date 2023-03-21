@@ -88,5 +88,17 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
             return 0;
         }
+        public async Task<int> UpdateStatus(Guid Id, int Status)
+        {
+            var old = await _context.PurchaseOrders.FirstOrDefaultAsync(i => i.Id.Equals(Id));
+            if (old != null)
+            {
+
+                old.Status = Status;
+
+                return await _context.SaveChangesAsync(default);
+            }
+            return 0;
+        }
     }
 }
