@@ -18,6 +18,9 @@ namespace Module.Catalog.Application.Commands.BrandCm
         [Required(ErrorMessage = "{0} is required.")]
         public string BrandName { get; set; }
         public Guid? GroupBrandId { get; set; }
+        public string LogoBrand { get; set; }
+        public string Intro { get; set; }
+        public bool? Pin { get; set; }
         public Guid? CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
     }

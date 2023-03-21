@@ -11,5 +11,6 @@ namespace Module.Catalog.Application.Persistences
         Task<PagedList<Category>> GetAllAdmin(int page, int pageSize);
         Task<PagedList<Category>> GetListCategories();
         Task<IEnumerable<Category>> Search(string? keyword);
+        Task<List<Guid>> GetListIdRefer(Guid id);
     }
 }

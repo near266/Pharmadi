@@ -77,5 +77,21 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             result.TotalCount = query1.Count();
             return result;
         }
+
+        public async Task<List<Guid>> GetListIdRefer ( Guid id)
+        {
+            var query = await _context.Categories.Where(i => i.Id == id).FirstOrDefaultAsync();
+            if (query.ParentId == null)
+            {
+                var childIds = await _context.Categories.Where(i => i.ParentId == id).Select(i => i.Id).ToListAsync();
+                return childIds;
+            }
+            else
+            {
+                var parentId = await _context.Categories.Where(i => i.Id == query.ParentId).Select(i => i.Id).ToListAsync();
+                return parentId;
+            }
+
+        }
     }
 }

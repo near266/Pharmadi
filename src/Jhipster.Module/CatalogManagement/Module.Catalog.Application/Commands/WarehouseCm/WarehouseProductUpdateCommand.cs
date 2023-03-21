@@ -2,22 +2,16 @@
 using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Commands.WarehouseCm
 {
     public class WarehouseProductUpdateCommand : IRequest<int>
     {
-        [Required(ErrorMessage = "{0} is required.")]
         public Guid Id { get; set; }
         public Guid ProductId { get; set; }
-        public Guid WarehouseId { get; set; }
-        public int AvaiableQuantity { get; set; }
+        public string Lot { get; set; }
+        public string DateExp { get; set; }
+        public int AvailabelQuantity { get; set; }
     }
     public class WarehouseProductUpdateCommandHandler : IRequestHandler<WarehouseProductUpdateCommand, int>
     {

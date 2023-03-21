@@ -235,11 +235,10 @@ namespace Jhipster.gRPC.Contracts.Shared.Identity
         //public string? NoteAddress { get; set; }
     }
     #endregion
-    [Service]
     public interface IAccountService
     {
         [Operation]
-        Task<RegisterResponse> RegisterAccount(RegisterRequest request,CallContext context = default);
+        Task<RegisterResponse> RegisterAccount(RegisterRequest request, CallContext context = default);
         Task<RegisterAdminResponse> RegisterAccountAdmin(RegisterAdminRequest request, CallContext context = default);
     }
 }

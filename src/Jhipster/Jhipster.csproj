@@ -50,7 +50,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Jhipster.BFF\BFF.Web\BFF.Web.csproj" />
-		<ProjectReference Include="..\Jhipster.gRPC\Jhipster.gRPC.csproj" />
 		<ProjectReference Include="..\Jhipster.Infrastructure\Jhipster.Infrastructure.csproj" />
 		<ProjectReference Include="..\Jhipster.Domain.Services\Jhipster.Domain.Services.csproj" />
 		<ProjectReference Include="..\Jhipster.Crosscutting\Jhipster.Crosscutting.csproj" />

@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Jhipster.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    [Migration("20230320171115_ProductAddProperty")]
-    partial class ProductAddProperty
+    [Migration("20230321023334_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -356,8 +356,8 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ParentId")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -521,6 +521,9 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<Guid?>("BrandId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Country")
+                        .HasColumnType("text");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
 
@@ -534,6 +537,9 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<string>("Dosage")
                         .HasColumnType("text");
 
+                    b.Property<string>("DosageForms")
+                        .HasColumnType("text");
+
                     b.Property<string>("Effect")
                         .HasColumnType("text");
 
@@ -544,10 +550,13 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<bool?>("HideProduct")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("text");
+                    b.Property<List<string>>("Image")
+                        .HasColumnType("text[]");
 
                     b.Property<string>("Industry")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Ingredient")
                         .HasColumnType("text");
 
                     b.Property<string>("LastModifiedBy")
@@ -557,14 +566,17 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<decimal?>("ListPrice")
-                        .HasColumnType("numeric");
+                    b.Property<int?>("Number")
+                        .HasColumnType("integer");
 
                     b.Property<Guid?>("PostContentId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Preserve")
                         .HasColumnType("text");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
@@ -579,12 +591,18 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<decimal?>("SalePrice")
                         .HasColumnType("numeric");
 
+                    b.Property<string>("Specification")
+                        .HasColumnType("text");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<string>("UnitName")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Usage")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -685,20 +703,22 @@ namespace Jhipster.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<int>("AvailabelQuantity")
-                        .HasColumnType("integer")
-                        .HasColumnName("Ton kho");
+                        .HasColumnType("integer");
+
+                    b.Property<string>("DateExp")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Lot")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("WarehouseId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("WarehouseId");
 
                     b.ToTable("WarehouseProducts");
                 });
@@ -1129,15 +1149,7 @@ namespace Jhipster.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Module.Catalog.Domain.Entities.Warehouse", "Warehouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Product");
-
-                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("Module.Ordering.Domain.Entities.Cart", b =>

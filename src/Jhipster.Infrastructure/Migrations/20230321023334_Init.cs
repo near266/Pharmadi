@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Jhipster.Infrastructure.Migrations
 {
-    public partial class ProductAddProperty : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,7 +18,7 @@ namespace Jhipster.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CategoryName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Descripton = table.Column<string>(type: "text", nullable: true),
-                    ParentId = table.Column<string>(type: "text", nullable: true),
+                    ParentId = table.Column<Guid>(type: "uuid", nullable: true),
                     IsLeaf = table.Column<bool>(type: "boolean", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
@@ -436,7 +436,7 @@ namespace Jhipster.Infrastructure.Migrations
                     SKU = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     ProductName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Function = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
-                    ListPrice = table.Column<decimal>(type: "numeric", nullable: true),
+                    Price = table.Column<decimal>(type: "numeric", nullable: true),
                     SalePrice = table.Column<decimal>(type: "numeric", nullable: true),
                     Description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
                     UnitName = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
@@ -444,11 +444,17 @@ namespace Jhipster.Infrastructure.Migrations
                     Status = table.Column<int>(type: "integer", nullable: false),
                     PostContentId = table.Column<Guid>(type: "uuid", nullable: true),
                     HideProduct = table.Column<bool>(type: "boolean", nullable: true),
-                    Image = table.Column<string>(type: "text", nullable: true),
+                    Image = table.Column<List<string>>(type: "text[]", nullable: true),
                     Industry = table.Column<string>(type: "text", nullable: true),
                     Effect = table.Column<string>(type: "text", nullable: true),
                     Preserve = table.Column<string>(type: "text", nullable: true),
                     Dosage = table.Column<string>(type: "text", nullable: true),
+                    DosageForms = table.Column<string>(type: "text", nullable: true),
+                    Country = table.Column<string>(type: "text", nullable: true),
+                    Ingredient = table.Column<string>(type: "text", nullable: true),
+                    Usage = table.Column<string>(type: "text", nullable: true),
+                    Specification = table.Column<string>(type: "text", nullable: true),
+                    Number = table.Column<int>(type: "integer", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastModifiedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
@@ -604,8 +610,9 @@ namespace Jhipster.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WarehouseId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Tonkho = table.Column<int>(name: "Ton kho", type: "integer", nullable: false)
+                    Lot = table.Column<string>(type: "text", nullable: false),
+                    DateExp = table.Column<string>(type: "text", nullable: false),
+                    AvailabelQuantity = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -614,12 +621,6 @@ namespace Jhipster.Infrastructure.Migrations
                         name: "FK_WarehouseProducts_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WarehouseProducts_Warehouse_WarehouseId",
-                        column: x => x.WarehouseId,
-                        principalTable: "Warehouse",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -760,11 +761,6 @@ namespace Jhipster.Infrastructure.Migrations
                 name: "IX_WarehouseProducts_ProductId",
                 table: "WarehouseProducts",
                 column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WarehouseProducts_WarehouseId",
-                table: "WarehouseProducts",
-                column: "WarehouseId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -803,6 +799,9 @@ namespace Jhipster.Infrastructure.Migrations
                 name: "UserTokens");
 
             migrationBuilder.DropTable(
+                name: "Warehouse");
+
+            migrationBuilder.DropTable(
                 name: "WarehouseProducts");
 
             migrationBuilder.DropTable(
@@ -825,9 +824,6 @@ namespace Jhipster.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Products");
-
-            migrationBuilder.DropTable(
-                name: "Warehouse");
 
             migrationBuilder.DropTable(
                 name: "Merchants");

@@ -11,27 +11,22 @@ using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Commands.WarehouseCm
 {
-    public class WarehouseProductAddCommand : IRequest<int>
+    public class WarehouseProductDeleteCommand : IRequest<int>
     {
         public Guid Id { get; set; }
-        public Guid ProductId { get; set; }
-        public string Lot { get; set; }
-        public string DateExp { get; set; }
-        public int AvailabelQuantity { get; set; }
     }
-    public class WarehouseProductAddCommandHandler : IRequestHandler<WarehouseProductAddCommand, int>
+    public class WarehouseProductDeleteCommandHandler : IRequestHandler<WarehouseProductDeleteCommand, int>
     {
         private readonly IWarehouseProductRepository _repo;
         private readonly IMapper _mapper;
-        public WarehouseProductAddCommandHandler(IWarehouseProductRepository repo, IMapper mapper)
+        public WarehouseProductDeleteCommandHandler(IWarehouseProductRepository repo, IMapper mapper)
         {
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<int> Handle(WarehouseProductAddCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(WarehouseProductDeleteCommand request, CancellationToken cancellationToken)
         {
-            var obj = _mapper.Map<WarehouseProduct>(request);
-            return await _repo.Add(obj);
+            return await _repo.Delete(request.Id);
         }
     }
 
