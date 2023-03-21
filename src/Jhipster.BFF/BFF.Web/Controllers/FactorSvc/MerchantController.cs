@@ -69,7 +69,6 @@ namespace BFF.Web.Controllers.FactorSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
         [HttpPost("RegisterByAdmin")]
         public async Task<IActionResult> RegisterByAdmin([FromBody] RegisterByAdminDTO request)
         {

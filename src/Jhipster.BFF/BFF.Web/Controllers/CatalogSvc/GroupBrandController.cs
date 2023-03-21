@@ -28,7 +28,6 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("UserId")?.Value;
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] GroupBrandAddCommand request)
@@ -49,7 +48,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] GroupBrandUpdateCommand request)
@@ -69,7 +67,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] GroupBrandDeleteCommand request)
@@ -86,7 +83,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("Search")]
         public async Task<ActionResult<IEnumerable<GroupBrand>>> Search([FromBody] GroupBrandSearchQuery request)
@@ -103,7 +99,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("GetAllAdmin")]
         public async Task<ActionResult<PagedList<GroupBrand>>> GetAllAdmin([FromBody] GroupBrandGetAllAdminQuery request)
