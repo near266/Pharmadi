@@ -9,6 +9,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
 {
     public class ViewProductPromotionQuery : IRequest<IEnumerable<Product>>
     {
+        public string keyword { get; set; }
         public int page { get; set; }
         public int pageSize { get; set; }
     }
@@ -23,7 +24,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
         }
         public async Task<IEnumerable<Product>> Handle(ViewProductPromotionQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.ViewProductPromotion(request.page, request.pageSize);
+            return await _repo.ViewProductPromotion(request.keyword,request.page, request.pageSize);
         }
     }
 

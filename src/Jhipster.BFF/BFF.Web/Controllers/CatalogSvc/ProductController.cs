@@ -8,11 +8,6 @@ using Jhipster.Service.Utilities;
 using Newtonsoft.Json;
 using BFF.Web.DTOs.CatalogSvc;
 using AutoMapper;
-using Module.Catalog.Application.Queries.CategoryQ;
-using Module.Catalog.Application.Commands.CategoryCm;
-using Module.Catalog.Application.Commands.WarehouseCm;
-using Module.Catalog.Application.Commands.TagCm;
-using Module.Catalog.Application.Commands.LabelCm;
 
 namespace BFF.Web.ProductSvc
 {
@@ -30,100 +25,15 @@ namespace BFF.Web.ProductSvc
             _logger = logger;
         }
         [HttpPost("Add")]
-        public async Task<ActionResult<int>> Add([FromBody] ProductAddRequest request)
+        public async Task<ActionResult<int>> Add([FromBody] ProductAddCommand request)
         {
             _logger.LogInformation($"REST request add Product : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
-
-                int result = 0;
-
-                //add product
-                //var step1 = _mapper.Map<ProductAddCommand>(request);
-                var step1 = new ProductAddCommand
-                {
-                    Id = request.Id,                    
-                    SKU = request.SKU,
-                    ProductName = request.ProductName,
-                    Function = request.Function,
-                    PostContentId = request.PostContentId,
-                    SalePrice = request.SalePrice,
-                    Price = request.Price,
-                    Description = request.Description,
-                    UnitName =request.UnitName,
-                    BrandId = request.BrandId,
-                    Status = request.Status,
-                    Image =request.Image,
-                    Industry =request.Industry,
-                    Effect = request.Effect,
-                    Preserve =request.Preserve,
-                    Dosage = request.Dosage,
-                    DosageForms = request.DosageForms,
-                    Country = request.Country,
-                    Ingredient = request.Country,
-                    Usage = request.Usage,
-                    Specification = request.Specification,
-                    Number = request.Number,
-                    CreatedBy = request.CreatedBy,
-                    CreatedDate = request.CreatedDate
-                };
-                await _mediator.Send(step1);
-
-                //add categoryProduct
-                foreach(var item in request.CategoryIds)
-                {
-                    var step3 = new CategoryProductAddCommand
-                    {
-                        Id = Guid.NewGuid(),
-                        ProductId = request.Id,
-                        CategoryId = item,
-                        Priority = true
-                    };
-                    await _mediator.Send(step3);
-                }
-
-                //add warehouse product
-                foreach (var item in request.warehouseProductAdds)
-                {
-                    var step4 = new WarehouseProductAddCommand
-                    {
-                        Id = Guid.NewGuid(),
-                        ProductId = request.Id,
-                        Lot = item.Lot,
-                        DateExp = item.DateExp,
-                        AvailabelQuantity = item.AvailabelQuantity
-
-                    };
-                    await _mediator.Send(step4);
-                }
-
-                //add tag product
-                foreach (var item in request.TagIds)
-                {
-                    var step5 = new TagProductAddCommand
-                    {
-                        Id = Guid.NewGuid(),
-                        ProductId = request.Id,
-                        TagId = item
-
-                    };
-                    await _mediator.Send(step5);
-                }
-
-                //add tag product
-                foreach (var item in request.LabelIds)
-                {
-                    var step6 = new LabelProductAddCommand
-                    {
-                        Id = Guid.NewGuid(),
-                        ProductId = request.Id,
-                        LabelId = item
-
-                    };
-                    await _mediator.Send(step6);
-                }
+                request.Status = 1;
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -278,28 +188,6 @@ namespace BFF.Web.ProductSvc
             }
         }
 
-        [HttpPost("ViewProductList")]
-        public async Task<ActionResult<ViewListProductDTo>> ViewProductList ([FromBody] ViewProductListQuery request)
-        {
-            _logger.LogInformation($"REST request ViewProductList : {JsonConvert.SerializeObject(request)}");
-            try
-            {
-                var temp = await _mediator.Send(request);
-                var result = _mapper.Map<IEnumerable<ProductListDTO>>(temp);
-                var res = new ViewListProductDTo
-                {
-                    ProductList= result,
-                };
-
-
-                return Ok(res);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"REST request to ViewProductList fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
-            }
-        }
     }
 }
 

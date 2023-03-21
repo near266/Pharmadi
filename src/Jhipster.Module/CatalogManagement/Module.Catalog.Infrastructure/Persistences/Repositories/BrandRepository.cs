@@ -47,10 +47,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<Brand>> Search(string? keyword)
         {
+            if(keyword != null)
+            {
+
             keyword = keyword.ToLower();
             var query = await _context.Brands.Where(i => i.BrandName.ToLower().Contains(keyword))
                         .ToListAsync();
             return query;
+            }
+            return null;
         }
 
         public async Task<PagedList<Brand>> GetAllAdmin(int page, int pageSize)

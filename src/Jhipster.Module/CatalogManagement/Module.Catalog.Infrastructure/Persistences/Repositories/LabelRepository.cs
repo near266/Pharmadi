@@ -34,9 +34,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<Label>> Search(string? keyword)
         {
+            if (keyword != null)
+            {
+
             keyword = keyword.ToLower();
             var query = await _context.Labels.Where(i=>i.LabelName.ToLower().Contains(keyword)).ToListAsync();
             return query;
+            }
+            return null;
         }
 
         public async Task<PagedList<Label>> GetAllAdmin(int page, int pageSize)

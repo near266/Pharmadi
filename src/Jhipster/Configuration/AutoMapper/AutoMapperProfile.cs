@@ -109,7 +109,6 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<ProductUpdateCommand, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<Product, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             
-            CreateMap<ViewProductListQuery, Product>();
             CreateMap<ProductListDTO, Product>().ReverseMap();
 
             //warehouse

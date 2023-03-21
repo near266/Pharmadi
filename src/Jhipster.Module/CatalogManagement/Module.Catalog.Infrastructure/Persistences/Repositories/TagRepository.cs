@@ -46,10 +46,16 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
         public async Task<IEnumerable<Tag>> Search(string? keyword)
         {
+            if(keyword != null)
+            {
             keyword = keyword.ToLower();
+
             var query = await _context.Tags.Where(i=>i.TagName.ToLower().Contains(keyword))
                         .ToListAsync();
             return query;
+            }
+            return null;
+
         }
 
         public async Task<PagedList<Tag>> GetAllAdmin(int page, int pageSize)

@@ -60,10 +60,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<GroupBrand>> Search(string? keyword)
         {
+            if(keyword != null)
+            {
+
             keyword = keyword.ToLower();
             var query = await _context.GroupBrands.Where(i => i.GroupBrandName.ToLower().Contains(keyword))
                         .ToListAsync();
             return query;
+            }
+            return null;
         }
 
     }

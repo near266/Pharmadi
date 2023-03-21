@@ -74,16 +74,18 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
 
         // int 
-        public async Task<IEnumerable<Product>> ViewProductForU(int page, int pageSize)
+        public async Task<IEnumerable<Product>> ViewProductForU(string? keyword,int page, int pageSize)
         {
-            var query= await _context.Products.Skip(pageSize * page)
+            var query= await _context.Products.Where(i=>i.ProductName.ToLower().Contains(keyword.ToLower()))
+                        .Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();
             return query;
         }
-        public async Task<IEnumerable<Product>> ViewProductBestSale(int page, int pageSize)
+        public async Task<IEnumerable<Product>> ViewProductBestSale( int page, int pageSize)
         {
-            var query = await _context.Products.Skip(pageSize * page)
+            var query = await _context.Products
+                .Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();
             return query;
@@ -91,14 +93,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<Product>> ViewProductNew(int page, int pageSize)
         {
-            var query = await _context.Products.Skip(pageSize * page)
+            var query = await _context.Products.Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();
             return query;
         }
-        public async Task<IEnumerable<Product>> ViewProductPromotion(int page, int pageSize)
+        public async Task<IEnumerable<Product>> ViewProductPromotion(string keyword, int page, int pageSize)
         {
-            var query = await _context.Products.Skip(pageSize * page)
+            var query = await _context.Products.Where(i=>i.ProductName.ToLower().Contains(keyword.ToLower()) && i.SalePrice<i.Price)
+                .Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();
             return query;
@@ -134,13 +137,6 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<Product>> ViewProductList(Guid Id)
-        {
-          
-            var query= _context.Products.AsQueryable();
-            var data= await query.AsNoTracking().IgnoreAutoIncludes().Where(c=>c.Id==Id).ToListAsync();
-          
-            return data;
-        }
+      
     }
 }
