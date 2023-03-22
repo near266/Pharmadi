@@ -187,7 +187,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if (obj != null)
             {
 
-                query = query.Where(i => i.Brand.BrandName.ToLower().Contains(obj.Brand.BrandName.ToLower()) && i.Id != obj.Id);
+                query = query.Where(i => (obj.Brand == null || i.Brand.BrandName.ToLower().Contains(obj.Brand.BrandName.ToLower()) && i.Id != obj.Id));
             }
             var result = query.AsEnumerable();
             return result;
