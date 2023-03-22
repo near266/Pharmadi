@@ -14,7 +14,6 @@ using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
 {
-    [Authorize]
     [ApiController]
     [Route("gw/[controller]")]
     public class CategoryController : ControllerBase
@@ -31,7 +30,15 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("UserId")?.Value;
         }
-
+        private List<string> GetListUserRole()
+        {
+            var key = User.FindFirst("auth")?.Value;
+            return key.Split(',').ToList();
+        }
+        private string GetUserRole()
+        {
+            return User.FindFirst("auth")?.Value;
+        }
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] CategoryAddCommand request)
         {

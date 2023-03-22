@@ -19,6 +19,10 @@ using Org.BouncyCastle.Asn1.X509;
 using System.Collections.Generic;
 using Module.Catalog.Application.Commands.WarehouseCm;
 using Module.Catalog.Application.Queries.CategoryQ;
+using Module.Ordering.Application.Commands.CartCm;
+using Module.Ordering.Domain.Entities;
+using Module.Ordering.Application.Commands.OrderItemCm;
+using Module.Ordering.Application.Commands.PurchaseOrderCm;
 
 namespace Jhipster.Configuration.AutoMapper
 {
@@ -152,6 +156,15 @@ namespace Jhipster.Configuration.AutoMapper
 
             CreateMap<Product, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            #endregion
+            #region OrderSvc
+            CreateMap<CartAddCommand,Cart>().ReverseMap();
+            CreateMap<CartUpdateCommand,Cart>().ReverseMap();
+            CreateMap<OrderItemAddCommand, OrderItem>().ReverseMap();
+            CreateMap<OrderItemUpdateCommand, OrderItem>().ReverseMap();
+            CreateMap<PurchaseOrderAddCommand, PurchaseOrder>().ReverseMap();
+            CreateMap<PurchaseOrderUpdateCommand, PurchaseOrder>().ReverseMap();
+            CreateMap<PurchaseOrderAddCommand, PurchaseOrder>().ReverseMap();
             #endregion
         }
     }

@@ -23,6 +23,21 @@ namespace BFF.Web.ProductSvc
             _mediator= mediator;
             _logger = logger;
         }
+        // Lấy ra thông tin của Token
+        private string GetUserId()//userId
+        {
+            return User.FindFirst("UserId")?.Value;
+        }
+        private List<string> GetListUserRole()
+        {
+            var key= User.FindFirst("auth")?.Value;
+            return key.Split(',').ToList();
+        }
+        private string GetUserRole()
+        {
+            return User.FindFirst("auth")?.Value;
+        }
+       
 
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] OrderItemAddCommand request)

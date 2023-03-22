@@ -31,6 +31,7 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public string? Country { get; set; }
         public string? Ingredient { get; set; }
         public string? Usage { get; set; }
+        public bool Archived { get; set; }
         public string? Specification { get; set; }
         public int? Number { get; set; }
         [JsonIgnore]
