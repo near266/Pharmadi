@@ -245,6 +245,7 @@ namespace BFF.Web.ProductSvc
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("ViewProductForU")]
         public async Task<IActionResult> ViewProductForU([FromBody] ViewProductForUQuery request)
         {
@@ -260,6 +261,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [AllowAnonymous]
 
         [HttpPost("ViewProductBestSale")]
         public async Task<IActionResult> ViewProductBestSale([FromBody] ViewProductBestSaleQuery request)
@@ -276,6 +278,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [AllowAnonymous]
 
         [HttpPost("ViewProductNew")]
         public async Task<IActionResult> ViewProductNew([FromBody] ViewProductNewQuery request)
@@ -292,6 +295,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [AllowAnonymous]
 
         [HttpPost("ViewProductPromotion")]
         public async Task<IActionResult> ViewProductPromotion([FromBody] ViewProductPromotionQuery request)
