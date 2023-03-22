@@ -35,15 +35,20 @@ namespace Jhipster.Configuration.AutoMapper
 
             CreateMap<User, RegisterAdminResponse>();
             CreateMap<User, RegisterResponse>();
-
-            
+                
             CreateMap<RegisterByUserDTO, RegisterRequest>();
             CreateMap<RegisterByUserDTO, Merchant>();
             CreateMap<RegisterByAdminDTO, RegisterAdminRequest>();
             CreateMap<RegisterByAdminDTO, Merchant>();
 
-            CreateMap<RegisterRequest, User>();
-            CreateMap<RegisterAdminRequest, User>();
+            CreateMap<User,RegisterRequest>()
+             .ForMember(userDto => userDto.Roles, opt => opt.MapFrom(user => user.UserRoles.Select(iur => iur.Role.Name).ToHashSet()))
+            .ReverseMap()
+                .ForPath(user => user.UserRoles, opt => opt.MapFrom(userDto => userDto.Roles.Select(role => new UserRole { Role = new Domain.Role { Name = role }, UserId = userDto.Id }).ToHashSet()));
+            CreateMap<User,RegisterAdminRequest>()
+            .ForMember(userDto => userDto.Roles, opt => opt.MapFrom(user => user.UserRoles.Select(iur => iur.Role.Name).ToHashSet()))
+            .ReverseMap()
+                .ForPath(user => user.UserRoles, opt => opt.MapFrom(userDto => userDto.Roles.Select(role => new UserRole { Role = new Domain.Role { Name = role }, UserId = userDto.Id }).ToHashSet()));
 
             //merchant
             CreateMap<Merchant, MerchantAddCommand>();

@@ -69,7 +69,7 @@ namespace Jhipster.Controllers
             if (await _userManager.FindByEmailAsync(userDto.Email.ToLowerInvariant()) != null)
                 throw new EmailAlreadyUsedException();
 
-            var newUser = await _userService.CreateUser(_mapper.Map<User>(userDto));
+            var newUser = await _userService.CreateUser(_mapper.Map<User>(userDto), userDto.Password);
             if (!string.IsNullOrEmpty(userDto.Email))
             {
                 await _mailService.SendCreationEmail(newUser);
