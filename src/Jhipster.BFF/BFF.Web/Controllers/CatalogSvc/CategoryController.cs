@@ -14,7 +14,6 @@ using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
 {
-    [Authorize]
     [ApiController]
     [Route("gw/[controller]")]
     public class CategoryController : ControllerBase

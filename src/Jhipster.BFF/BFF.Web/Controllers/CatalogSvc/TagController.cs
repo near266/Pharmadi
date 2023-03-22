@@ -11,7 +11,6 @@ using BFF.Web.Constants;
 
 namespace BFF.Web.ProductSvc
 {
-    [Authorize]
     [ApiController]
     [Route("gw/[controller]")]
     public class TagController : ControllerBase
