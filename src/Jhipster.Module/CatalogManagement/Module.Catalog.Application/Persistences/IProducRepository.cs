@@ -18,5 +18,6 @@ namespace Module.Catalog.Application.Persistences
         Task<int> UpdataStatusProduct(Guid id ,int status);
         Task<IEnumerable<Product>> ViewListProductWithBrand(Guid Id);
         Task<IEnumerable< Product>> ViewListProductSimilarCategory(Guid Id);
+        Task<List<List<string>>> FakeData();
     }
 }

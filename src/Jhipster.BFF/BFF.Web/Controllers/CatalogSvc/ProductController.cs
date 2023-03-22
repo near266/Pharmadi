@@ -357,7 +357,21 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-
+        [HttpPost("ImageProduct")]
+        public async Task<IActionResult> ImageProduct([FromBody] FakeDataQuery request)
+        {
+            _logger.LogInformation($"REST request ImageProduct : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to ImageProduct fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
 

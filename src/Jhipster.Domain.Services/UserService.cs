@@ -9,6 +9,7 @@ using Jhipster.Domain.Services.Interfaces;
 using Jhipster.Dto;
 using Jhipster.Dto.Authentication;
 using Jhipster.Service.Utilities;
+using LanguageExt.Pipes;
 using LanguageExt.UnitsOfMeasure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -36,9 +37,9 @@ namespace Jhipster.Domain.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public virtual async Task<User> CreateUser(User userToCreate)
+        public virtual async Task<User> CreateUser(User userToCreate,string Password)
         {
-            var password = RandomUtil.GeneratePassword();
+            var password = Password;
             var user = new User
             {
                 Id = userToCreate.Id,
@@ -55,7 +56,7 @@ namespace Jhipster.Domain.Services
                 Activated = true
             };
             await _userManager.CreateAsync(user);
-            //await CreateUserRoles(user, userToCreate.UserRoles.Select(iur => iur.Role.Name).ToHashSet());
+            await CreateUserRoles(user, userToCreate.UserRoles.Select(iur => iur.Role.Name).ToHashSet());
             _log.LogDebug($"Created Information for User: {user}");
             return user;
         }
@@ -198,6 +199,7 @@ namespace Jhipster.Domain.Services
                 //TODO manage authorities
             };
             await _userManager.CreateAsync(newUser);
+            await CreateUserRoles(newUser, userToRegister.UserRoles.Select(iur => iur.Role.Name).ToHashSet());
             _log.LogDebug($"Created Information for User: {newUser}");
             return newUser;
         }

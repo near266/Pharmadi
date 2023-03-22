@@ -27,7 +27,10 @@ namespace BFF.Web.ProductSvc
             _mediator = mediator;
             _logger = logger;
         }
-
+        private string GetUserIdFromContext()
+        {
+            return User.FindFirst("UserId")?.Value;
+        }
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] PurchaseOrderAddCommand request)
         {
@@ -189,6 +192,24 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to update PurchaseOrder fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpGet("Merchant/transactionHistory")]
+        public async Task<IActionResult> transactionHistory()
+        {
+
+            try
+            {
+                var request = GetUserIdFromContext();
+                var map = new HistoryPurchaseOrderQuery();
+                map.id = Guid.Parse(request);
+                var result = await _mediator.Send(map);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
                 return StatusCode(500, ex.Message);
             }
         }

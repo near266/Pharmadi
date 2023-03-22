@@ -11,7 +11,7 @@ namespace Jhipster.Domain.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<User> CreateUser(User userToCreate);
+        Task<User> CreateUser(User userToCreate,string Password);
         IEnumerable<string> GetAuthorities();
         Task DeleteUser(string login);
         Task<User> UpdateUser(User userToUpdate);
