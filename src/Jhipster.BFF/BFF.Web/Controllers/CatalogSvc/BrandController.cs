@@ -113,6 +113,21 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("PinBrand")]
+        public async Task<IActionResult> PinBrand ([FromBody] BrandPinCommand request)
+        {
+            _logger.LogInformation($"REST request get all Brand Pin : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to get all Brand Pin fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
 

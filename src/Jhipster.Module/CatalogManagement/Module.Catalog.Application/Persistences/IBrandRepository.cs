@@ -1,5 +1,6 @@
 ﻿using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
+using System.Diagnostics.SymbolStore;
 
 namespace Module.Catalog.Application.Persistences
 {
@@ -10,5 +11,6 @@ namespace Module.Catalog.Application.Persistences
         Task<int> Delete(Guid id);
         Task<IEnumerable<Brand>> Search(string? keyword);
         Task<PagedList<Brand>> GetAllAdmin(int page, int pageSize);
+        Task<int> PinBrand(Guid Id,bool? Pin);
     }
 }

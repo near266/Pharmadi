@@ -70,6 +70,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return result;
         }
 
-      
+        public async Task<int> PinBrand(Guid Id,bool? Pin)
+        {
+            var check = await _context.Brands.FirstOrDefaultAsync(i=>i.Id == Id);
+            if (check != null)
+            {
+                check.Pin = Pin;
+                return 1;
+            }
+            return 0;
+        }
     }
 }
