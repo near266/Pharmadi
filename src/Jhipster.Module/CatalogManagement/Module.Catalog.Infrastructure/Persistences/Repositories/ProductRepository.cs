@@ -34,7 +34,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU,string? ProductName,int? status)
+        public async Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU, string? ProductName, int? status)
         {
             var result = new PagedList<Product>();
             var query1 = _context.Products.AsQueryable();
@@ -50,7 +50,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             if (status != null)
             {
-                query1 = query1.Where(i=> i.Status ==status);
+                query1 = query1.Where(i => i.Status == status);
             }
             var data = await query1
                         .Skip(pageSize * (page - 1))
@@ -80,8 +80,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                                     .Include(p => p.Brand).Include(p => p.PostContent)
                                     .Include(p => p.LabelProducts).ThenInclude(l => l.Label)
                                     .Include(p => p.TagProducts).ThenInclude(l => l.Tag)
-                                    .Include(p=>p.CategoryProducts).ThenInclude(l => l.Category)
-                                    .Include(p=>p.WarehouseProducts)
+                                    .Include(p => p.CategoryProducts).ThenInclude(l => l.Category)
+                                    .Include(p => p.WarehouseProducts)
                                     .FirstOrDefaultAsync(i => i.Id == Id);
             return obj;
         }
@@ -89,7 +89,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         // int 
         public async Task<PagedList<Product>> ViewProductForU(string? keyword, int page, int pageSize)
         {
-            var query1= _context.Products.AsQueryable();
+            var query1 = _context.Products.AsQueryable();
             var result = new PagedList<Product>();
             var query = await _context.Products.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()))
                         .Skip(pageSize * (page - 1))
@@ -130,7 +130,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var query1 = _context.Products.AsQueryable();
 
             var result = new PagedList<Product>();
-            var query = await _context.Products.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()) && i.SalePrice !=0)
+            var query = await _context.Products.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()) && i.SalePrice != 0)
                 .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
@@ -193,28 +193,37 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return result;
         }
 
-      
 
-        public async Task<IEnumerable<Product>> ViewListProductSimilarCategory(Guid Id)
+
+        public async Task<PagedList<Product>> ViewListProductSimilarCategory(Guid Id, int page, int pageSize)
         {
-            var listCatIds = await _context.CategoryProducts.Where(i => i.ProductId == Id).Select(i=>i.CategoryId).ToListAsync();
-            var listId2 = await _context.Categories.Where(i =>listCatIds.Contains(i.Id) && i.ParentId!= null).Select(i=>i.Id).ToListAsync();
-            var listId1 = await _context.Categories.Where(i => listCatIds.Contains(i.Id) && i.ParentId == null).Select(i=>i.Id).ToListAsync();
+            var listProduct = new PagedList<Product>();
+            var listCatIds = await _context.CategoryProducts.Where(i => i.ProductId == Id).Select(i => i.CategoryId).ToListAsync();
+            var listId2 = await _context.Categories.Where(i => listCatIds.Contains(i.Id) && i.ParentId != null).Select(i => i.Id).ToListAsync();
+            var listId1 = await _context.Categories.Where(i => listCatIds.Contains(i.Id) && i.ParentId == null).Select(i => i.Id).ToListAsync();
             //var listProd = await _context.Products.ToListAsync();
-            if(listId2!= null)
+            if (listId2 != null)
             {
-                var prodIds = await _context.CategoryProducts.Where(i => listId2.Contains(i.CategoryId)).Select(i=>i.ProductId).ToListAsync();
-                var listProd = _context.Products.Where(i=>prodIds.Contains(i.Id)).AsEnumerable();
-                return listProd;
+                var prodIds = await _context.CategoryProducts.Where(i => listId2.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
+                var listProd = _context.Products.Where(i => prodIds.Contains(i.Id))
+                                   .Skip(pageSize * (page - 1))
+                                    .Take(pageSize).AsEnumerable();
+                listProduct.Data = listProd;
+                listProduct.TotalCount = listProd.Count();
+                return listProduct;
             }
             else
             {
                 var prodId = await _context.CategoryProducts.Where(i => listId1.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
-                var ListProd = _context.Products.Where(i => prodId.Contains(i.Id)).AsEnumerable();
-                return ListProd;
+                var ListProd = _context.Products.Where(i => prodId.Contains(i.Id))
+                       .Skip(pageSize * (page - 1))
+                        .Take(pageSize).AsEnumerable();
+                listProduct.Data = ListProd;
+                listProduct.TotalCount = ListProd.Count();
+                return listProduct;
             }
-            var res = new List<Product>();
-            return res;
+
+            return listProduct;
         }
         public async Task<List<List<string>>> FakeData()
         {
