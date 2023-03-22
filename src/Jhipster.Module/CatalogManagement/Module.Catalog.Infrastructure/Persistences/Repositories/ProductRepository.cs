@@ -89,48 +89,53 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         // int 
         public async Task<PagedList<Product>> ViewProductForU(string? keyword, int page, int pageSize)
         {
+            var query1= _context.Products.AsQueryable();
             var result = new PagedList<Product>();
             var query = await _context.Products.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()))
                         .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = query;
-            result.TotalCount = query.Count();
+            result.TotalCount = query1.Count();
             return result;
         }
         public async Task<PagedList<Product>> ViewProductBestSale(int page, int pageSize)
         {
             var result = new PagedList<Product>();
+            var query1 = _context.Products.AsQueryable();
 
             var query = await _context.Products
                 .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = query;
-            result.TotalCount = query.Count();
+            result.TotalCount = query1.Count();
             return result;
         }
 
         public async Task<PagedList<Product>> ViewProductNew(int page, int pageSize)
         {
             var result = new PagedList<Product>();
+            var query1 = _context.Products.AsQueryable();
 
             var query = await _context.Products.Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = query;
-            result.TotalCount = query.Count();
+            result.TotalCount = query1.Count();
             return result;
         }
         public async Task<PagedList<Product>> ViewProductPromotion(string? keyword, int page, int pageSize)
         {
+            var query1 = _context.Products.AsQueryable();
+
             var result = new PagedList<Product>();
             var query = await _context.Products.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()) && i.SalePrice !=0)
                 .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = query;
-            result.TotalCount = query.Count();
+            result.TotalCount = query1.Count();
             return result;
         }
 
