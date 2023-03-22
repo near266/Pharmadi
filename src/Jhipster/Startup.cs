@@ -66,6 +66,15 @@ namespace Jhipster
 
             services
                 .AddMailModule(Configuration);
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
         }
 
 
@@ -82,8 +91,10 @@ namespace Jhipster
                 .UseApplicationWeb(env)
                 .UseApplicationDatabase(serviceProvider, env)
                 .UseApplicationIdentity(serviceProvider);
+            app
+                .UseCors();
 
-            
+
         }
 
         protected virtual void AddDatabase(IServiceCollection services)

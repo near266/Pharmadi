@@ -17,7 +17,7 @@ namespace Module.Catalog.Application.Commands.TagCm
         public Guid? LastModifiedBy { get; set; }
         [JsonIgnore]
         public DateTime? LastModifiedDate { get; set; }
-        public bool Archived { get; set; }
+        public bool? Archived { get; set; }
     }
     public class TagUpdateCommandHandler : IRequestHandler<TagUpdateCommand, int>
     {

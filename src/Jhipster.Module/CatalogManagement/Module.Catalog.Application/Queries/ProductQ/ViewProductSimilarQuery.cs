@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Jhipster.Service.Utilities;
 using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
@@ -10,11 +11,13 @@ using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Queries.ProductQ
 {
-    public class ViewProductSimilarQuery : IRequest<IEnumerable<Product>>
+    public class ViewProductSimilarQuery : IRequest<PagedList<Product>>
     {
         public Guid Id { get; set; }
+        public int page { get; set; }
+        public int pageSize { get; set; }
     }
-    public class ViewProductSimilarQueryHandler : IRequestHandler<ViewProductSimilarQuery, IEnumerable<Product>>
+    public class ViewProductSimilarQueryHandler : IRequestHandler<ViewProductSimilarQuery, PagedList<Product>>
     {
         private readonly IProductRepository _repo;
         private readonly IMapper _mapper;
@@ -23,9 +26,9 @@ namespace Module.Catalog.Application.Queries.ProductQ
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<IEnumerable<Product>> Handle(ViewProductSimilarQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<Product>> Handle(ViewProductSimilarQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.ViewListProductSimilarCategory(request.Id);
+            return await _repo.ViewListProductSimilarCategory(request.Id,request.page,request.pageSize);
         }
     }
 }

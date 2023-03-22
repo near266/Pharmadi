@@ -19,7 +19,7 @@ namespace Module.Catalog.Application.Commands.LabelCm
         public string LabelName { get; set; }
         public Guid? LastModifiedBy { get; set; }
         public DateTime? LastModifiedDate { get; set; }
-        public bool Archived { get; set; }
+        public bool? Archived { get; set; }
     }
     public class LabelUpdateCommandHandler : IRequestHandler<LabelUpdateCommand, int>
     {
