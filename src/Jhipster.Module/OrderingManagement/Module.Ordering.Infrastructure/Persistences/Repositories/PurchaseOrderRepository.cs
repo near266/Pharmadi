@@ -4,6 +4,7 @@ using Module.Ordering.Application.Persistences;
 using Module.Ordering.Domain.Entities;
 using Module.Ordering.Infrastructure.Persistences;
 using Jhipster.Service.Utilities;
+using Module.Ordering.Application.DTO;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -100,5 +101,34 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
             return 0;
         }
+        public async Task<List<HistoryOrderDTO>> transactionHistory(Guid id)
+        {
+            var data = from s in _context.PurchaseOrders
+                       where s.MerchantId == id
+                       join st in _context.OrderItems on s.Id equals st.PurchaseOrderId
+                       select new HistoryOrderDTOs
+                       {
+                           MerchantId = s.MerchantId,
+                           ShippingFee = s.ShippingFee,
+                           TotalPrice = s.TotalPrice,
+                           TotalPayment = s.TotalPayment,
+                           Status = s.Status,
+                           OrderItemId = st.Id,
+                           QuantityOrderItem = st.Quantity,
+
+                       };
+            var value = data.GroupBy(i => new { i.MerchantId, i.ShippingFee, i.TotalPayment, i.TotalPrice, i.Status }).Select(g => new HistoryOrderDTO
+            {
+                MerchantId = g.Key.MerchantId,
+                ShippingFee = g.Key.ShippingFee,
+                TotalPrice = g.Key.TotalPrice,
+                TotalPayment = g.Key.TotalPayment,
+                Status = g.Key.Status,
+                ToTalProduct = g.Sum(a => a.QuantityOrderItem),
+                ToTalOrderItem = g.Count()
+            });
+            return value.ToList();
+        }
+
     }
 }

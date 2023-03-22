@@ -194,6 +194,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var res = new List<Product>();
             return res;
         }
-
+        public async Task<List<List<string>>> FakeData()
+        {
+            return await _context.Products.Select(i => i.Image).ToListAsync();
+        }
     }
 }
