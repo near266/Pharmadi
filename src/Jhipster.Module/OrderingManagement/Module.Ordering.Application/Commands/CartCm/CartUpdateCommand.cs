@@ -2,21 +2,16 @@
 using MediatR;
 using Module.Ordering.Application.Persistences;
 using Module.Ordering.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Module.Ordering.Application.Commands.CartCm
 {
     public class CartUpdateCommand : IRequest<int>
     {
         public Guid Id { get; set; }    
-        public Guid UserId { get; set; }
-        public Guid ProductId { get; set; }
-        public int Quantity { get; set; }
+        public Guid? UserId { get; set; }
+        public Guid? ProductId { get; set; }
+        public int? Quantity { get; set; }
+        public bool? IsChoice { get; set; }
     }
     public class CartUpdateCommandHandler : IRequestHandler<CartUpdateCommand, int>
     {

@@ -51,7 +51,7 @@ namespace Jhipster.Infrastructure.Data
 
         public DbSet<Cart> Carts { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<PurchaseOrder> Orderings { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         #endregion
 
 
@@ -101,12 +101,12 @@ namespace Jhipster.Infrastructure.Data
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<PurchaseOrder>()
-               .HasMany(e => e.OrderItems)
-               .WithOne()
-               .HasForeignKey(e => e.PurchaseOrderId)
-               .IsRequired()
-               .OnDelete(DeleteBehavior.Cascade);
+            //builder.Entity<PurchaseOrder>()
+            //   .HasMany(e => e.OrderItems)
+            //   .WithOne()
+            //   .HasForeignKey(e => e.PurchaseOrderId)
+            //   .IsRequired()
+            //   .OnDelete(DeleteBehavior.Cascade);
 
         }
 

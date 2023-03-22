@@ -22,6 +22,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         {
             await _context.OrderItems.AddAsync(request);
             return await _context.SaveChangesAsync();
+           
         }
 
         public async Task<int> Delete(Guid id)
@@ -37,11 +38,22 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
 
         public async Task<PagedList<OrderItem>> GetAllItemByOrder(int page, int pageSize, Guid OrderId)
         {
-            var query = _context.OrderItems.Include(i => i.Product).Where(i=>i.PurchaseOrderId==OrderId).AsQueryable();
+            var query = _context.OrderItems.Where(c => c.PurchaseOrderId == OrderId).Select(c => new OrderItem
+            {
+                Id = c.Id,
+                PurchaseOrderId = c.PurchaseOrderId,
+                Product = _context.Products.Where(i => i.Id == c.ProductId)
+                                 .Include(i => i.Brand)
+                                 .Include(i => i.TagProducts).ThenInclude(i => i.Tag)
+                                 .Include(i => i.LabelProducts).ThenInclude(i => i.Label)
+                                 .FirstOrDefault(),
+                Quantity = c.Quantity
+            }).AsQueryable();
+
             var data = await query
-                        .Skip(pageSize * (page-1))
-                        .Take(pageSize)
-                        .ToListAsync();
+                        .Skip(pageSize * (page - 1))
+                        .Take(pageSize).ToListAsync();
+
             var res = new PagedList<OrderItem>();
             res.Data = data;
             res.TotalCount = query.Count();

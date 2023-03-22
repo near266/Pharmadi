@@ -73,6 +73,23 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return reslut;
         }
 
+        public async Task<IEnumerable<Category>> GetTwoLayer()
+        {
+            //var result = _context.Categories.Where(i=>i.ParentId==null).Select(i => new Category
+            //{
+            //    Id = i.Id,
+            //    CategoryName = i.CategoryName,
+            //    Categories = _context.Categories.Where(i=>i.ParentId==i.Id).AsEnumerable()
+
+            //}).AsEnumerable();
+            var result = _context.Categories.Where(i => i.ParentId == null).AsEnumerable();
+            foreach (var item in result)
+            {
+                item.Categories = _context.Categories.Where(i => i.ParentId == item.Id).AsEnumerable();
+            }
+            return result;
+        }
+
         public async Task<PagedList<Category>> GetListCategories()
         {
 

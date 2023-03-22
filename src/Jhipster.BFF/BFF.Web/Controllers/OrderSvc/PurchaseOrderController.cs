@@ -12,35 +12,117 @@ using Newtonsoft.Json;
 using Module.Catalog.Application.Queries.CategoryQ;
 using Module.Catalog.Application.Queries.WarehouseProductQ;
 using Module.Catalog.Application.Commands.WarehouseCm;
+using BFF.Web.DTOs.OrderSvc;
+using AutoMapper;
+using Module.Ordering.Application.Commands.OrderItemCm;
+using Module.Ordering.Application.Commands.CartCm;
+using Module.Ordering.Application.Queries.CartQ;
 
 namespace BFF.Web.ProductSvc
 {
-    [ApiController]
+    //[ApiController]
     [Route("gw/[controller]")]
     public class PurchaseOrderController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
         private readonly ILogger<PurchaseOrderController> _logger;
 
-        public PurchaseOrderController(IMediator mediator, ILogger<PurchaseOrderController> logger)
+        public PurchaseOrderController(IMediator mediator, IMapper mapper, ILogger<PurchaseOrderController> logger)
         {
             _mediator = mediator;
             _logger = logger;
+            _mapper = mapper;
         }
         private string GetUserIdFromContext()
         {
             return User.FindFirst("UserId")?.Value;
         }
-        [HttpPost("Add")]
-        public async Task<ActionResult<int>> Add([FromBody] PurchaseOrderAddCommand request)
+        [HttpPost("AddByUser")]
+        public async Task<ActionResult<int>> Add([FromBody] OrderAddRequestUser request)
         {
             _logger.LogInformation($"REST request add PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.Id = Guid.NewGuid();
+                request.CreatedBy = new Guid(GetUserIdFromContext());
+                request.Status = 1;
+                request.MerchantId = new Guid(GetUserIdFromContext());
                 request.CreatedDate = DateTime.Now;
-                var result = await _mediator.Send(request);
-                return Ok(result);
+
+
+                var res1 = 0;
+                // add order
+                var step1 = _mapper.Map<PurchaseOrderAddCommand>(request);
+                res1 = await _mediator.Send(step1);
+
+                // get cart choice
+                var step2 = new CartGetAllChoiceQuery 
+                {  
+                    userId = request.MerchantId
+                };
+                var temp2 = await _mediator.Send(step2);
+
+                //add order item
+                foreach(var c in temp2)
+                {
+                    var res2 = new OrderItemAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        PurchaseOrderId = request.Id,
+                        ProductId = (Guid)c.ProductId,
+                        Quantity = (int)c.Quantity
+                    };
+                   res1 = await _mediator.Send(res2);
+                }
+
+                //remove cart
+                var step3 = new CartDeleteCommand
+                {
+                    ids = temp2.Select(i=>i.Id).ToList()
+                };
+                res1 = await _mediator.Send(step3);
+
+                return Ok(res1);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to add PurchaseOrder fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("AddByAdmin")]
+        public async Task<ActionResult<int>> AddByAdmin([FromBody] OrderAddRequestAdmin request)
+        {
+            _logger.LogInformation($"REST request add PurchaseOrder : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                request.Id = Guid.NewGuid();
+                request.CreatedBy = new Guid(GetUserIdFromContext());
+                request.Status = 2;
+                request.CreatedDate = DateTime.Now;
+
+                // add order
+                var step1 = _mapper.Map<PurchaseOrderAddCommand>(request);
+                await _mediator.Send(step1);
+
+
+                //add order item
+                foreach (var c in request.orderItemRequests)
+                {
+                    var res2 = new OrderItemAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        PurchaseOrderId = request.Id,
+                        ProductId = c.ProductId,
+                        Quantity = c.Quantity
+                    };
+                    await _mediator.Send(res2);
+                }
+
+
+                return Ok(1);
             }
             catch (Exception ex)
             {
@@ -56,6 +138,7 @@ namespace BFF.Web.ProductSvc
             try
             {
                 request.LastModifiedDate = DateTime.Now;
+                request.LastModifiedBy = new Guid(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -105,6 +188,8 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request GetAllPurchaseOrderByUser : {JsonConvert.SerializeObject(request)}");
             try
             {
+                if (request.userId == null || request.userId == Guid.Empty)
+                    request.userId = new Guid(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }

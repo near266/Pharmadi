@@ -11,6 +11,10 @@ namespace Module.Ordering.Application.Queries.PurchaseOrderQ
         public int page { get; set; }
         public int pageSize { get; set; }
         public int? status { get; set; }
+        public string? codekey { get; set; }
+        public string? customerkey { get; set; }
+        public DateTime? fromDate { get; set; }
+        public DateTime? toDate { get; set; }
     }
     public class PurchaseOrderGetAllByAdminQueryHandler : IRequestHandler<PurchaseOrderGetAllByAdminQuery, PagedList<PurchaseOrder>>
     {
@@ -23,7 +27,7 @@ namespace Module.Ordering.Application.Queries.PurchaseOrderQ
         }
         public async Task<PagedList<PurchaseOrder>> Handle(PurchaseOrderGetAllByAdminQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.GetAllAdmin(request.page, request.pageSize,request.status);
+            return await _repo.GetAllAdmin(request.page, request.pageSize,request.status, request.fromDate,request.toDate, request.codekey,request.customerkey);
         }
     }
 

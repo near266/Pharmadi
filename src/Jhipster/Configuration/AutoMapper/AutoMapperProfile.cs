@@ -23,6 +23,7 @@ using Module.Ordering.Application.Commands.CartCm;
 using Module.Ordering.Domain.Entities;
 using Module.Ordering.Application.Commands.OrderItemCm;
 using Module.Ordering.Application.Commands.PurchaseOrderCm;
+using BFF.Web.DTOs.OrderSvc;
 
 namespace Jhipster.Configuration.AutoMapper
 {
@@ -158,14 +159,22 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<Product, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             #endregion
-            #region OrderSvc
+            
+            #region 4.OrderSvc
             CreateMap<CartAddCommand,Cart>().ReverseMap();
-            CreateMap<CartUpdateCommand,Cart>().ReverseMap();
+            CreateMap<CartUpdateCommand,Cart>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Cart, Cart>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<OrderItemRequest, OrderItem>().ReverseMap();
             CreateMap<OrderItemAddCommand, OrderItem>().ReverseMap();
-            CreateMap<OrderItemUpdateCommand, OrderItem>().ReverseMap();
+            CreateMap<OrderItemUpdateCommand, OrderItem>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<OrderItem, OrderItem>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             CreateMap<PurchaseOrderAddCommand, PurchaseOrder>().ReverseMap();
-            CreateMap<PurchaseOrderUpdateCommand, PurchaseOrder>().ReverseMap();
-            CreateMap<PurchaseOrderAddCommand, PurchaseOrder>().ReverseMap();
+            CreateMap<PurchaseOrderUpdateCommand, PurchaseOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<PurchaseOrder, PurchaseOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<OrderAddRequestUser, PurchaseOrderAddCommand>();
+            CreateMap<OrderAddRequestAdmin, PurchaseOrderAddCommand>();
             #endregion
         }
     }

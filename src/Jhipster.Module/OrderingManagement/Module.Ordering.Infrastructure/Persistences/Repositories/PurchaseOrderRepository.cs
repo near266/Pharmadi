@@ -34,13 +34,31 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<PurchaseOrder>> GetAllAdmin(int page, int pageSize, int? status)
+        public async Task<PagedList<PurchaseOrder>> GetAllAdmin(int page, int pageSize, int? status, DateTime? fromDate, DateTime? toDate, string? codekey, string? customerkey)
         {
 
-            var query = _context.PurchaseOrders.Include(i => i.OrderItems).AsQueryable();
-            if(status!=null)
+            var query = _context.PurchaseOrders.Include(i => i.Merchant).AsQueryable();
+            if(fromDate!=null)
+            {
+                query = query.Where(i=>i.CreatedDate>=fromDate);
+            }
+            if (toDate != null)
+            {
+                query = query.Where(i => i.CreatedDate <= toDate);
+            }
+            if (status!=null)
             {
                 query = query.Where(i => i.Status == status);
+            }
+            if (codekey != null)
+            {
+                codekey = codekey.ToLower();
+                query = query.Where(i => i.OrderCode.ToLower().Contains(codekey));
+            }
+            if (customerkey != null)
+            {
+                customerkey = customerkey.ToLower();
+                query = query.Where(i => i.Merchant.MerchantName.ToLower().Contains(customerkey));
             }
             var data = await query
                         .Skip(pageSize *( page-1))
@@ -55,14 +73,14 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         public async Task<PurchaseOrder> ViewDetail(Guid id)
         {
 
-            var result = await _context.PurchaseOrders.Include(i => i.Id==id).FirstOrDefaultAsync();
+            var result = await _context.PurchaseOrders.Include(i => i.Merchant).FirstOrDefaultAsync();
             return result;
         }
 
         public async Task<PagedList<PurchaseOrder>> GetAllByUser(int page, int pageSize, int? status, Guid userId)
         {
 
-            var query = _context.PurchaseOrders.Where(i=>i.MerchantId==userId).AsQueryable();
+            var query = _context.PurchaseOrders.Include(i=>i.Merchant).Where(i=>i.MerchantId==userId).AsQueryable();
             if (status != null)
             {
                 query = query.Where(i => i.Status == status);

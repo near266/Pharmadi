@@ -37,24 +37,24 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("auth")?.Value;
         }
-       
 
-        [HttpPost("Add")]
-        public async Task<ActionResult<int>> Add([FromBody] OrderItemAddCommand request)
-        {
-            _logger.LogInformation($"REST request add OrderItem : {JsonConvert.SerializeObject(request)}");
-            try
-            {
-                request.Id = Guid.NewGuid();
-                var result = await _mediator.Send(request);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"REST request to add OrderItem fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
-            }
-        }
+
+        //[HttpPost("Add")]
+        //public async Task<ActionResult<int>> Add([FromBody] OrderItemAddCommand request)
+        //{
+        //    _logger.LogInformation($"REST request add OrderItem : {JsonConvert.SerializeObject(request)}");
+        //    try
+        //    {
+        //        request.Id = Guid.NewGuid();
+        //        var result = await _mediator.Send(request);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"REST request to add OrderItem fail: {ex.Message}");
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
 
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] OrderItemUpdateCommand request)

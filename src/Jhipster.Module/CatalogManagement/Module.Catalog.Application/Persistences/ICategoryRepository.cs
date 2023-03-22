@@ -14,6 +14,7 @@ namespace Module.Catalog.Application.Persistences
         Task<List<Guid>> GetListIdRefer(Guid id);
         Task <IEnumerable<Category>> GetAllCategoriesLv1();
         Task<IEnumerable<Category>> GetAllCategoriesLv2();
+        Task<IEnumerable<Category>> GetTwoLayer();
 
     }
 }

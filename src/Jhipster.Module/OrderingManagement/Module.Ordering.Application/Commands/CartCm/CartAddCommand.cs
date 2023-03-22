@@ -7,16 +7,19 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Module.Ordering.Application.Commands.CartCm
 {
     public class CartAddCommand : IRequest<int>
     {
+        [JsonIgnore]
         public Guid Id { get; set; }    
         public Guid UserId { get; set; }
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }
+        public bool? IsChoice { get; set; }
     }
     public class CartAddCommandHandler : IRequestHandler<CartAddCommand, int>
     {

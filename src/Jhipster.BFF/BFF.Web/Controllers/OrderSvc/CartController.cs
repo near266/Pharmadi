@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace BFF.Web.ProductSvc
 {
-    [ApiController]
+    //[ApiController]
     [Route("gw/[controller]")]
     public class CartController : ControllerBase
     {
@@ -23,6 +23,11 @@ namespace BFF.Web.ProductSvc
             _mediator = mediator;
             _logger = logger;
         }
+        private string GetUserIdFromContext()
+        {
+            return User.FindFirst("UserId")?.Value;
+        }
+
 
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] CartAddCommand request)
@@ -31,6 +36,8 @@ namespace BFF.Web.ProductSvc
             try
             {
                 request.Id = Guid.NewGuid();
+                request.UserId = new Guid(GetUserIdFromContext());
+                request.IsChoice = false;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -40,7 +47,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] CartUpdateCommand request)
         {
@@ -79,6 +85,8 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request GetAllCartByUser : {JsonConvert.SerializeObject(request)}");
             try
             {
+                if(request.userId==null|| request.userId==Guid.Empty)
+                    request.userId= new Guid(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }

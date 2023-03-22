@@ -110,6 +110,22 @@ namespace BFF.Web.ProductSvc
             }
         }
 
+        [HttpPost("GetTwoLayer")]
+        public async Task<ActionResult<IEnumerable<Category>>> CategoryGetTwoLayer([FromBody] CategoryGetTwoLayerQuery request)
+        {
+            _logger.LogInformation($"REST request CategoryGetTwoLayerQuery : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to CategoryGetTwoLayerQuery fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("GetAllAdmin")]
         public async Task<ActionResult<PagedList<Category>>> GetAllAdmin([FromBody] CategoryGetAllAdminQuery request)
         {

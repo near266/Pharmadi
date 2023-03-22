@@ -9,6 +9,7 @@ namespace Module.Ordering.Domain.Entities
 {
     public class PurchaseOrder:BaseEntity<Guid>
     {
+        public string OrderCode { get; set; }
         public Guid MerchantId { get; set; }
         public Decimal ShippingFee { get; set; }
         public Decimal TotalPrice { get; set; }

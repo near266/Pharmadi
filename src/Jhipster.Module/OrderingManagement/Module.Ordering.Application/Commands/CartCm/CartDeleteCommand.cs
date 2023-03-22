@@ -13,7 +13,7 @@ namespace Module.Ordering.Application.Commands.CartCm
 {
     public class CartDeleteCommand : IRequest<int>
     {
-        public Guid Id { get; set; }    
+        public List<Guid> ids { get; set; }    
     }
     public class CartDeleteCommandHandler : IRequestHandler<CartDeleteCommand, int>
     {
@@ -26,7 +26,7 @@ namespace Module.Ordering.Application.Commands.CartCm
         }
         public async Task<int> Handle(CartDeleteCommand request, CancellationToken cancellationToken)
         {
-            return await _repo.Delete(request.Id);
+            return await _repo.Delete(request.ids);
         }
     }
 
