@@ -114,6 +114,21 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("PinGroupBrand")]
+        public async Task<IActionResult> PinGroupBrand([FromBody] PinGroupBrandCommand request)
+        {
+            _logger.LogInformation($"REST request to PinGroupBrand : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request toPinGroupBrand  fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
 

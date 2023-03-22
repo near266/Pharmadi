@@ -13,5 +13,6 @@ namespace Module.Catalog.Domain.Entities
         [MaxLength(100)]
         //[Column("Ten to chuc")]
         public string GroupBrandName { get; set; }
+        public bool? Pin { get; set; }
     }
 }

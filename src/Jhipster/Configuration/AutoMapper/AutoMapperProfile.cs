@@ -100,6 +100,7 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<GroupBrandAddCommand, GroupBrand>();
             CreateMap<GroupBrand, GroupBrand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<GroupBrandUpdateCommand, GroupBrand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<PinGroupBrandCommand,GroupBrand>();
 
             //Label
             CreateMap<LabelAddCommand, Label>();

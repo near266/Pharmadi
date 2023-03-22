@@ -71,5 +71,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return result;
         }
 
+        public async Task<int> PinGroup(Guid Id, bool? Pin)
+        {
+            var check = await _context.GroupBrands.FirstOrDefaultAsync(i=>i.Id.Equals(Id));
+            if (check != null)
+            {
+                check.Pin = Pin;
+                return 1;
+            }
+            return 0;
+        }
     }
 }
