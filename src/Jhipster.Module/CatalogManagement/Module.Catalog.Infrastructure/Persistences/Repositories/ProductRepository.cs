@@ -81,6 +81,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                                     .Include(p => p.LabelProducts).ThenInclude(l => l.Label)
                                     .Include(p => p.TagProducts).ThenInclude(l => l.Tag)
                                     .Include(p=>p.CategoryProducts).ThenInclude(l => l.Category)
+                                    .Include(p=>p.WarehouseProducts)
                                     .FirstOrDefaultAsync(i => i.Id == Id);
             return obj;
         }
