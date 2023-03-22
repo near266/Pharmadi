@@ -13,5 +13,6 @@ namespace Module.Catalog.Domain.Entities
         [MaxLength(100)]
         //[Column("Ten tag ")]
         public string TagName { get; set; }
+        public bool Archived { get; set; }
     }
 }

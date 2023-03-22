@@ -20,6 +20,7 @@ namespace Module.Catalog.Application.Commands.TagCm
         public Guid? CreatedBy { get; set; }
         [JsonIgnore]
         public DateTime CreatedDate { get; set; }
+        public bool Archived { get; set; }
     }
     public class TagAddCommandHandler : IRequestHandler<TagAddCommand, int>
     {
