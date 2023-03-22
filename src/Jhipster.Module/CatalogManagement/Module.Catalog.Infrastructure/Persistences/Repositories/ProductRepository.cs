@@ -4,6 +4,7 @@ using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
 using AutoMapper.Execution;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -79,42 +80,57 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                                     .Include(p => p.Brand).Include(p => p.PostContent)
                                     .Include(p => p.LabelProducts).ThenInclude(l => l.Label)
                                     .Include(p => p.TagProducts).ThenInclude(l => l.Tag)
+                                    .Include(p=>p.CategoryProducts).ThenInclude(l => l.Category)
                                     .FirstOrDefaultAsync(i => i.Id == Id);
             return obj;
         }
 
         // int 
-        public async Task<IEnumerable<Product>> ViewProductForU(string? keyword, int page, int pageSize)
+        public async Task<PagedList<Product>> ViewProductForU(string? keyword, int page, int pageSize)
         {
+            var result = new PagedList<Product>();
             var query = await _context.Products.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()))
                         .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
-            return query;
+            result.Data = query;
+            result.TotalCount = query.Count();
+            return result;
         }
-        public async Task<IEnumerable<Product>> ViewProductBestSale(int page, int pageSize)
+        public async Task<PagedList<Product>> ViewProductBestSale(int page, int pageSize)
         {
+            var result = new PagedList<Product>();
+
             var query = await _context.Products
                 .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
-            return query;
+            result.Data = query;
+            result.TotalCount = query.Count();
+            return result;
         }
 
-        public async Task<IEnumerable<Product>> ViewProductNew(int page, int pageSize)
+        public async Task<PagedList<Product>> ViewProductNew(int page, int pageSize)
         {
+            var result = new PagedList<Product>();
+
             var query = await _context.Products.Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
-            return query;
+            result.Data = query;
+            result.TotalCount = query.Count();
+            return result;
         }
-        public async Task<IEnumerable<Product>> ViewProductPromotion(string keyword, int page, int pageSize)
+        public async Task<PagedList<Product>> ViewProductPromotion(string? keyword, int page, int pageSize)
         {
-            var query = await _context.Products.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()) && i.SalePrice < i.Price)
+            var result = new PagedList<Product>();
+            var query = await _context.Products.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()) && i.SalePrice !=0)
                 .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
-            return query;
+            result.Data = query;
+            result.TotalCount = query.Count();
+            return result;
         }
 
         public async Task<PagedList<Product>> SearchProduct(string? keyword, List<Guid?>? categoryIds, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize)
