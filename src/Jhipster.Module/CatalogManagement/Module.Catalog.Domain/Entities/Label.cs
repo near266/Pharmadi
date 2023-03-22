@@ -13,7 +13,7 @@ namespace Module.Catalog.Domain.Entities
         [MaxLength(100)]
         //[Column("Ten nhan ")]
         public string LabelName { get; set; }
-        public bool Archived { get; set; }
+        public bool? Archived { get; set; }
      
     }
 }

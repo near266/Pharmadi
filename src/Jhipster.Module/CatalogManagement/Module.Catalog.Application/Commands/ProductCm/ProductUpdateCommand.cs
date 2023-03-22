@@ -26,7 +26,7 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public string? Industry { get; set; }
         public string? Effect { get; set; }
         public string? Preserve { get; set; }
-        public bool Archived { get; set; }
+        public bool? Archived { get; set; }
         public string? Dosage { get; set; }
         public string? DosageForms { get; set; }
         public string? Country { get; set; }

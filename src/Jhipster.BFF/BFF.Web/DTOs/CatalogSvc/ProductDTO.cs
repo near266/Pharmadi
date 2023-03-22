@@ -38,7 +38,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public Guid? PostContentId { get; set; }
         public bool? HideProduct { get; set; }
         public List<string>? Image { get; set; }
-        public bool Archived { get; set; }
+        public bool? Archived { get; set; }
         public string? Industry { get; set; }
         public string? Effect { get; set; }
         public string? Preserve { get; set; }
