@@ -20,6 +20,7 @@ namespace Module.Catalog.Application.Commands.LabelCm
         public Guid? CreatedBy { get; set; }
         [JsonIgnore]
         public DateTime CreatedDate { get; set; }
+        public bool Archived { get; set; }
     }
     public class LabelAddCommandHandler : IRequestHandler<LabelAddCommand, int>
     {
