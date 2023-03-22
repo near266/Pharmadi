@@ -17,7 +17,6 @@ using Module.Catalog.Application.Commands.LabelCm;
 
 namespace BFF.Web.ProductSvc
 {
-    [Authorize]
     [ApiController]
     [Route("gw/[controller]")]
     public class ProductController : ControllerBase
