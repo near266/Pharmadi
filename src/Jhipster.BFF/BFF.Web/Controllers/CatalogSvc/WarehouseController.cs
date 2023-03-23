@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using Module.Catalog.Application.Commands.WarehouseCm;
 using Newtonsoft.Json;
 using BFF.Web.DTOs.CatalogSvc;
+using Microsoft.AspNetCore.Authorization;
+using BFF.Web.Constants;
 
 namespace BFF.Web.ProductSvc
 {
@@ -22,7 +24,8 @@ namespace BFF.Web.ProductSvc
         private string GetUserIdFromContext()
         {
             return User.FindFirst("UserId")?.Value;
-        }      
+        }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("AddProductWarehouse")]
         public async Task<ActionResult<int>> AddProductWarehouse([FromBody] List<WarehouseProductAddRequest> request)
@@ -52,6 +55,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("UpdateProductWarehouse")]
         public async Task<ActionResult<int>> UpdateProductWarehouse([FromBody] List<WarehouseProductUpdateRequest> request)
@@ -80,6 +84,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("DeleteProductWarehouse")]
         public async Task<ActionResult<int>> UpdateProductWarehouse([FromBody] List<Guid> ids)

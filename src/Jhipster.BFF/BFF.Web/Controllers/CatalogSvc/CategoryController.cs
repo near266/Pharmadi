@@ -40,6 +40,8 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("auth")?.Value;
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
+
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] CategoryAddCommand request)
         {
@@ -78,6 +80,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] CategoryDeleteCommand request)
@@ -126,6 +129,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("GetAllAdmin")]
         public async Task<ActionResult<PagedList<Category>>> GetAllAdmin([FromBody] CategoryGetAllAdminQuery request)
@@ -189,6 +193,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("AddProductCategory")]
         public async Task<ActionResult<int>> AddProductCategory([FromBody] List<CategoryProductAddRequest> request)
@@ -217,6 +222,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("UpdateProductTag")]
         public async Task<ActionResult<int>> UpdateProductTag([FromBody] List<CategoryProductUpdateRequest> request)
@@ -244,6 +250,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("DeleteProductCategory")]
         public async Task<ActionResult<int>> UpdateProductCategory([FromBody] List<Guid> ids)
