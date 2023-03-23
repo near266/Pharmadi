@@ -16,6 +16,7 @@ namespace Module.Catalog.Application.Queries.BrandQ
         public int page { get; set; }
         public int pageSize { get; set; }
         public int type { get; set; }
+        public Guid? GroupBrandId { get; set; } 
     }
     public class GetListBrandIsHaveGroupIdQueryHandler : IRequestHandler<GetListBrandIsHaveGroupIdQuery, PagedList<Brand>>
     {
@@ -28,7 +29,7 @@ namespace Module.Catalog.Application.Queries.BrandQ
         }
         public async Task<PagedList<Brand>> Handle(GetListBrandIsHaveGroupIdQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.IsHaveGroup(request.page,request.pageSize,request.type);
+            return await _repo.IsHaveGroup(request.page,request.pageSize,request.type,request.GroupBrandId);
         }
     }
 }

@@ -81,7 +81,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<Brand>> IsHaveGroup(int page, int pageSize, int type)
+        public async Task<PagedList<Brand>> IsHaveGroup(int page, int pageSize, int type,Guid? GroupBrandId)
         {
                var query = _context.Brands.AsQueryable();
                 var result = new PagedList<Brand>();

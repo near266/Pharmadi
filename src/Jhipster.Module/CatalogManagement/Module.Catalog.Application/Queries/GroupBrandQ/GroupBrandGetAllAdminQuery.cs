@@ -10,6 +10,7 @@ namespace Module.Catalog.Application.Queries.GroupBrandQ
     {
         public int page { get; set; }
         public int pageSize { get; set; }
+
     }
     public class GroupBrandGetAllQueryHandler : IRequestHandler<GroupBrandGetAllAdminQuery, PagedList<GroupBrand>>
     {
