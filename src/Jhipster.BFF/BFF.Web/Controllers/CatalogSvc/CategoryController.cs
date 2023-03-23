@@ -256,7 +256,7 @@ namespace BFF.Web.ProductSvc
                 {
                     var tem = new CategoryProductDeleteCommand
                     {
-                        Id = Guid.NewGuid(),
+                        Id = item,
                     };
                     result = await _mediator.Send(tem);
                 }

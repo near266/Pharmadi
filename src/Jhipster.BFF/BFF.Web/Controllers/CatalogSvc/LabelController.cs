@@ -183,7 +183,7 @@ namespace BFF.Web.ProductSvc
                 {
                     var tem = new LabelProductDeleteCommand
                     {
-                        Id = Guid.NewGuid(),
+                        Id = item,
                     };
                     result = await _mediator.Send(tem);
                 }
