@@ -30,5 +30,7 @@ namespace Module.Factor.Domain.Entities
         public string? Branch { get; set; }
         public string? TypeCustomer { get; set; }
 
+        public string? Email { get; set; }
+
     }
 }

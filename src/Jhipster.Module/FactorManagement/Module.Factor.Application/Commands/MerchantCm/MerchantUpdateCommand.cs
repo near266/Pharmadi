@@ -22,6 +22,7 @@ namespace Module.Factor.Application.Commands.MerchantCm
         public int? Channel { get; set; }
         public int? Rank { get; set; }
         public string? Branch { get; set; }
+        public string? Email { get; set; }
         public string? TypeCustomer { get; set; }
         public Guid? LastModifiedBy { get; set; }
         public DateTime LastModifiedDate { get; set; }
