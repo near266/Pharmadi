@@ -35,11 +35,11 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
 
         public async Task<PagedList<Merchant>> GetAllAdmin(int page, int pageSize, string? keyword)
         {
-            var query =  _context.Merchants.AsQueryable();
-            if(keyword!=null)
+            var query = _context.Merchants.AsQueryable();
+            if (keyword != null)
             {
                 keyword = keyword.ToLower();
-                query = query.Where(i=>i.MerchantName.ToLower().Contains(keyword));
+                query = query.Where(i => i.MerchantName.ToLower().Contains(keyword));
             }
             var data = query
                         .Skip(pageSize * page)
@@ -62,7 +62,12 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
             return 0;
         }
-
+        public async Task UpdateActiveMerchant(Guid id)
+        {
+            var data = await _context.Merchants.FirstOrDefaultAsync(i => i.Id == id);
+            data.Status = 1;
+            await _context.SaveChangesAsync();
+        }
         public async Task<Merchant> ViewDetail(Guid id)
         {
             var res = await _context.Merchants.Where(i => i.Id == id).FirstOrDefaultAsync();
@@ -78,7 +83,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 query = query.Where(i => i.MerchantName.ToLower().Contains(keyword) || i.Address.ToLower().Contains(keyword)
                                 || i.PhoneNumber.Contains(keyword));
             }
-            var data  = query.AsEnumerable();
+            var data = query.AsEnumerable();
             return data;
         }
     }

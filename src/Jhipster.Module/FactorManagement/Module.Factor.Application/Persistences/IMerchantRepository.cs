@@ -11,5 +11,6 @@ namespace Module.Factor.Application.Persistences
         Task<PagedList<Merchant>> GetAllAdmin(int page, int pageSize, string? keyword);
         Task<Merchant> ViewDetail(Guid id);
         Task<IEnumerable<Merchant>> SearchToChoose(string? keyword);
+        Task UpdateActiveMerchant(Guid id);
     }
 }
