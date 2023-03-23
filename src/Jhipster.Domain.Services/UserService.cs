@@ -143,13 +143,19 @@ namespace Jhipster.Domain.Services
             List<UserRole> userRoles = new List<UserRole>();
             userRoles.Add(new UserRole
             {
+                UserId = user.Id,
+                User=user,
+                
                 Role = new Role
                 {
-                    Name = RolesConstants.USER,
-                    NormalizedName = RolesConstants.USER
+                    Id= "role_merchant",
+                    Name = "ROLE_MERCHANT",
+                    NormalizedName = RolesConstants.USER,
+                    
                 },
                 RoleId = RolesConstants.USER.ToLower()
             });
+
             await CreateUserRoles(user, userRoles.Select(iur => iur.Role.Name).ToHashSet());
             _log.LogDebug($"Activated user: {user}");
             return user;
@@ -199,7 +205,7 @@ namespace Jhipster.Domain.Services
                 //TODO manage authorities
             };
             await _userManager.CreateAsync(newUser);
-            await CreateUserRoles(newUser, userToRegister.UserRoles.Select(iur => iur.Role.Name).ToHashSet());
+            //await CreateUserRoles(newUser, userToRegister.UserRoles.Select(iur => iur.Role.Name).ToHashSet());
             _log.LogDebug($"Created Information for User: {newUser}");
             return newUser;
         }

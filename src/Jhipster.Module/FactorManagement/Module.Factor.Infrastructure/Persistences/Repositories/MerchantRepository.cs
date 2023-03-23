@@ -33,14 +33,18 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<Merchant>> GetAllAdmin(int page, int pageSize, string? keyword)
+        public async Task<PagedList<Merchant>> GetAllAdmin(int page, int pageSize, string? name, DateTime? StartDate, DateTime? EndDate, int? Status)
         {
-            var query =  _context.Merchants.AsQueryable();
-            if(keyword!=null)
+            var query = _context.Merchants.AsQueryable();
+            if (name != null)
             {
-                keyword = keyword.ToLower();
-                query = query.Where(i=>i.MerchantName.ToLower().Contains(keyword));
+                name = name.ToLower();
+                query = query.Where(i => i.MerchantName.ToLower().Contains(name));
             }
+           
+            query = Status != null ? query.Where(i => i.Status == Status) : query;
+            query = StartDate != null ? query.Where(i => i.CreatedDate > StartDate) : query;
+            query=EndDate!=null ?query.Where(i=>i.CreatedDate < EndDate) : query;   
             var data = query
                         .Skip(pageSize * page)
                         .Take(pageSize);
@@ -62,7 +66,12 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
             return 0;
         }
-
+        public async Task UpdateActiveMerchant(Guid id)
+        {
+            var data = await _context.Merchants.FirstOrDefaultAsync(i => i.Id == id);
+            data.Status = 1;
+            await _context.SaveChangesAsync();
+        }
         public async Task<Merchant> ViewDetail(Guid id)
         {
             var res = await _context.Merchants.Where(i => i.Id == id).FirstOrDefaultAsync();
@@ -78,7 +87,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 query = query.Where(i => i.MerchantName.ToLower().Contains(keyword) || i.Address.ToLower().Contains(keyword)
                                 || i.PhoneNumber.Contains(keyword));
             }
-            var data  = query.AsEnumerable();
+            var data = query.AsEnumerable();
             return data;
         }
     }

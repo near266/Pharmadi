@@ -34,8 +34,9 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("UserId")?.Value;
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
-        
+
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] ProductAddRequest request)
         {
@@ -157,6 +158,7 @@ namespace BFF.Web.ProductSvc
             }
         }
 
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
 
 
@@ -178,6 +180,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] ProductDeleteCommand request)

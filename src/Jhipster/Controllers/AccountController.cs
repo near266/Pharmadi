@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Jhipster.Dto.Authentication;
 using Newtonsoft.Json;
+using Module.Factor.Application.Persistences;
 
 namespace Jhipster.Controllers
 {
@@ -33,11 +34,12 @@ namespace Jhipster.Controllers
         private readonly IMailService _mailService;
         private readonly UserManager<User> _userManager;
         private readonly IUserService _userService;
-
-        public AccountController(ILogger<AccountController> log, UserManager<User> userManager, IUserService userService,
+        private readonly IMerchantRepository _merchantRepository;
+        public AccountController(ILogger<AccountController> log,IMerchantRepository merchantRepository, UserManager<User> userManager, IUserService userService,
             IMapper userMapper, IMailService mailService)
         {
             _log = log;
+            _merchantRepository = merchantRepository;
             _userMapper = userMapper;
             _userManager = userManager;
             _userService = userService;
@@ -73,6 +75,7 @@ namespace Jhipster.Controllers
         {
             var user = await _userService.ActivateRegistration(key);
             if (user == null) throw new InternalServerErrorException("Not user was found for this activation key");
+            await _merchantRepository.UpdateActiveMerchant(Guid.Parse(user.Id));
         }
 
         /// <summary>

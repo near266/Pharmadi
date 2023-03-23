@@ -29,7 +29,7 @@ namespace Module.Factor.Domain.Entities
         public int? Rank { get; set; }
         public string? Branch { get; set; }
         public string? TypeCustomer { get; set; }
-
+        public int? Status { get; set; } // trạng thái active 0-1
         public string? Email { get; set; }
 
     }

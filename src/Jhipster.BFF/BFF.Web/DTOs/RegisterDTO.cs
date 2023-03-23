@@ -49,6 +49,9 @@ namespace BFF.Web.DTOs
         public int? Rank { get; set; }
         public string? Branch { get; set; }
         public string? TypeCustomer { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        public int? Status { get; set; }
+
     }
 
     public class RegisterByAdminDTO
@@ -91,5 +94,9 @@ namespace BFF.Web.DTOs
         public int? Rank { get; set; }
         public string? Branch { get; set; }
         public string? TypeCustomer { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+
+        public int? Status { get; set; }
+
     }
 }

@@ -28,6 +28,8 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("UserId")?.Value;
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
+
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] TagAddCommand request)
         {
@@ -47,6 +49,8 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
+
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] TagUpdateCommand request)
         {
@@ -65,6 +69,8 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
+
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete([FromBody] TagDeleteCommand request)
         {
@@ -95,6 +101,8 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
+
         [HttpPost("GetAllAdmin")]
         public async Task<ActionResult<PagedList<Tag>>> GetAllAdmin([FromBody] TagGetAllAdminQuery request)
         {
@@ -110,6 +118,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("AddProductTag")]
         public async Task<ActionResult<int>> AddProductTag([FromBody] List<TagProductAddRequest> request)
@@ -137,6 +146,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("UpdateProductTag")]
         public async Task<ActionResult<int>> UpdateProductTag([FromBody] List<TagProductUpdateRequest> request)
@@ -164,6 +174,8 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
+
 
         [HttpPost("DeleteProductTag")]
         public async Task<ActionResult<int>> UpdateProductTag([FromBody] List<Guid> ids)
