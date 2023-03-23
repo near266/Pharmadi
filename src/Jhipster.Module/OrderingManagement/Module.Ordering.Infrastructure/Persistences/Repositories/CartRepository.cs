@@ -6,6 +6,7 @@ using Module.Ordering.Infrastructure.Persistences;
 using Jhipster.Service.Utilities;
 using Module.Catalog.Domain.Entities;
 using Module.Ordering.Shared.DTOs;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -26,7 +27,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
 
         public async Task<int> Delete(List<Guid> ids)
         {
-            foreach(var id in ids)
+            foreach (var id in ids)
             {
                 var obj = await _context.Carts.FirstOrDefaultAsync(i => i.Id.Equals(id));
                 if (obj != null)
@@ -35,7 +36,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                     await _context.SaveChangesAsync();
                 }
             }
-      
+
             return 1;
         }
 
@@ -56,8 +57,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }).AsQueryable();
 
             var res = new List<ViewCartByBrandDTO>();
-            var q1 = await _context.Carts.Include(i => i.Product).Where(i=>i.UserId==userId).Select(i => i.Product.BrandId).Distinct().ToListAsync();
-            foreach(var item in q1)
+            var q1 = await _context.Carts.Include(i => i.Product).Where(i => i.UserId == userId).Select(i => i.Product.BrandId).Distinct().ToListAsync();
+            foreach (var item in q1)
             {
                 var temp = new ViewCartByBrandDTO
                 {
@@ -68,14 +69,14 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
 
             var data = res.Skip(pageSize * (page - 1)).Take(pageSize).ToList();
-            var totalPrice = _context.Carts.Where(i=>i.UserId==userId).Sum(i=>i.Product.Price);
-            var totalDiscount= _context.Carts.Where(i => i.UserId == userId).Sum(i => i.Product.SalePrice);
+            var totalPrice = _context.Carts.Where(i => i.UserId == userId).Sum(i => i.Product.Price);
+            var totalDiscount = _context.Carts.Where(i => i.UserId == userId).Sum(i => i.Product.SalePrice);
 
 
             view.data = data;
             view.TotalCount = res.Count();
             view.TotalPrice = (decimal)totalPrice;
-            view.TotalDiscount=(decimal)totalDiscount;
+            view.TotalDiscount = (decimal)totalDiscount;
             view.EconomicalPrice = (decimal)totalPrice - (decimal)totalDiscount;
             return view;
         }
@@ -98,20 +99,39 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             var data = await _context.Carts.Where(i => i.UserId == userId && i.IsChoice == true).ToListAsync();
             return data;
         }
+        public async Task<List<ViewQuickOrder>> ViewQuick(Guid userId)
+        {
+            var data = from s in _context.Products
+                       join sst in _context.Brands on s.BrandId equals sst.Id
+                       join st in _context.Carts.Where(a => a.UserId == userId) on s.Id equals st.ProductId into cart
+                       from st in cart.DefaultIfEmpty()
+                       select new ViewQuickOrder()
+                       {
+                           ProductId = s.Id,
+                           ProductName = s.ProductName,
+                           Image = s.Image,
+                           Price = s.Price,
+                           DiscountPrice = s.SalePrice,
+                           BrandName = sst.BrandName,
+                           Quantity = st.Quantity ?? 0
+                       };
+            return data.ToList();
 
+        }
         public async Task<CartResultDTO> CartResultSum(Guid userId)
         {
             var res = new CartResultDTO();
-            var data = await _context.Carts.Include(i=>i.Product).Where(i => i.UserId == userId && i.IsChoice == true).ToListAsync();
+            var data = await _context.Carts.Include(i => i.Product).Where(i => i.UserId == userId && i.IsChoice == true).ToListAsync();
             res.Quantity = (int)data.Sum(i => i.Quantity);
             var summ = 0;
-            foreach(var item in data)
+            foreach (var item in data)
             {
                 summ = (int)(item.Quantity * item.Product.SalePrice);
                 res.TotalPrice += summ;
             }
             return res;
-            
+
         }
+
     }
 }

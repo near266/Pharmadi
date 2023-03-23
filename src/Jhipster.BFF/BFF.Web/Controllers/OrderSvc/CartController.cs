@@ -115,6 +115,23 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("QuickOrder")]
+        public async Task<IActionResult> QuickOrder([FromBody] QuickOrderQuery request)
+        {
+            _logger.LogInformation($"REST request QuickOrder : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                if (request.userId == null || request.userId == Guid.Empty)
+                    request.userId = new Guid(GetUserIdFromContext());
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to QuickOrder fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
 
