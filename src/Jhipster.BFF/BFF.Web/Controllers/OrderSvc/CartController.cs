@@ -104,6 +104,8 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request CartResultSumQuery : {JsonConvert.SerializeObject(request)}");
             try
             {
+                if (request.userId == null || request.userId == Guid.Empty)
+                    request.userId = new Guid(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
