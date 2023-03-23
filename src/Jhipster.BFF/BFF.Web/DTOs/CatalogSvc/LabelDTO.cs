@@ -21,4 +21,10 @@ namespace BFF.Web.DTOs.CatalogSvc
         public Guid ProductId { get; set; }
         public Guid LabelId { get; set; }
     }
+
+    public class LabelProductDeleteRequest
+    {
+        public Guid ProductId { get; set; }
+        public Guid Id { get; set; }
+    }
 }

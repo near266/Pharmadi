@@ -1,7 +1,7 @@
 ﻿using Jhipster.Service.Utilities;
+using Module.Catalog.Domain.Entities;
 using Module.Ordering.Domain.Entities;
-
-
+using Module.Ordering.Shared.DTOs;
 
 namespace Module.Ordering.Application.Persistences
 {
@@ -10,7 +10,8 @@ namespace Module.Ordering.Application.Persistences
         Task<int> Add(Cart request);
         Task<int> Update(Cart request);
         Task<int> Delete(List<Guid> ids);
-        Task<PagedList<Cart>> GetAllByUser(int page, int pageSize, Guid userId);
+        Task<PagedList<ViewCartByBrandDTO>> GetAllByUser(int page, int pageSize, Guid userId);
         Task<List<Cart>> GetCartChoice(Guid userId);
+        Task<CartResultDTO> CartResultSum(Guid userId);
     }
 }

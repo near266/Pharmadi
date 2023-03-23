@@ -142,7 +142,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<Product>> SearchProduct(string? keyword, List<Guid?>? categoryIds, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize)
         {
             var result = new PagedList<Product>();
-            var query1 = _context.Products.AsQueryable();
+            var query1 = _context.Products.Include(i=>i.Brand).AsQueryable();
             if (keyword != null)
             {
                 keyword = keyword.ToLower();
@@ -175,7 +175,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if (check != null)
             {
                 check.Status = status;
-                return 1;
+
+                return await _context.SaveChangesAsync();
             }
             return 0;
         }
