@@ -105,5 +105,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return result;
 
         }
+        public async Task<List<string>>ImageBrand()
+        {
+            return await _context.Brands.Select(i => i.LogoBrand).ToListAsync();
+        }
     }
 }
