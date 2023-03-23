@@ -6,7 +6,7 @@ using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
 
-namespace Module.Factor.Application.Queries.ProductQ
+namespace Module.Catalog.Application.Queries.ProductQ
 {
     public class ProductSearchToChooseQuery : IRequest<IEnumerable<Product>>
     {
