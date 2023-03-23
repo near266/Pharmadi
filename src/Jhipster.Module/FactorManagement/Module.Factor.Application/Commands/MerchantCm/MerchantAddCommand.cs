@@ -3,6 +3,7 @@ using MediatR;
 using Module.Factor.Application.Persistences;
 using Module.Factor.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Module.Factor.Application.Commands.MerchantCm
 {
@@ -25,6 +26,7 @@ namespace Module.Factor.Application.Commands.MerchantCm
         public string? TypeCustomer { get; set; }
         public Guid? CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
+        [JsonIgnore]
         public int? Status { get; set; }
 
         public string? Email { get; set; }
