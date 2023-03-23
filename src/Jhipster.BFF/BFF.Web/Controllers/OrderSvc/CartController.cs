@@ -8,6 +8,7 @@ using Module.Ordering.Application.Queries.CartQ;
 using Module.Ordering.Application.Commands.CartCm;
 using Module.Ordering.Domain.Entities;
 using Newtonsoft.Json;
+using Module.Catalog.Domain.Entities;
 
 namespace BFF.Web.ProductSvc
 {
@@ -80,7 +81,7 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("GetAllCartByUser")]
-        public async Task<ActionResult<PagedList<Cart>>> GetAllCartByUser(CartGetAllByUserQuery request)
+        public async Task<ActionResult<PagedList<IGrouping<Brand, Cart>>>> GetAllCartByUser(CartGetAllByUserQuery request)
         {
             _logger.LogInformation($"REST request GetAllCartByUser : {JsonConvert.SerializeObject(request)}");
             try
@@ -93,6 +94,22 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to GetAllCartByUser  fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("CartReuslt")]
+        public async Task<IActionResult> CartReuslt([FromBody] CartResultSumQuery request)
+        {
+            _logger.LogInformation($"REST request CartResultSumQuery : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to CartResultSumQuery fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

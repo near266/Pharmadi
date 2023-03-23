@@ -23,4 +23,10 @@ namespace BFF.Web.DTOs.CatalogSvc
         public Guid CategoryId { get; set; }
         public bool Priority { get; set; }
     }
+
+    public class CategoryProductDeleteRequest
+    {
+        public Guid ProductId { get; set; }
+        public Guid Id { get; set; }
+    }
 }

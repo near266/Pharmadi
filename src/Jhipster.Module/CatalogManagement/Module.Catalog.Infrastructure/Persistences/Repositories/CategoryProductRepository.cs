@@ -20,9 +20,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> Delete(Guid id)
+        public async Task<int> Delete(Guid productId, Guid categoryid)
         {
-            var obj = await _context.CategoryProducts.FirstOrDefaultAsync(i => i.Id.Equals(id));
+            var obj = await _context.CategoryProducts.FirstOrDefaultAsync(i => i.ProductId.Equals(productId)&&i.CategoryId==categoryid);
             if (obj != null)
             {
                 _context.CategoryProducts.Remove(obj);
