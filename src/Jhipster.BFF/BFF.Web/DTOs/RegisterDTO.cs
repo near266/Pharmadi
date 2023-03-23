@@ -44,6 +44,11 @@ namespace BFF.Web.DTOs
         public string Location { get; set; }
         public string ContactName { get; set; }
         public string? GPPNumber { get; set; }
+        public string? ContractNumber { get; set; }
+        public int? Channel { get; set; }
+        public int? Rank { get; set; }
+        public string? Branch { get; set; }
+        public string? TypeCustomer { get; set; }
     }
 
     public class RegisterByAdminDTO
@@ -81,5 +86,10 @@ namespace BFF.Web.DTOs
         public string Location { get; set; }
         public string ContactName { get; set; }
         public string? GPPNumber { get; set; }
+        public string? ContractNumber { get; set; }
+        public int? Channel { get; set; }
+        public int? Rank { get; set; }
+        public string? Branch { get; set; }
+        public string? TypeCustomer { get; set; }
     }
 }

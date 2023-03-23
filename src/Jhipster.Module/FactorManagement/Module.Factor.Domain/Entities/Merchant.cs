@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Module.Factor.Domain.Entities
@@ -23,5 +24,11 @@ namespace Module.Factor.Domain.Entities
         [MaxLength(50)]
         //[Column("So GPP")]
         public string? GPPNumber { get; set; }
+        public string? ContractNumber { get; set; }
+        public int? Channel { get; set; }       
+        public int? Rank { get; set; }
+        public string? Branch { get; set; }
+        public string? TypeCustomer { get; set; }
+
     }
 }
