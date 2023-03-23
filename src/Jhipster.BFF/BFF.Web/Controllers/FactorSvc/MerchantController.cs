@@ -59,7 +59,8 @@ namespace BFF.Web.Controllers.FactorSvc
                 if(step1!=null)
                 {
                     var temp2 = _mapper.Map<Merchant>(request);
-                    var result =await _service.Add(temp2);
+                    var map = _mapper.Map<MerchantAddCommand>(temp2);
+                    var result = await _mediator.Send(map);
                     return Ok(result);
                 }
                 return null;
@@ -91,7 +92,8 @@ namespace BFF.Web.Controllers.FactorSvc
                 if (step1 != null)
                 {
                     var temp2 = _mapper.Map<Merchant>(request);
-                    var result =await _service.Add(temp2);
+                    var map=_mapper.Map<MerchantAddCommand>(temp2);
+                    var result =await _mediator.Send(map);
                     return Ok(result);
                 }
                 return null;
