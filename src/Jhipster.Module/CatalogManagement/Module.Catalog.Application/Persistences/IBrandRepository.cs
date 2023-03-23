@@ -1,6 +1,7 @@
 ﻿using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
 using System.Diagnostics.SymbolStore;
+using Module.Catalog.Shared.DTOs;
 
 namespace Module.Catalog.Application.Persistences
 {
@@ -12,7 +13,7 @@ namespace Module.Catalog.Application.Persistences
         Task<IEnumerable<Brand>> Search(string? keyword);
         Task<PagedList<Brand>> GetAllAdmin(int page, int pageSize);
         Task<int> PinBrand(Guid Id,bool? Pin);
-        Task<PagedList<Brand>> IsHaveGroup(int page , int pageSize,int type ,Guid? GroupBrandId);
+        Task<PagedList<BrandDTO>> IsHaveGroup(int page , int pageSize,int type ,Guid? GroupBrandId);
         Task<List<string>> ImageBrand();
     }
 }

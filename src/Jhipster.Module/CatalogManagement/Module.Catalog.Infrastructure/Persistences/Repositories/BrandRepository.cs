@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
+using Module.Catalog.Shared.DTOs;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -81,14 +82,25 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<Brand>> IsHaveGroup(int page, int pageSize, int type,Guid? GroupBrandId)
+        public async Task<PagedList<BrandDTO>> IsHaveGroup(int page, int pageSize, int type,Guid? GroupBrandId)
         {
                var query = _context.Brands.AsQueryable();
-                var result = new PagedList<Brand>();
+                var result = new PagedList<BrandDTO>();
             if(type == 1)
             {
-                var data = await query.Where(i=>i.GroupBrandId !=null).Include(i=>i.GroupBrand) .Skip(pageSize * (page - 1))
-                        .Take(pageSize).ToListAsync();
+                var data = await query.Where(i=>i.GroupBrandId !=null).Include(i=>i.GroupBrand).Select(i=> new BrandDTO
+                {
+                    Id = i.Id,
+                    GroupBrandId = i.GroupBrandId,
+                    Intro = i.Intro,
+                    BrandName = i.BrandName,
+                    LogoBrand = i.LogoBrand,
+                    Pin = i.Pin,
+                    GroupBrand = i.GroupBrand,
+                    SumProduct = _context.Products.Where(i=>i.BrandId==i.Id).Count()
+
+                }).Skip(pageSize * (page - 1))
+                  .Take(pageSize).ToListAsync();
                 result.Data = data;
                 result.TotalCount = query.Count();
                 return result;
@@ -96,7 +108,19 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if(type == 2)
             {
 
-                var data = await query.Where(i => i.GroupBrandId == null).Include(i => i.GroupBrand).Skip(pageSize * (page - 1))
+                var data = await query.Where(i => i.GroupBrandId == null).Include(i => i.GroupBrand).Select(i => new BrandDTO
+                {
+                    Id = i.Id,
+                    GroupBrandId = i.GroupBrandId,
+                    Intro = i.Intro,
+                    BrandName = i.BrandName,
+                    LogoBrand = i.LogoBrand,
+                    Pin = i.Pin,
+                    GroupBrand = i.GroupBrand,
+                    SumProduct = _context.Products.Where(i => i.BrandId == i.Id).Count()
+
+                })
+                    .Skip(pageSize * (page - 1))
                         .Take(pageSize).ToListAsync();
                 result.Data = data;
                 result.TotalCount = query.Count();
