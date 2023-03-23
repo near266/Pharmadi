@@ -19,6 +19,7 @@
 	</ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Jhipster.gRPC.Contracts.Shared\Jhipster.gRPC.Contracts.Shared.csproj" />
         <ProjectReference Include="..\Jhipster.Infrastructure\Jhipster.Infrastructure.csproj" />
 		<PackageReference Include="Microsoft.NETCore.Targets" Version="4.3.0" PrivateAssets="all" />
         <ProjectReference Include="..\Jhipster.Domain\Jhipster.Domain.csproj" />

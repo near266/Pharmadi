@@ -24,6 +24,7 @@ using Module.Ordering.Domain.Entities;
 using Module.Ordering.Application.Commands.OrderItemCm;
 using Module.Ordering.Application.Commands.PurchaseOrderCm;
 using BFF.Web.DTOs.OrderSvc;
+using Jhipster.Domain.Services.Command;
 
 namespace Jhipster.Configuration.AutoMapper
 {
@@ -59,6 +60,8 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<Merchant, MerchantAddCommand>();
             CreateMap<MerchantAddCommand, Merchant>();
             CreateMap<Merchant, Merchant>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<RegisterRequest, RegisterAccountCommand>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<RegisterAccountAdminCommand, RegisterAdminRequest>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             #region 2.Module permission
             //CreateMap<Function, FunctionDTO>().ReverseMap();
