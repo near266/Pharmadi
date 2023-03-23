@@ -80,5 +80,30 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             return 0;
         }
+
+        public async Task<PagedList<Brand>> IsHaveGroup(int page, int pageSize, int type)
+        {
+               var query = _context.Brands.AsQueryable();
+                var result = new PagedList<Brand>();
+            if(type == 1)
+            {
+                var data = await query.Where(i=>i.GroupBrandId !=null).Include(i=>i.GroupBrand) .Skip(pageSize * (page - 1))
+                        .Take(pageSize).ToListAsync();
+                result.Data = data;
+                result.TotalCount = query.Count();
+                return result;
+            }
+            if(type == 2)
+            {
+
+                var data = await query.Where(i => i.GroupBrandId == null).Include(i => i.GroupBrand).Skip(pageSize * (page - 1))
+                        .Take(pageSize).ToListAsync();
+                result.Data = data;
+                result.TotalCount = query.Count();
+                return result;
+            }
+            return result;
+
+        }
     }
 }

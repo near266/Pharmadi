@@ -127,6 +127,21 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("GetListBrandIsHaveGroup")]
+        public async Task<IActionResult> GetListBrandIsHaveGroup([FromBody] GetListBrandIsHaveGroupIdQuery request)
+        {
+            _logger.LogInformation($"REST request GetListBrandIsHaveGroup : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request GetListBrandIsHaveGroup fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
 

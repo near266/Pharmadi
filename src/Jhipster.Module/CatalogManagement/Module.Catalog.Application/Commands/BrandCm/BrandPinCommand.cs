@@ -27,7 +27,7 @@ namespace Module.Catalog.Application.Commands.BrandCm
         public async Task<int> Handle(BrandPinCommand request, CancellationToken cancellationToken)
         {
             var obj = _mapper.Map<Brand>(request);
-            return await _repo.Add(obj);
+            return await _repo.PinBrand(obj.Id,obj.Pin);
         }
     }
 }

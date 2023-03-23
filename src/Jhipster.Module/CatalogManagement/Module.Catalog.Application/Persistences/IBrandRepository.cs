@@ -12,5 +12,6 @@ namespace Module.Catalog.Application.Persistences
         Task<IEnumerable<Brand>> Search(string? keyword);
         Task<PagedList<Brand>> GetAllAdmin(int page, int pageSize);
         Task<int> PinBrand(Guid Id,bool? Pin);
+        Task<PagedList<Brand>> IsHaveGroup(int page , int pageSize,int type);
     }
 }
