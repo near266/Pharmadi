@@ -22,5 +22,19 @@ namespace BFF.Web.Controllers.BannerController
             };
             return Ok(value);
         }
+        [HttpPost("ViewBanner")]
+        public async Task<IActionResult> ViewBanner()
+        {
+            var value = new List<string>()
+            {
+                "https://image.pharmadi.vn/StorageProduct/photo_6113997950469387568_x_638151651529547317_ORIGIN.png",
+                "https://image.pharmadi.vn/StorageProduct/photo_6113997950469387568_x_638151651529547317_ORIGIN.png",
+                "https://image.pharmadi.vn/StorageProduct/photo_6113997950469387568_x_638151651529547317_ORIGIN.png",
+                "https://image.pharmadi.vn/StorageProduct/photo_6113997950469387568_x_638151651529547317_ORIGIN.png",
+                "https://image.pharmadi.vn/StorageProduct/photo_6113997950469387568_x_638151651529547317_ORIGIN.png",
+                "https://image.pharmadi.vn/StorageProduct/photo_6113997950469387568_x_638151651529547317_ORIGIN.png"
+            };
+            return Ok(value);
+        }
     }
 }
