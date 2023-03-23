@@ -253,7 +253,7 @@ namespace BFF.Web.ProductSvc
         [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("DeleteProductCategory")]
-        public async Task<ActionResult<int>> UpdateProductCategory([FromBody] List<Guid> ids)
+        public async Task<ActionResult<int>> UpdateProductCategory([FromBody] List<CategoryProductDeleteRequest> ids)
         {
             _logger.LogInformation($"REST request delete CategoryProduct : {JsonConvert.SerializeObject(ids)}");
             try
@@ -263,7 +263,8 @@ namespace BFF.Web.ProductSvc
                 {
                     var tem = new CategoryProductDeleteCommand
                     {
-                        Id = item,
+                        Id = item.Id,
+                        productId = item.ProductId
                     };
                     result = await _mediator.Send(tem);
                 }

@@ -175,7 +175,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if (check != null)
             {
                 check.Status = status;
-                return 1;
+
+                return await _context.SaveChangesAsync();
             }
             return 0;
         }

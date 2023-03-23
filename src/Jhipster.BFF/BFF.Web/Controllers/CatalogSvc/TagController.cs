@@ -178,17 +178,18 @@ namespace BFF.Web.ProductSvc
 
 
         [HttpPost("DeleteProductTag")]
-        public async Task<ActionResult<int>> UpdateProductTag([FromBody] List<Guid> ids)
+        public async Task<ActionResult<int>> UpdateProductTag([FromBody] List<TagProductDeleteRequest> requests)
         {
-            _logger.LogInformation($"REST request delete TagProduct : {JsonConvert.SerializeObject(ids)}");
+            _logger.LogInformation($"REST request delete TagProduct : {JsonConvert.SerializeObject(requests)}");
             try
             {
                 var result = 0;
-                foreach (var item in ids)
+                foreach (var item in requests)
                 {
                     var tem = new TagProductDeleteCommand
                     {
-                        Id = item,
+                        productId = item.ProductId,
+                        Id = item.Id,
                     };
                     result = await _mediator.Send(tem);
                 }
