@@ -151,6 +151,21 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("ImageBrand")]
+        public async Task<IActionResult> ImageBrand([FromBody] ImageBrandQuery request)
+        {
+            _logger.LogInformation($"REST request ImageBrand : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request ImageBrand fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
 

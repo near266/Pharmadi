@@ -13,5 +13,6 @@ namespace Module.Catalog.Application.Persistences
         Task<PagedList<Brand>> GetAllAdmin(int page, int pageSize);
         Task<int> PinBrand(Guid Id,bool? Pin);
         Task<PagedList<Brand>> IsHaveGroup(int page , int pageSize,int type ,Guid? GroupBrandId);
+        Task<List<string>> ImageBrand();
     }
 }
