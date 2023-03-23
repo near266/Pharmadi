@@ -48,6 +48,8 @@ namespace BFF.Web.Controllers.FactorSvc
                 request.CreatedDate = DateTime.Now;
                 request.LangKey = "en";
                 request.Roles =AddRole;
+                request.Status = 0;
+
                 //request.Roles.Add("")
                 var tem1 = _mapper.Map<RegisterRequest>(request);
                 tem1.Id = request.Id.ToString();
@@ -78,6 +80,7 @@ namespace BFF.Web.Controllers.FactorSvc
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
                 request.LangKey = "en";
+                request.Status = 1;
                 var tem1 = _mapper.Map<RegisterAdminRequest>(request);
                 tem1.Id = request.Id.ToString();
                 //adduser
