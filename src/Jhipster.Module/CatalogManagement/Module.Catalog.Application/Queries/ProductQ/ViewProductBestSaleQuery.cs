@@ -10,7 +10,6 @@ namespace Module.Catalog.Application.Queries.ProductQ
 {
     public class ViewProductBestSaleQuery : IRequest<PagedList<Product>>
     {
-        public string keyword { get; set; }
         public int page { get; set; }
         public int pageSize { get; set; }
     }
@@ -25,7 +24,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
         }
         public async Task<PagedList<Product>> Handle(ViewProductBestSaleQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.ViewProductForU(request.keyword,request.page, request.pageSize);
+            return await _repo.ViewProductBestSale(request.page,request.pageSize);
         }
     }
 

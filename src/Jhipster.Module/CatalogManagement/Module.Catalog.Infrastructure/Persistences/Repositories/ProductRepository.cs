@@ -104,7 +104,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<Product>();
             var query1 = _context.Products.AsQueryable();
 
-            var query = await _context.Products
+            var query = await _context.Products.Where(i=>i.SalePrice !=null).OrderByDescending(l => l.SalePrice)
                 .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
@@ -119,7 +119,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var query1 = _context.Products.AsQueryable();
 
             var query = await _context.Products.Skip(pageSize * (page - 1))
-                        .Take(pageSize)
+                        .Take(pageSize).OrderByDescending(i => i.CreatedDate)
                         .ToListAsync();
             result.Data = query;
             result.TotalCount = query1.Count();
@@ -130,7 +130,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var query1 = _context.Products.AsQueryable();
 
             var result = new PagedList<Product>();
-            var query = await _context.Products.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()) && i.SalePrice != 0)
+            var query = await _context.Products.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()) && i.SalePrice != null)
                 .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
