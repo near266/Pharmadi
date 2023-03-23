@@ -14,7 +14,6 @@ using Module.Catalog.Application.Commands.CategoryCm;
 using Module.Catalog.Application.Commands.WarehouseCm;
 using Module.Catalog.Application.Commands.TagCm;
 using Module.Catalog.Application.Commands.LabelCm;
-using Module.Factor.Application.Queries.ProductQ;
 
 namespace BFF.Web.ProductSvc
 {
