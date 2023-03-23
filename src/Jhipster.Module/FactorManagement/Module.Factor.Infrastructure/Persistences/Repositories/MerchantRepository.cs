@@ -33,14 +33,18 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<Merchant>> GetAllAdmin(int page, int pageSize, string? keyword)
+        public async Task<PagedList<Merchant>> GetAllAdmin(int page, int pageSize, string? name, DateTime? StartDate, DateTime? EndDate, int? Status)
         {
             var query = _context.Merchants.AsQueryable();
-            if (keyword != null)
+            if (name != null)
             {
-                keyword = keyword.ToLower();
-                query = query.Where(i => i.MerchantName.ToLower().Contains(keyword));
+                name = name.ToLower();
+                query = query.Where(i => i.MerchantName.ToLower().Contains(name));
             }
+           
+            query = Status != null ? query.Where(i => i.Status == Status) : query;
+            query = StartDate != null ? query.Where(i => i.CreatedDate > StartDate) : query;
+            query=EndDate!=null ?query.Where(i=>i.CreatedDate < EndDate) : query;   
             var data = query
                         .Skip(pageSize * page)
                         .Take(pageSize);
