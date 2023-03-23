@@ -65,7 +65,7 @@ namespace BFF.Web.DTOs.CatalogSvc
     {
         [System.Text.Json.Serialization.JsonIgnore]
         public Guid Id { get; set; }
-        [System.Text.Json.Serialization.JsonIgnore]
+        //[System.Text.Json.Serialization.JsonIgnore]
         public Guid ProductId { get; set; }
         public string Lot { get; set; }
         public DateTime DateExpire { get; set; }
@@ -76,7 +76,7 @@ namespace BFF.Web.DTOs.CatalogSvc
     {
         [System.Text.Json.Serialization.JsonIgnore]
         public Guid Id { get; set; }
-        [System.Text.Json.Serialization.JsonIgnore]
+        //[System.Text.Json.Serialization.JsonIgnore]
         public Guid ProductId { get; set; }
         public Guid CategoryId { get; set; }
         public bool Priority { get; set; }
