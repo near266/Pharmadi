@@ -229,5 +229,17 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             return await _context.Products.Select(i => i.Image).ToListAsync();
         }
+
+        public async Task<IEnumerable<Product>> SearchToChoose(string? keyword)
+        {
+            var query = _context.Products.AsQueryable();
+            if(keyword!=null)
+            {
+                keyword = keyword.ToLower();
+                query = query.Where(i => i.ProductName.ToLower().Contains(keyword) || i.SKU.ToLower().Contains(keyword));
+            }
+            var data = query.AsEnumerable();
+            return data;
+        }
     }
 }

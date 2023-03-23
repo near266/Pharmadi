@@ -14,6 +14,7 @@ using Module.Catalog.Application.Commands.CategoryCm;
 using Module.Catalog.Application.Commands.WarehouseCm;
 using Module.Catalog.Application.Commands.TagCm;
 using Module.Catalog.Application.Commands.LabelCm;
+using Module.Factor.Application.Queries.ProductQ;
 
 namespace BFF.Web.ProductSvc
 {
@@ -368,6 +369,22 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to ImageProduct fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("SearchToChoose")]
+        public async Task<IActionResult> SearchToChoose([FromBody] ProductSearchToChooseQuery request)
+        {
+            _logger.LogInformation($"REST request ProductSearchToChoo : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to ProductSearchToChoose fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

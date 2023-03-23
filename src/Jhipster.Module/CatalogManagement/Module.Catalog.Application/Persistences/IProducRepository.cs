@@ -19,5 +19,6 @@ namespace Module.Catalog.Application.Persistences
         Task<IEnumerable<Product>> ViewListProductWithBrand(Guid Id);
         Task<PagedList<Product>> ViewListProductSimilarCategory(Guid Id,int page, int pageSize);
         Task<List<List<string>>> FakeData();
+        Task<IEnumerable<Product>> SearchToChoose(string? keyword);
     }
 }
