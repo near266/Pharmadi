@@ -40,9 +40,10 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         }
 
 
-        public async Task<PagedList<ViewCartByBrandDTO>> GetAllByUser(int page, int pageSize, Guid userId)
+        public async Task<ViewCartDTO> GetAllByUser(int page, int pageSize, Guid userId)
         {
 
+            var view = new ViewCartDTO();
             var query = _context.Carts.Where(c => c.UserId == userId).Select(c => new Cart
             {
                 Id = c.Id,
@@ -54,21 +55,6 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 Quantity = c.Quantity
             }).AsQueryable();
 
-
-            //var query1 = query.GroupBy(i => i.Product.Brand).Select(i => new ViewCartByBrandDTO
-            //{
-            //    Brand = i.Key,
-            //    Carts = i.ToList()
-            //}).AsQueryable();
-
-            //var query2 = query1.ToListAsync();
-            //var data = await query1
-            //            .Skip(pageSize * (page - 1))
-            //            .Take(pageSize).ToListAsync();
-            //var res = new PagedList<ViewCartByBrandDTO>();
-            //res.Data = data;
-            //res.TotalCount = query1.Select(i => i.Brand).Count();
-            //return res;
             var res = new List<ViewCartByBrandDTO>();
             var q1 = await _context.Carts.Include(i => i.Product).Where(i=>i.UserId==userId).Select(i => i.Product.BrandId).Distinct().ToListAsync();
             foreach(var item in q1)
@@ -82,11 +68,16 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
 
             var data = res.Skip(pageSize * (page - 1)).Take(pageSize).ToList();
+            var totalPrice = _context.Carts.Where(i=>i.UserId==userId).Sum(i=>i.Product.Price);
+            var totalDiscount= _context.Carts.Where(i => i.UserId == userId).Sum(i => i.Product.SalePrice);
 
-            var result = new PagedList<ViewCartByBrandDTO>();
-            result.Data = data.AsEnumerable();
-            result.TotalCount = res.Count();
-            return result;
+
+            view.data = data;
+            view.TotalCount = res.Count();
+            view.TotalPrice = (decimal)totalPrice;
+            view.TotalDiscount=(decimal)totalDiscount;
+            view.EconomicalPrice = (decimal)totalPrice - (decimal)totalDiscount;
+            return view;
         }
 
         public async Task<int> Update(Cart request)

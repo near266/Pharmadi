@@ -19,4 +19,12 @@ namespace Module.Ordering.Shared.DTOs
         public Brand Brand { get; set; }
         public List<Cart> Carts { get; set; }
     }
+    public class ViewCartDTO
+    {
+        public List<ViewCartByBrandDTO> data { get; set; }
+        public int TotalCount { get; set; }
+        public decimal TotalPrice { get; set; }
+        public decimal TotalDiscount { get; set; }
+        public decimal EconomicalPrice { get; set; }
+    }
 }
