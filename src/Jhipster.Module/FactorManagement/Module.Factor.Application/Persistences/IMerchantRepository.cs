@@ -10,5 +10,6 @@ namespace Module.Factor.Application.Persistences
         Task<int> Delete(Guid id);
         Task<PagedList<Merchant>> GetAllAdmin(int page, int pageSize, string? keyword);
         Task<Merchant> ViewDetail(Guid id);
+        Task<IEnumerable<Merchant>> SearchToChoose(string? keyword);
     }
 }

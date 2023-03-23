@@ -171,6 +171,23 @@ namespace BFF.Web.Controllers.FactorSvc
 
         }
 
+        [HttpPost("MerchantSearchToChoose")]
+        public async Task<IActionResult> MerchantSearchToChoose([FromBody] MerchantSearchToChooseQuery request)
+        {
+            _logger.LogDebug($"REST request MerchantSearchToChooseQuery : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                return Ok(await _mediator.Send(request));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to MerchantSearchToChooseQuery fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
     }
 }
 

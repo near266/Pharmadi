@@ -68,5 +68,18 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             var res = await _context.Merchants.Where(i => i.Id == id).FirstOrDefaultAsync();
             return res;
         }
+
+        public async Task<IEnumerable<Merchant>> SearchToChoose(string? keyword)
+        {
+            var query = _context.Merchants.AsQueryable();
+            if (keyword != null)
+            {
+                keyword = keyword.ToLower();
+                query = query.Where(i => i.MerchantName.ToLower().Contains(keyword) || i.Address.ToLower().Contains(keyword)
+                                || i.PhoneNumber.Contains(keyword));
+            }
+            var data  = query.AsEnumerable();
+            return data;
+        }
     }
 }

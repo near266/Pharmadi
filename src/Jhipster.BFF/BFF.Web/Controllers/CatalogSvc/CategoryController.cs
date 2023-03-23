@@ -1,4 +1,5 @@
 ﻿using BFF.Web.Constants;
+using BFF.Web.DTOs.CatalogSvc;
 using Jhipster.Service.Utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -185,6 +186,86 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to get list Category by fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("AddProductCategory")]
+        public async Task<ActionResult<int>> AddProductCategory([FromBody] List<CategoryProductAddRequest> request)
+        {
+            _logger.LogInformation($"REST request add CategoryProduct : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = 0;
+                foreach (var item in request)
+                {
+                    var tem = new CategoryProductAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = item.ProductId,
+                        CategoryId = item.CategoryId,
+                        Priority = item.Priority,
+                    };
+                    result = await _mediator.Send(tem);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to add TagProduct fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("UpdateProductTag")]
+        public async Task<ActionResult<int>> UpdateProductTag([FromBody] List<CategoryProductUpdateRequest> request)
+        {
+            _logger.LogInformation($"REST request Update TagProduct : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = 0;
+                foreach (var item in request)
+                {
+                    var tem = new CategoryProductUpdateCommand
+                    {
+                        ProductId = item.ProductId,
+                        CategoryId = item.CategoryId,
+                        Priority = item.Priority,
+                    };
+                    result = await _mediator.Send(tem);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to Update TagProduct fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("DeleteProductCategory")]
+        public async Task<ActionResult<int>> UpdateProductCategory([FromBody] List<Guid> ids)
+        {
+            _logger.LogInformation($"REST request delete CategoryProduct : {JsonConvert.SerializeObject(ids)}");
+            try
+            {
+                var result = 0;
+                foreach (var item in ids)
+                {
+                    var tem = new CategoryProductDeleteCommand
+                    {
+                        Id = Guid.NewGuid(),
+                    };
+                    result = await _mediator.Send(tem);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to delete CategoryProduct fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

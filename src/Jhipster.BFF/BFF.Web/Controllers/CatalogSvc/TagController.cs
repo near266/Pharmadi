@@ -8,6 +8,7 @@ using Jhipster.Service.Utilities;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
 using BFF.Web.Constants;
+using BFF.Web.DTOs.CatalogSvc;
 
 namespace BFF.Web.ProductSvc
 {
@@ -106,6 +107,85 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to get all Tag by Admin  fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("AddProductTag")]
+        public async Task<ActionResult<int>> AddProductTag([FromBody] List<TagProductAddRequest> request)
+        {
+            _logger.LogInformation($"REST request add TagProduct : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = 0;
+                foreach( var item in request)
+                {
+                    var tem = new TagProductAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = item.ProductId,
+                        TagId = item.TagId
+                    };
+                    result = await _mediator.Send(tem);
+                }
+                
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to add TagProduct fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("UpdateProductTag")]
+        public async Task<ActionResult<int>> UpdateProductTag([FromBody] List<TagProductUpdateRequest> request)
+        {
+            _logger.LogInformation($"REST request Update TagProduct : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = 0;
+                foreach (var item in request)
+                {
+                    var tem = new TagProductAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = item.ProductId,
+                        TagId = item.TagId
+                    };
+                    result = await _mediator.Send(tem);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to Update TagProduct fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("DeleteProductTag")]
+        public async Task<ActionResult<int>> UpdateProductTag([FromBody] List<Guid> ids)
+        {
+            _logger.LogInformation($"REST request delete TagProduct : {JsonConvert.SerializeObject(ids)}");
+            try
+            {
+                var result = 0;
+                foreach (var item in ids)
+                {
+                    var tem = new TagProductDeleteCommand
+                    {
+                        Id = Guid.NewGuid(),
+                    };
+                    result = await _mediator.Send(tem);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to delete TagProduct fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

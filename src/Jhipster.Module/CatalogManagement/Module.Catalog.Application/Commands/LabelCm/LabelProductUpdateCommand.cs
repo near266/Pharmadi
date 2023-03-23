@@ -12,7 +12,6 @@ namespace Module.Catalog.Application.Commands.LabelCm
         public Guid Id { get; set; }
         public Guid ProductId { get; set; }
         public Guid LabelId { get; set; }
-        public bool Priority { get; set; }
     }
     public class LabelProductUpdateCommandHandler : IRequestHandler<LabelProductUpdateCommand, int>
     {
