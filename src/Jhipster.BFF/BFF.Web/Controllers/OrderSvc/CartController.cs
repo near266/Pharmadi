@@ -54,6 +54,8 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request update Cart : {JsonConvert.SerializeObject(request)}");
             try
             {
+                request.UserId = Guid.Parse(GetUserIdFromContext());
+                request.IsChoice = true;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -112,6 +114,23 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to CartResultSumQuery fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpPost("QuickOrder")]
+        public async Task<IActionResult> QuickOrder()
+        {
+           
+            try
+            {
+                var request = new QuickOrderQuery();
+                    request.userId = new Guid(GetUserIdFromContext());
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to QuickOrder fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

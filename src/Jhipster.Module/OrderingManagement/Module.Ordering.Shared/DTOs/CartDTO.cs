@@ -27,4 +27,14 @@ namespace Module.Ordering.Shared.DTOs
         public decimal TotalDiscount { get; set; }
         public decimal EconomicalPrice { get; set; }
     }
+    public class ViewQuickOrder
+    {
+        public Guid ProductId { get; set;}
+        public string ProductName { get; set;}
+        public List<string> Image { get; set;}
+        public decimal? Price { get; set; }  
+        public decimal? DiscountPrice { get; set; }
+        public int? Quantity { get; set; } = 0;
+        public string BrandName { get;set;}
+    }
 }
