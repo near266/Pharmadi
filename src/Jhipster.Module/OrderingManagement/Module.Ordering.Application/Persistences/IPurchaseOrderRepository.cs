@@ -13,6 +13,6 @@ namespace Module.Ordering.Application.Persistences
         Task<PagedList<PurchaseOrder>> GetAllByUser(int page, int pageSize, int? status, Guid userId);
         Task<PurchaseOrder> ViewDetail(Guid id);
         Task<int> UpdateStatus(Guid Id, int Status);
-        Task<List<HistoryOrderDTO>> transactionHistory(Guid id);
+        Task<List<HistoryOrderDTO>> transactionHistory(Guid id,int? Status, string? OrderCode, DateTime? CreateDate, string? NameProduct);
     }
 }

@@ -58,14 +58,14 @@ namespace BFF.Web.ProductSvc
                 res1 = await _mediator.Send(step1);
 
                 // get cart choice
-                var step2 = new CartGetAllChoiceQuery 
-                {  
+                var step2 = new CartGetAllChoiceQuery
+                {
                     userId = request.MerchantId
                 };
                 var temp2 = await _mediator.Send(step2);
 
                 //add order item
-                foreach(var c in temp2)
+                foreach (var c in temp2)
                 {
                     var res2 = new OrderItemAddCommand
                     {
@@ -74,13 +74,13 @@ namespace BFF.Web.ProductSvc
                         ProductId = (Guid)c.ProductId,
                         Quantity = (int)c.Quantity
                     };
-                   res1 = await _mediator.Send(res2);
+                    res1 = await _mediator.Send(res2);
                 }
 
                 //remove cart
                 var step3 = new CartDeleteCommand
                 {
-                    ids = temp2.Select(i=>i.Id).ToList()
+                    ids = temp2.Select(i => i.Id).ToList()
                 };
                 res1 = await _mediator.Send(step3);
 
@@ -223,37 +223,37 @@ namespace BFF.Web.ProductSvc
         {
             _logger.LogInformation($"REST request update PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
-            { 
+            {
                 //status ==2 xac nhan don hang
-                if(request.Status==2)
+                if (request.Status == 2)
                 {
                     // lay ds item trong don hang can phe duyet
                     var step1 = new OrderItemGetAllByOrderQuery
-                    { 
+                    {
                         purchaseOrderId = request.Id,
-                        page =1,
-                        pageSize =1000
+                        page = 1,
+                        pageSize = 1000
                     };
                     var temp1 = await _mediator.Send(step1);
-                    
+
                     // tien hanh check so luong trong kho
-                    foreach(var item in temp1.Data)
+                    foreach (var item in temp1.Data)
                     {
                         var step2 = new CountProductQuery
                         {
                             id = item.ProductId,
                         };
                         var temp2 = await _mediator.Send(step2);
-                        if(temp2 < item.Quantity) throw new ArgumentException("There are not enough products in Warehouse", nameof(item.Product.ProductName));
+                        if (temp2 < item.Quantity) throw new ArgumentException("There are not enough products in Warehouse", nameof(item.Product.ProductName));
                     }
                     // khi tat ca so luong du tien hanh cap nhat lai kho
-                    foreach(var item in temp1.Data)
+                    foreach (var item in temp1.Data)
                     {
                         var step3 = new ListLotDateByProductQuery
                         {
                             id = item.ProductId,
                         };
-                        var temp3 = await _mediator.Send(step3); 
+                        var temp3 = await _mediator.Send(step3);
                         //for(int i=0;i<temp3.Count(); i++)
                         //{
                         //    var quantity = item.Quantity;
@@ -282,15 +282,15 @@ namespace BFF.Web.ProductSvc
             }
         }
         [HttpGet("Merchant/transactionHistory")]
-        public async Task<IActionResult> transactionHistory()
+        public async Task<IActionResult> transactionHistory([FromQuery] HistoryPurchaseOrderQuery rq)
         {
 
             try
             {
                 var request = GetUserIdFromContext();
-                var map = new HistoryPurchaseOrderQuery();
-                map.id = Guid.Parse(request);
-                var result = await _mediator.Send(map);
+
+                rq.id = Guid.Parse(request);
+                var result = await _mediator.Send(rq);
                 return Ok(result);
             }
             catch (Exception ex)
