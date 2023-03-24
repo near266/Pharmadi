@@ -3,6 +3,7 @@ using MediatR;
 using Module.Factor.Application.Persistences;
 using Module.Factor.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Module.Factor.Application.Commands.MerchantCm
 {
@@ -14,9 +15,9 @@ namespace Module.Factor.Application.Commands.MerchantCm
         public string MerchantName { get; set; }
         public string? TaxCode { get; set; }
         public string PhoneNumber { get; set; }
-        public string Address { get; set; }
-        public string Location { get; set; }
-        public string ContactName { get; set; }
+        public string? Address { get; set; }
+        public string? Location { get; set; }
+        public string? ContactName { get; set; }
         public string? GPPNumber { get; set; }
         public string? ContractNumber { get; set; }
         public int? Channel { get; set; }
@@ -24,7 +25,9 @@ namespace Module.Factor.Application.Commands.MerchantCm
         public string? Branch { get; set; }
         public string? Email { get; set; }
         public string? TypeCustomer { get; set; }
+        [JsonIgnore]
         public Guid? LastModifiedBy { get; set; }
+        [JsonIgnore]
         public DateTime LastModifiedDate { get; set; }
     }
     public class MerchantUpdateCommandHandler: IRequestHandler<MerchantUpdateCommand, int>

@@ -15,12 +15,12 @@ namespace Module.Factor.Domain.Entities
         [Phone]
         public string PhoneNumber { get; set; }
         [MaxLength(2000)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
         [MaxLength(2000)]
-        public string Location { get; set; }
+        public string? Location { get; set; }
         [MaxLength(100)]
         //[Column("Ten nguoi lien lac")]
-        public string ContactName { get; set; }
+        public string? ContactName { get; set; }
         [MaxLength(50)]
         //[Column("So GPP")]
         public string? GPPNumber { get; set; }
