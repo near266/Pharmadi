@@ -82,19 +82,34 @@ namespace BFF.Web.Controllers.FactorSvc
             {
                 var AddRole = new HashSet<string>();
                 AddRole.Add("ROLE_MERCHANT");
+
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
                 request.LangKey = "en";
                 request.Roles = AddRole;
-                
+
 
                 //request.Roles.Add("")
                 var tem1 = _mapper.Map<RegisterRequest>(request);
                 tem1.Id = request.Id.ToString();
+                tem1.Login = request.PhoneNumber;
                 //adduser
                 var step1 = await _accountService.RegisterAccount(tem1);
-
-                return Ok(step1.Id);
+                if (step1 != null)
+                {
+                    var temp2 = new Merchant()
+                    {
+                        Id = new Guid(step1.Id),
+                        MerchantName = tem1.Login,
+                        PhoneNumber = tem1.PhoneNumber,
+                        Status = 0,
+                    };
+                    var map = _mapper.Map<MerchantAddCommand>(temp2);
+                   var check=  await _mediator.Send(map);
+                   
+                    return Ok(step1.Id);
+                }
+                return Ok(Guid.NewGuid().ToString());
 
 
             }
@@ -105,13 +120,14 @@ namespace BFF.Web.Controllers.FactorSvc
             }
         }
         [HttpPost("AddMerchant")]
-        public async Task<IActionResult> AddMerchant([FromBody] MerchantAddCommand rq)
+        public async Task<IActionResult> AddMerchant([FromBody] MerchantUpdateCommand rq)
         {
 
             _logger.LogInformation($"REST request AddMerchant : {JsonConvert.SerializeObject(rq)}");
             try
             {
-                rq.Status = 0;
+                rq.LastModifiedDate = DateTime.Now;
+                rq.LastModifiedBy = rq.Id;
                 return Ok(await _mediator.Send(rq));
 
             }
