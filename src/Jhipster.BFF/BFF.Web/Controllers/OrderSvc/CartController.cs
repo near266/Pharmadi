@@ -116,12 +116,12 @@ namespace BFF.Web.ProductSvc
             }
         }
         [HttpPost("QuickOrder")]
-        public async Task<IActionResult> QuickOrder([FromBody] QuickOrderQuery request)
+        public async Task<IActionResult> QuickOrder()
         {
-            _logger.LogInformation($"REST request QuickOrder : {JsonConvert.SerializeObject(request)}");
+           
             try
             {
-                if (request.userId == null || request.userId == Guid.Empty)
+                var request = new QuickOrderQuery();
                     request.userId = new Guid(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
