@@ -54,6 +54,8 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request update Cart : {JsonConvert.SerializeObject(request)}");
             try
             {
+                request.UserId = Guid.Parse(GetUserIdFromContext());
+                request.IsChoice = true;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
