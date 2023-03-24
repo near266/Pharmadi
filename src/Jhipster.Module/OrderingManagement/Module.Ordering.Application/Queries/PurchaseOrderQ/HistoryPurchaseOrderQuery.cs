@@ -5,13 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Module.Ordering.Application.Queries.PurchaseOrderQ
 {
     public class HistoryPurchaseOrderQuery : IRequest<List<HistoryOrderDTO>>
     {
+        [JsonIgnore]
         public Guid id { get; set; }
+        public int? Status { get; set; }
+        public string? OrderCode { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string? NameProduct { get; set; }
+
     }
     public class HistoryPurchaseOrderQueryHandler : IRequestHandler<HistoryPurchaseOrderQuery, List<HistoryOrderDTO>>
     {
@@ -23,7 +30,7 @@ namespace Module.Ordering.Application.Queries.PurchaseOrderQ
 
         public async Task<List<HistoryOrderDTO>> Handle(HistoryPurchaseOrderQuery request, CancellationToken cancellationToken)
         {
-            return await _purchaseOrderRepostitory.transactionHistory(request.id);
+            return await _purchaseOrderRepostitory.transactionHistory(request.id,request.Status,request.OrderCode,request.CreatedDate,request.NameProduct);
         }
     }
 }
