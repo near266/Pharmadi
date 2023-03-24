@@ -19,6 +19,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         }
         public async Task<int> Add(PurchaseOrder request)
         {
+            request.OrderCode = "DH001";
             await _context.PurchaseOrders.AddAsync(request);
             return await _context.SaveChangesAsync();
         }
