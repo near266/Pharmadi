@@ -71,13 +71,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return result;
         }
 
-        public async Task<int> PinBrand(Guid Id,bool? Pin)
+        public async Task<int> PinBrand(Brand brand)
         {
-            var check = await _context.Brands.FirstOrDefaultAsync(i=>i.Id == Id);
-            if (check != null)
+            var old = await _context.Brands.FirstOrDefaultAsync(i=>i.Id==brand.Id);
+            if (old != null)
             {
-                
-                _mapper.Map(Pin, check.Pin);
+                old.LastModifiedDate= DateTime.UtcNow;
+                old.LastModifiedBy=brand.LastModifiedBy; 
+                old.Pin= brand.Pin;
                 _context.SaveChangesAsync();
                 return 1;
             }

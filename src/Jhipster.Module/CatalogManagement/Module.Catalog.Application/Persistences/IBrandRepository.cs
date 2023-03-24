@@ -12,7 +12,7 @@ namespace Module.Catalog.Application.Persistences
         Task<int> Delete(Guid id);
         Task<IEnumerable<Brand>> Search(string? keyword);
         Task<PagedList<Brand>> GetAllAdmin(int page, int pageSize);
-        Task<int> PinBrand(Guid Id,bool? Pin);
+        Task<int> PinBrand(Brand brand);
         Task<PagedList<BrandDTO>> IsHaveGroup(int page , int pageSize,int type ,Guid? GroupBrandId);
         Task<List<string>> ImageBrand();
     }

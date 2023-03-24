@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Commands.BrandCm
@@ -14,7 +15,13 @@ namespace Module.Catalog.Application.Commands.BrandCm
     {
         public Guid Id { get; set; }
         public bool Pin { get; set; }
-    }
+        [JsonIgnore]
+        public DateTime? LastModifiedDate { get; set; }
+        [JsonIgnore]
+
+        public string? LastModifiedBy { get; set; }
+      
+      }
     public class BrandPinCommandHandler : IRequestHandler<BrandPinCommand, int>
     {
         private readonly IBrandRepository _repo;
@@ -26,8 +33,8 @@ namespace Module.Catalog.Application.Commands.BrandCm
         }
         public async Task<int> Handle(BrandPinCommand request, CancellationToken cancellationToken)
         {
-            var obj = _mapper.Map<Brand>(request);
-            return await _repo.PinBrand(obj.Id,obj.Pin);
+            var req = _mapper.Map<Brand>(request);
+            return await _repo.PinBrand(req);
         }
     }
 }
