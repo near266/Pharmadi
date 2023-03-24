@@ -12,6 +12,8 @@ namespace Module.Ordering.Shared.DTOs
     {
         public int Quantity { get; set; }
         public int TotalPrice { get; set; }
+
+        public int TotalPayment { get; set; }
     }
 
     public class ViewCartByBrandDTO

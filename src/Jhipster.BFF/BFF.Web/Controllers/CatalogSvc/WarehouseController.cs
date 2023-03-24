@@ -34,7 +34,7 @@ namespace BFF.Web.ProductSvc
             try
             {
                 var result = 0;
-                foreach( var item in request)
+                foreach (var item in request)
                 {
                     var tem = new WarehouseProductAddCommand
                     {
@@ -46,7 +46,7 @@ namespace BFF.Web.ProductSvc
                     };
                     result = await _mediator.Send(tem);
                 }
-                
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -66,10 +66,11 @@ namespace BFF.Web.ProductSvc
                 var result = 0;
                 foreach (var item in request)
                 {
-                    var tem = new WarehouseProductAddCommand
+                    var tem = new WarehouseProductUpdateCommand
                     {
-                        Id = Guid.NewGuid(),
+                        Id = item.Id,
                         ProductId = item.ProductId,
+                        Lot = item.Lot,
                         DateExpire = item.DateExpire,
                         AvailabelQuantity = item.AvailabelQuantity
                     };

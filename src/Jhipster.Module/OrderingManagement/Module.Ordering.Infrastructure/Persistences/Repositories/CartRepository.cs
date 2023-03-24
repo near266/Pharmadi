@@ -21,6 +21,13 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         }
         public async Task<int> Add(Cart request)
         {
+            var obj = await _context.Carts.Where(i => i.UserId == request.UserId && i.ProductId == request.ProductId).FirstOrDefaultAsync();
+            if(obj!=null)
+            {
+                obj = _mapper.Map<Cart, Cart>(request, obj);
+
+                return await _context.SaveChangesAsync(default);
+            }
             await _context.Carts.AddAsync(request);
             return await _context.SaveChangesAsync();
         }
@@ -50,8 +57,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 Id = c.Id,
                 UserId = c.UserId,
                 Product = _context.Products.Where(i => i.Id == c.ProductId)
-                                .Include(i => i.TagProducts).ThenInclude(i => i.Tag)
-                                .Include(i => i.LabelProducts).ThenInclude(i => i.Label)
+                                //.Include(i => i.TagProducts).ThenInclude(i => i.Tag)
+                                //.Include(i => i.LabelProducts).ThenInclude(i => i.Label)
                                 .FirstOrDefault(),
                 Quantity = c.Quantity
             }).AsQueryable();
@@ -123,11 +130,15 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             var res = new CartResultDTO();
             var data = await _context.Carts.Include(i => i.Product).Where(i => i.UserId == userId && i.IsChoice == true).ToListAsync();
             res.Quantity = (int)data.Sum(i => i.Quantity);
-            var summ = 0;
+            
             foreach (var item in data)
             {
-                summ = (int)(item.Quantity * item.Product.SalePrice);
+                var summ = (int)(item.Quantity * item.Product.SalePrice);
                 res.TotalPrice += summ;
+
+                var summ1 = (int)(item.Quantity * item.Product.Price);
+                res.TotalPayment += summ1;
+
             }
             return res;
 

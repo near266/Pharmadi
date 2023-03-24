@@ -5,6 +5,7 @@ using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
 using AutoMapper.Execution;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Module.Catalog.Shared.DTOs;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -87,85 +88,164 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
 
         // int 
-        public async Task<PagedList<Product>> ViewProductForU(string? keyword, int page, int pageSize)
+        public async Task<PagedList<ProductSearchDTO>> ViewProductForU(string? keyword, int page, int pageSize, Guid? userId)
         {
-            var query1 = _context.Products.AsQueryable();
-            var result = new PagedList<Product>();
-            var query = await _context.Products.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()))
-                        .Skip(pageSize * (page - 1))
+            var result = new PagedList<ProductSearchDTO>();
+            var query =  _context.Products.AsQueryable();
+            if (keyword != null)
+            {
+                query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
+            }
+            var query2 = await query.Select(i => new ProductSearchDTO
+            {
+                Id = i.Id,
+                SKU = i.SKU,
+                Price = i.Price,
+                SalePrice = i.SalePrice,
+                ProductName = i.ProductName,
+                UnitName = i.UnitName,
+                Image = i.Image,
+                Specification = i.Specification,
+                SaleNumber = 0,
+                Labels = _context.LabelProducts.Include(i=>i.Label).Where(i=>i.ProductId==i.Id).Select(i=>i.Label).AsEnumerable(),
+                CartNumber = (userId != null) ? (int)_context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault() : 0
+
+            }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
-            result.Data = query;
-            result.TotalCount = query1.Count();
+                                  
+            result.Data = query2.AsEnumerable();
+            result.TotalCount = query.Count();
             return result;
         }
-        public async Task<PagedList<Product>> ViewProductBestSale(int page, int pageSize)
+        public async Task<PagedList<ProductSearchDTO>> ViewProductBestSale(int page, int pageSize, Guid? userId)
         {
-            var result = new PagedList<Product>();
-            var query1 = _context.Products.AsQueryable();
+            var result = new PagedList<ProductSearchDTO>();
+            var query = _context.Products.AsQueryable();
+          
+            var query2 = await query.Select(i => new ProductSearchDTO
+            {
+                Id = i.Id,
+                SKU = i.SKU,
+                Price = i.Price,
+                SalePrice = i.SalePrice,
+                ProductName = i.ProductName,
+                UnitName = i.UnitName,
+                Image = i.Image,
+                Specification = i.Specification,
+                SaleNumber = 0,
+                Labels = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).Select(i => i.Label).AsEnumerable(),
+                CartNumber = (userId != null) ? (int)_context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault() : 0
 
-            var query = await _context.Products.Where(i=>i.SalePrice !=null).OrderByDescending(l => l.SalePrice)
-                .Skip(pageSize * (page - 1))
+            }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
-            result.Data = query;
-            result.TotalCount = query1.Count();
+
+            result.Data = query2.AsEnumerable();
+            result.TotalCount = query.Count();
             return result;
         }
 
-        public async Task<PagedList<Product>> ViewProductNew(int page, int pageSize)
+        public async Task<PagedList<ProductSearchDTO>> ViewProductNew(int page, int pageSize, Guid? userId)
         {
-            var result = new PagedList<Product>();
-            var query1 = _context.Products.AsQueryable();
+            var result = new PagedList<ProductSearchDTO>();
+            var query = _context.Products.AsQueryable();
+         
+            var query2 = await query.Select(i => new ProductSearchDTO
+            {
+                Id = i.Id,
+                SKU = i.SKU,
+                Price = i.Price,
+                SalePrice = i.SalePrice,
+                ProductName = i.ProductName,
+                UnitName = i.UnitName,
+                Image = i.Image,
+                Specification = i.Specification,
+                SaleNumber = 0,
+                Labels = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).Select(i => i.Label).AsEnumerable(),
+                CartNumber = (userId != null) ? (int)_context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault() : 0
 
-            var query = await _context.Products.Skip(pageSize * (page - 1))
-                        .Take(pageSize).OrderByDescending(i => i.CreatedDate)
-                        .ToListAsync();
-            result.Data = query;
-            result.TotalCount = query1.Count();
-            return result;
-        }
-        public async Task<PagedList<Product>> ViewProductPromotion(string? keyword, int page, int pageSize)
-        {
-            var query1 = _context.Products.AsQueryable();
-
-            var result = new PagedList<Product>();
-            var query = await _context.Products.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()) && i.SalePrice != null)
-                .Skip(pageSize * (page - 1))
+            }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
-            result.Data = query;
-            result.TotalCount = query1.Count();
+
+            result.Data = query2.AsEnumerable();
+            result.TotalCount = query.Count();
+            return result;
+        }
+        public async Task<PagedList<ProductSearchDTO>> ViewProductPromotion(string? keyword, int page, int pageSize, Guid? userId)
+        {
+            var result = new PagedList<ProductSearchDTO>();
+            var query = _context.Products.AsQueryable();
+            if (keyword != null)
+            {
+                query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
+            }
+            var query2 = await query.Select(i => new ProductSearchDTO
+            {
+                Id = i.Id,
+                SKU = i.SKU,
+                Price = i.Price,
+                SalePrice = i.SalePrice,
+                ProductName = i.ProductName,
+                UnitName = i.UnitName,
+                Image = i.Image,
+                Specification = i.Specification,
+                SaleNumber = 0,
+                Labels = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).Select(i => i.Label).AsEnumerable(),
+                CartNumber = (userId != null) ? (int)_context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault() : 0
+
+            }).Skip(pageSize * (page - 1))
+                        .Take(pageSize)
+                        .ToListAsync();
+
+            result.Data = query2.AsEnumerable();
+            result.TotalCount = query.Count();
             return result;
         }
 
-        public async Task<PagedList<Product>> SearchProduct(string? keyword, List<Guid?>? categoryIds, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize)
+        public async Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid?>? categoryIds, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
         {
-            var result = new PagedList<Product>();
-            var query1 = _context.Products.Include(i=>i.Brand).AsQueryable();
+            var result = new PagedList<ProductSearchDTO>();
+            var query = _context.Products.Include(i=>i.Brand).AsQueryable();
             if (keyword != null)
             {
                 keyword = keyword.ToLower();
-                query1 = query1.Where(i => i.SKU.ToLower().Contains(keyword) || i.ProductName.ToLower().Contains(keyword));
+                query = query.Where(i => i.SKU.ToLower().Contains(keyword) || i.ProductName.ToLower().Contains(keyword));
             }
             if (categoryIds.Count() > 0)
             {
-                query1 = query1.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(i => categoryIds.Contains(i.CategoryId)));
+                query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(i => categoryIds.Contains(i.CategoryId)));
             }
             if (brandIds.Count() > 0)
             {
-                query1 = query1.Where(i => brandIds.Contains(i.BrandId));
+                query = query.Where(i => brandIds.Contains(i.BrandId));
             }
             if (tagIds.Count() > 0)
             {
-                query1 = query1.Include(i => i.TagProducts).Where(i => i.TagProducts.Any(i => tagIds.Contains(i.TagId)));
+                query = query.Include(i => i.TagProducts).Where(i => i.TagProducts.Any(i => tagIds.Contains(i.TagId)));
             }
-            var data = await query1
-                        .Skip(pageSize * (page - 1))
+
+            var query2 = await query.Select(i => new ProductSearchDTO
+            {
+                Id = i.Id,
+                SKU = i.SKU,
+                Price = i.Price,
+                SalePrice = i.SalePrice,
+                ProductName = i.ProductName,
+                UnitName = i.UnitName,
+                Image = i.Image,
+                Specification = i.Specification,
+                SaleNumber = 0,
+                Labels = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).Select(i => i.Label).AsEnumerable(),
+                CartNumber = (int)_context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault()
+
+            }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
-            result.Data = data;
-            result.TotalCount = query1.Count();
+
+            result.Data = query2.AsEnumerable();
+            result.TotalCount = query.Count();
             return result;
         }
 
@@ -181,24 +261,38 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<IEnumerable<Product>> ViewListProductWithBrand(Guid Id)
+        public async Task<IEnumerable<ProductSearchDTO>> ViewListProductWithBrand(Guid Id, Guid? userId)
         {
             var query = _context.Products.AsQueryable();
             var obj = query.FirstOrDefault(c => c.Id == Id);
             if (obj != null)
             {
-
                 query = query.Where(i => (obj.Brand == null || i.Brand.BrandName.ToLower().Contains(obj.Brand.BrandName.ToLower()) && i.Id != obj.Id));
             }
-            var result = query.AsEnumerable();
-            return result;
+
+            var query2 =  query.Select(i => new ProductSearchDTO
+            {
+                Id = i.Id,
+                SKU = i.SKU,
+                Price = i.Price,
+                SalePrice = i.SalePrice,
+                ProductName = i.ProductName,
+                UnitName = i.UnitName,
+                Image = i.Image,
+                Specification = i.Specification,
+                SaleNumber = 0,
+                Labels = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).Select(i => i.Label).AsEnumerable(),
+                CartNumber = (userId != null) ? (int)_context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault() : 0
+
+            }).AsEnumerable();
+
+            return query2;
         }
 
 
-
-        public async Task<PagedList<Product>> ViewListProductSimilarCategory(Guid Id, int page, int pageSize)
+        public async Task<PagedList<ProductSearchDTO>> ViewListProductSimilarCategory(Guid Id, int page, int pageSize, Guid? userId)
         {
-            var listProduct = new PagedList<Product>();
+            var listProduct = new PagedList<ProductSearchDTO>();
             var listCatIds = await _context.CategoryProducts.Where(i => i.ProductId == Id).Select(i => i.CategoryId).ToListAsync();
             var listId2 = await _context.Categories.Where(i => listCatIds.Contains(i.Id) && i.ParentId != null).Select(i => i.Id).ToListAsync();
             var listId1 = await _context.Categories.Where(i => listCatIds.Contains(i.Id) && i.ParentId == null).Select(i => i.Id).ToListAsync();
@@ -206,9 +300,22 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if (listId2 != null)
             {
                 var prodIds = await _context.CategoryProducts.Where(i => listId2.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
-                var listProd = _context.Products.Where(i => prodIds.Contains(i.Id))
-                                   .Skip(pageSize * (page - 1))
-                                    .Take(pageSize).AsEnumerable();
+                var listProd = _context.Products.Where(i => prodIds.Contains(i.Id)).Select(i => new ProductSearchDTO
+                {
+                    Id = i.Id,
+                    SKU = i.SKU,
+                    Price = i.Price,
+                    SalePrice = i.SalePrice,
+                    ProductName = i.ProductName,
+                    UnitName = i.UnitName,
+                    Image = i.Image,
+                    Specification = i.Specification,
+                    SaleNumber = 0,
+                    Labels = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).Select(i => i.Label).AsEnumerable(),
+                    CartNumber = (userId!=null)?(int)_context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault():0
+
+                }).AsEnumerable();
+
                 listProduct.Data = listProd;
                 listProduct.TotalCount = listProd.Count();
                 return listProduct;
@@ -216,9 +323,22 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             else
             {
                 var prodId = await _context.CategoryProducts.Where(i => listId1.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
-                var ListProd = _context.Products.Where(i => prodId.Contains(i.Id))
-                       .Skip(pageSize * (page - 1))
-                        .Take(pageSize).AsEnumerable();
+                var ListProd = _context.Products.Where(i => prodId.Contains(i.Id)).Select(i => new ProductSearchDTO
+                {
+                    Id = i.Id,
+                    SKU = i.SKU,
+                    Price = i.Price,
+                    SalePrice = i.SalePrice,
+                    ProductName = i.ProductName,
+                    UnitName = i.UnitName,
+                    Image = i.Image,
+                    Specification = i.Specification,
+                    SaleNumber = 0,
+                    Labels = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).Select(i => i.Label).AsEnumerable(),
+                    CartNumber = (userId != null) ? (int)_context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault() : 0
+
+                }).AsEnumerable();
+
                 listProduct.Data = ListProd;
                 listProduct.TotalCount = ListProd.Count();
                 return listProduct;

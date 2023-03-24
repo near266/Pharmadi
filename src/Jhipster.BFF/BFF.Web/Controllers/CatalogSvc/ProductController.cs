@@ -220,6 +220,7 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request search Product : {JsonConvert.SerializeObject(request)}");
             try
             {
+                request.userId = Guid.Parse(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -236,6 +237,7 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request get all Product by Admin : {JsonConvert.SerializeObject(request)}");
             try
             {
+
                 var result = await _mediator.Send(request);
                 //var res = _mapper.Map<PagedList<GetAllAminDTO>>(result);
                 return Ok(result);
@@ -254,6 +256,7 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductForU  : {JsonConvert.SerializeObject(request)}");
             try
             {
+                request.userId = Guid.Parse(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -271,6 +274,7 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductBestSale  : {JsonConvert.SerializeObject(request)}");
             try
             {
+                request.userId = Guid.Parse(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -288,6 +292,7 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductNew  : {JsonConvert.SerializeObject(request)}");
             try
             {
+                request.userId = Guid.Parse(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -305,6 +310,7 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductPromotion  : {JsonConvert.SerializeObject(request)}");
             try
             {
+                request.userId = Guid.Parse(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -335,6 +341,7 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductWithBrand : {JsonConvert.SerializeObject(request)}");
             try
             {
+                request.userId = Guid.Parse(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -350,6 +357,7 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductSimilarCategory : {JsonConvert.SerializeObject(request)}");
             try
             {
+                request.userId = Guid.Parse(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }

@@ -82,13 +82,13 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<BrandDTO>> IsHaveGroup(int page, int pageSize, int type,Guid? GroupBrandId)
+        public async Task<PagedList<BrandDTO>> IsHaveGroup(int page, int pageSize, int type, Guid? GroupBrandId)
         {
-               var query = _context.Brands.AsQueryable();
-                var result = new PagedList<BrandDTO>();
-            if(type == 1)
+            var query = _context.Brands.AsQueryable();
+            var result = new PagedList<BrandDTO>();
+            if (type == 1)
             {
-                var data = await query.Where(i=>i.GroupBrandId !=null).Include(i=>i.GroupBrand).Select(i=> new BrandDTO
+                var data = await query.Where(i => i.GroupBrandId != null).Include(i => i.GroupBrand).Select(i => new BrandDTO
                 {
                     Id = i.Id,
                     GroupBrandId = i.GroupBrandId,
@@ -97,15 +97,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     LogoBrand = i.LogoBrand,
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(i=>i.BrandId==i.Id).Count()
+                    SumProduct = _context.Products.Where(i => i.BrandId == i.Id).Count()
 
                 }).Skip(pageSize * (page - 1))
                   .Take(pageSize).ToListAsync();
                 result.Data = data;
-                result.TotalCount = query.Count();
+                result.TotalCount = data.Count();
                 return result;
             }
-            if(type == 2)
+            if (type == 2)
             {
 
                 var data = await query.Where(i => i.GroupBrandId == null).Include(i => i.GroupBrand).Select(i => new BrandDTO
@@ -123,7 +123,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     .Skip(pageSize * (page - 1))
                         .Take(pageSize).ToListAsync();
                 result.Data = data;
-                result.TotalCount = query.Count();
+                result.TotalCount = data.Count();
                 return result;
             }
             return result;
