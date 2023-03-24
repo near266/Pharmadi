@@ -256,7 +256,12 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductForU  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                request.userId = Guid.Parse(GetUserIdFromContext());
+                try
+                {
+                    request.userId = Guid.Parse(GetUserIdFromContext());
+                }
+                catch
+                { }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -274,7 +279,12 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductBestSale  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                request.userId = Guid.Parse(GetUserIdFromContext());
+                try
+                {
+                    request.userId = Guid.Parse(GetUserIdFromContext());
+                }
+                catch
+                { }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -292,7 +302,12 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductNew  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                request.userId = Guid.Parse(GetUserIdFromContext());
+                try
+                {
+                    request.userId = Guid.Parse(GetUserIdFromContext());
+                }
+                catch
+                { }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -310,7 +325,12 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductPromotion  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                request.userId = Guid.Parse(GetUserIdFromContext());
+                try
+                {
+                    request.userId = Guid.Parse(GetUserIdFromContext());
+                }
+                catch
+                { }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
