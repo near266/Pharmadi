@@ -122,16 +122,16 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
             return 0;
         }
-        public async Task<List<HistoryOrderDTO>> transactionHistory(Guid id,int? Status, string? OrderCode, DateTime? CreateDate, string? NameProduct)
+        public async Task<List<HistoryOrderDTO>> transactionHistory(Guid id, int? Status, string? OrderCode, DateTime? CreateDate, string? NameProduct)
         {
             var dataPurchaseOrders = _context.PurchaseOrders.AsQueryable();
             dataPurchaseOrders = OrderCode != null ? dataPurchaseOrders.Where(i => i.OrderCode == OrderCode) : dataPurchaseOrders;
             dataPurchaseOrders = CreateDate != null ? dataPurchaseOrders.Where(i => i.CreatedDate == CreateDate) : dataPurchaseOrders;
             dataPurchaseOrders = Status != null ? dataPurchaseOrders.Where(i => i.Status == Status) : dataPurchaseOrders;
 
-            dataPurchaseOrders = id != null ? dataPurchaseOrders.Where(i => i.Id == id) : dataPurchaseOrders;
-            var dataProduct =_context.Products.AsQueryable();
-            dataProduct = NameProduct != null ? dataProduct.Where(i => i.ProductName.Equals( NameProduct)) : dataProduct;
+            dataPurchaseOrders = id != null ? dataPurchaseOrders.Where(i => i.MerchantId == id) : dataPurchaseOrders;
+            var dataProduct = _context.Products.AsQueryable();
+            dataProduct = NameProduct != null ? dataProduct.Where(i => i.ProductName.Equals(NameProduct)) : dataProduct;
 
             var data = from s in dataPurchaseOrders
                        join st in _context.OrderItems on s.Id equals st.PurchaseOrderId
@@ -163,14 +163,15 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 ToTalOrderItem = g.Count()
             });
             var history = new List<HistoryOrderDTO>();
-            if(NameProduct!=null)
+            if (NameProduct != null)
             {
-                foreach(var item in value)
+                foreach (var item in value)
                 {
                     if (item.ProductName == NameProduct) history.Add(item);
-                }    
-            }    
-            return history;
+                }
+                return history;
+            }
+            return value.ToList();
         }
 
     }
