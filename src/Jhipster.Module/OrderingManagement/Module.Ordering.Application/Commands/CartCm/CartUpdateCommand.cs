@@ -14,7 +14,6 @@ namespace Module.Ordering.Application.Commands.CartCm
         public Guid? UserId { get; set; }
         public Guid? ProductId { get; set; }
         public int? Quantity { get; set; }
-        [JsonIgnore]
         public bool? IsChoice { get; set; }
     }
     public class CartUpdateCommandHandler : IRequestHandler<CartUpdateCommand, int>

@@ -24,6 +24,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             var obj = await _context.Carts.Where(i => i.UserId == request.UserId && i.ProductId == request.ProductId).FirstOrDefaultAsync();
             if(obj!=null)
             {
+                request.Id = obj.Id;
+                request.Quantity = obj.Quantity + request.Quantity;
                 obj = _mapper.Map<Cart, Cart>(request, obj);
 
                 return await _context.SaveChangesAsync(default);
@@ -133,10 +135,10 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             
             foreach (var item in data)
             {
-                var summ = (int)(item.Quantity * item.Product.SalePrice);
+                var summ = (int)(item.Quantity * item.Product.Price);
                 res.TotalPrice += summ;
 
-                var summ1 = (int)(item.Quantity * item.Product.Price);
+                var summ1 = (int)(item.Quantity * item.Product.SalePrice);
                 res.TotalPayment += summ1;
 
             }
