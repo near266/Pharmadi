@@ -26,6 +26,11 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             {
                 request.Id = obj.Id;
                 request.Quantity = obj.Quantity + request.Quantity;
+                if(request.Quantity == 0)
+                {
+                    _context.Carts.Remove(obj);
+                    return await _context.SaveChangesAsync();
+                }
                 obj = _mapper.Map<Cart, Cart>(request, obj);
 
                 return await _context.SaveChangesAsync(default);
