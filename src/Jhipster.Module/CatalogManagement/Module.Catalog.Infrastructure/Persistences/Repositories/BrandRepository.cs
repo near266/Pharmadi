@@ -76,7 +76,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var check = await _context.Brands.FirstOrDefaultAsync(i=>i.Id == Id);
             if (check != null)
             {
+                if(check.Pin==null) { check.Pin= false; }
                 check.Pin = Pin;
+                _context.SaveChangesAsync();
                 return 1;
             }
             return 0;

@@ -418,6 +418,21 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("GetListProductSimilarCategoryByBrandId")]
+        public async Task<IActionResult> GetListProductSimilarCategoryByBrandId([FromBody] GetListProductSimilarCategoryByBrandIdQuery request)
+        {
+            _logger.LogInformation($"REST request GetListProductSimilarCategoryByBrandId : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to GetListProductSimilarCategoryByBrandId fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
 

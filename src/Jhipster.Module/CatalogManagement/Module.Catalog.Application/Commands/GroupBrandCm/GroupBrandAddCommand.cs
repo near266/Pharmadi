@@ -17,6 +17,8 @@ namespace Module.Catalog.Application.Commands.GroupBrandCm
         public Guid Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
         public string GroupBrandName { get; set; }
+        public string? LogoGroupBrand { get; set; }
+        public bool? Pin { get; set; }
         public Guid? CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
     }

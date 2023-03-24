@@ -6,6 +6,7 @@ using Jhipster.Service.Utilities;
 using AutoMapper.Execution;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Module.Catalog.Shared.DTOs;
+using Jhipster.Domain;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -362,6 +363,28 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             var data = query.AsEnumerable();
             return data;
+        }
+
+        public async Task<IEnumerable<SearchProductDTO>> GetListProductSimilarCategoryByBrandId(Guid brandId)
+        {
+            var pro =_context.Products.Where(i=>i.BrandId== brandId).Select(i=>i.Id).ToList();
+            var Cate =  await _context.CategoryProducts.Where(i=>pro.Contains(i.ProductId)).Select(i=>i.CategoryId).ToListAsync();
+            var Listpro = await _context.CategoryProducts.Where(i => Cate.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
+
+            var result = await _context.Products.Where(i => Listpro.Contains(i.Id)).Select(i => new SearchProductDTO
+            {
+
+                Id = i.Id,
+                SKU = i.SKU,
+                Price = i.Price,
+                SalePrice = i.SalePrice,
+                ProductName = i.ProductName,
+                UnitName = i.UnitName,
+                Image = i.Image,
+                Specification = i.Specification
+               
+            }).ToListAsync();
+            return result;
         }
     }
 }

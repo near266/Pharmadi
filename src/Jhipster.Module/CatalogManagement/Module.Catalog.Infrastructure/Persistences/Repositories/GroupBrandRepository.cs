@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -76,7 +77,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var check = await _context.GroupBrands.FirstOrDefaultAsync(i=>i.Id.Equals(Id));
             if (check != null)
             {
+                if (check.Pin == null) { check.Pin=false; }
                 check.Pin = Pin;
+                await _context.SaveChangesAsync();
                 return 1;
             }
             return 0;
