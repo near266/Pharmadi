@@ -88,8 +88,8 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request GetAllCartByUser : {JsonConvert.SerializeObject(request)}");
             try
             {
-                if(request.userId==null|| request.userId==Guid.Empty)
-                    request.userId= new Guid(GetUserIdFromContext());
+                if (request.userId == null || request.userId == Guid.Empty)
+                    request.userId = new Guid(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -118,12 +118,12 @@ namespace BFF.Web.ProductSvc
             }
         }
         [HttpPost("QuickOrder")]
-        public async Task<IActionResult> QuickOrder()
+        public async Task<IActionResult> QuickOrder([FromBody] QuickOrderQuery request)
         {
-           
+
             try
             {
-                var request = new QuickOrderQuery();
+                if (request.userId == null || request.userId == Guid.Empty)
                     request.userId = new Guid(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
