@@ -213,15 +213,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 keyword = keyword.ToLower();
                 query = query.Where(i => i.SKU.ToLower().Contains(keyword) || i.ProductName.ToLower().Contains(keyword));
             }
-            if (categoryIds!=null)
+            if (categoryIds!=null && categoryIds.Count()>0)
             {
                 query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(i => categoryIds.Contains(i.CategoryId)));
             }
-            if (brandIds!=null)
+            if (brandIds!=null && brandIds.Count()>0)
             {
                 query = query.Where(i => brandIds.Contains(i.BrandId));
             }
-            if (tagIds!=null)
+            if (tagIds!=null&& tagIds.Count()>0)
             {
                 query = query.Include(i => i.TagProducts).Where(i => i.TagProducts.Any(i => tagIds.Contains(i.TagId)));
             }
@@ -233,6 +233,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Price = i.Price,
                 SalePrice = i.SalePrice,
                 ProductName = i.ProductName,
+                Brand = i.Brand,
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
