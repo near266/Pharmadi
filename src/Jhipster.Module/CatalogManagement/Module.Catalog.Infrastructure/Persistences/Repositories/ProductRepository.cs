@@ -353,7 +353,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return await _context.Products.Select(i => i.Image).ToListAsync();
         }
 
-        public async Task<IEnumerable<Product>> SearchToChoose(string? keyword)
+        public async Task<IEnumerable<ProductSearchDTO>> SearchToChoose(string? keyword)
         {
             var query = _context.Products.AsQueryable();
             if(keyword!=null)
@@ -361,8 +361,24 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 keyword = keyword.ToLower();
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword) || i.SKU.ToLower().Contains(keyword));
             }
-            var data = query.AsEnumerable();
-            return data;
+
+            var query2 = query.Select(i => new ProductSearchDTO
+            {
+                Id = i.Id,
+                SKU = i.SKU,
+                Price = i.Price,
+                SalePrice = i.SalePrice,
+                ProductName = i.ProductName,
+                UnitName = i.UnitName,
+                Image = i.Image,
+                Specification = i.Specification,
+                SaleNumber = 0,
+                LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
+                Brand = i.Brand
+
+            }).AsEnumerable();
+
+            return query2;
         }
 
         public async Task<IEnumerable<SearchProductDTO>> GetListProductSimilarCategoryByBrandId(Guid brandId)
