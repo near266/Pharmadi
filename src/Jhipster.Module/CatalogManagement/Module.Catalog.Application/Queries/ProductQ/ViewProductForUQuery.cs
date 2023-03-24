@@ -11,7 +11,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
 {
     public class ViewProductForUQuery : IRequest<PagedList<ProductSearchDTO>>
     {
-        public string keyword { get; set; }
+        public string? keyword { get; set; }
         public int page { get; set; }
         public int pageSize { get; set; }
         public Guid? userId { get; set; }

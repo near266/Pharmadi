@@ -84,7 +84,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             if (keyword != null)
             {
                 keyword = keyword.ToLower();
-                query = query.Where(i => i.MerchantName.ToLower().Contains(keyword) || i.Address.ToLower().Contains(keyword)
+                query = query.Where(i => i.MerchantName.ToLower().Contains(keyword) || (i.Address != null ? i.Address : "null").ToLower().Contains(keyword)
                                 || i.PhoneNumber.Contains(keyword));
             }
             var data = query.AsEnumerable();

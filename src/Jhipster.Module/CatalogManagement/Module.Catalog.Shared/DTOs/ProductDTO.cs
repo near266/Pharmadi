@@ -20,8 +20,8 @@ namespace Module.Catalog.Shared.DTOs
         public Brand? Brand { get; set; }
         public List<string>? Image { get; set; }
         public string? Specification { get; set; }
-        public IEnumerable<Label> Labels { get; set; }
+        public IEnumerable<LabelProduct>? LabelProducts { get; set; }
         public int SaleNumber { get; set; }
-        public int CartNumber { get; set; }
+        public string CartNumber { get; set; } ="0";
     }
 }

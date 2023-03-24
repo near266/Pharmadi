@@ -24,6 +24,13 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             var obj = await _context.Carts.Where(i => i.UserId == request.UserId && i.ProductId == request.ProductId).FirstOrDefaultAsync();
             if(obj!=null)
             {
+                request.Id = obj.Id;
+                request.Quantity = obj.Quantity + request.Quantity;
+                if(request.Quantity == 0)
+                {
+                    _context.Carts.Remove(obj);
+                    return await _context.SaveChangesAsync();
+                }
                 obj = _mapper.Map<Cart, Cart>(request, obj);
 
                 return await _context.SaveChangesAsync(default);
@@ -60,7 +67,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                                 //.Include(i => i.TagProducts).ThenInclude(i => i.Tag)
                                 //.Include(i => i.LabelProducts).ThenInclude(i => i.Label)
                                 .FirstOrDefault(),
-                Quantity = c.Quantity
+                Quantity = c.Quantity,
+                IsChoice = c.IsChoice
             }).AsQueryable();
 
             var res = new List<ViewCartByBrandDTO>();
@@ -133,10 +141,10 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             
             foreach (var item in data)
             {
-                var summ = (int)(item.Quantity * item.Product.SalePrice);
+                var summ = (int)(item.Quantity * item.Product.Price);
                 res.TotalPrice += summ;
 
-                var summ1 = (int)(item.Quantity * item.Product.Price);
+                var summ1 = (int)(item.Quantity * item.Product.SalePrice);
                 res.TotalPayment += summ1;
 
             }
