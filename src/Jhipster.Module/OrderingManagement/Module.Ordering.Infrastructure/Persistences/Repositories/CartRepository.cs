@@ -67,7 +67,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                                 //.Include(i => i.TagProducts).ThenInclude(i => i.Tag)
                                 //.Include(i => i.LabelProducts).ThenInclude(i => i.Label)
                                 .FirstOrDefault(),
-                Quantity = c.Quantity
+                Quantity = c.Quantity,
+                IsChoice = c.IsChoice
             }).AsQueryable();
 
             var res = new List<ViewCartByBrandDTO>();
