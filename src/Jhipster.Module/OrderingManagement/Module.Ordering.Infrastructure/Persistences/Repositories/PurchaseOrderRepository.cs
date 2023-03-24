@@ -5,6 +5,8 @@ using Module.Ordering.Domain.Entities;
 using Module.Ordering.Infrastructure.Persistences;
 using Jhipster.Service.Utilities;
 using Module.Ordering.Application.DTO;
+using System.Collections.Generic;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -39,15 +41,15 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         {
 
             var query = _context.PurchaseOrders.Include(i => i.Merchant).AsQueryable();
-            if(fromDate!=null)
+            if (fromDate != null)
             {
-                query = query.Where(i=>i.CreatedDate>=fromDate);
+                query = query.Where(i => i.CreatedDate >= fromDate);
             }
             if (toDate != null)
             {
                 query = query.Where(i => i.CreatedDate <= toDate);
             }
-            if (status!=null)
+            if (status != null)
             {
                 query = query.Where(i => i.Status == status);
             }
@@ -62,7 +64,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 query = query.Where(i => i.Merchant.MerchantName.ToLower().Contains(customerkey));
             }
             var data = await query
-                        .Skip(pageSize *( page-1))
+                        .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
             var result = new PagedList<PurchaseOrder>();
@@ -81,13 +83,13 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         public async Task<PagedList<PurchaseOrder>> GetAllByUser(int page, int pageSize, int? status, Guid userId)
         {
 
-            var query = _context.PurchaseOrders.Include(i=>i.Merchant).Where(i=>i.MerchantId==userId).AsQueryable();
+            var query = _context.PurchaseOrders.Include(i => i.Merchant).Where(i => i.MerchantId == userId).AsQueryable();
             if (status != null)
             {
                 query = query.Where(i => i.Status == status);
             }
             var data = await query
-                        .Skip(pageSize *( page-1))
+                        .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
             var result = new PagedList<PurchaseOrder>();
@@ -120,11 +122,20 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
             return 0;
         }
-        public async Task<List<HistoryOrderDTO>> transactionHistory(Guid id)
+        public async Task<List<HistoryOrderDTO>> transactionHistory(Guid id,int? Status, string? OrderCode, DateTime? CreateDate, string? NameProduct)
         {
-            var data = from s in _context.PurchaseOrders
-                       where s.MerchantId == id
+            var dataPurchaseOrders = _context.PurchaseOrders.AsQueryable();
+            dataPurchaseOrders = OrderCode != null ? dataPurchaseOrders.Where(i => i.OrderCode == OrderCode) : dataPurchaseOrders;
+            dataPurchaseOrders = CreateDate != null ? dataPurchaseOrders.Where(i => i.CreatedDate == CreateDate) : dataPurchaseOrders;
+            dataPurchaseOrders = Status != null ? dataPurchaseOrders.Where(i => i.Status == Status) : dataPurchaseOrders;
+
+            dataPurchaseOrders = id != null ? dataPurchaseOrders.Where(i => i.Id == id) : dataPurchaseOrders;
+            var dataProduct =_context.Products.AsQueryable();
+            dataProduct = NameProduct != null ? dataProduct.Where(i => i.ProductName.Equals( NameProduct)) : dataProduct;
+
+            var data = from s in dataPurchaseOrders
                        join st in _context.OrderItems on s.Id equals st.PurchaseOrderId
+                       join sst in _context.Products on st.ProductId equals sst.Id
                        select new HistoryOrderDTOs
                        {
                            MerchantId = s.MerchantId,
@@ -134,19 +145,32 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                            Status = s.Status,
                            OrderItemId = st.Id,
                            QuantityOrderItem = st.Quantity,
-
+                           OrderCode = s.OrderCode,
+                           CreateDate = s.CreatedDate,
+                           ProductName = sst.ProductName
                        };
-            var value = data.GroupBy(i => new { i.MerchantId, i.ShippingFee, i.TotalPayment, i.TotalPrice, i.Status }).Select(g => new HistoryOrderDTO
+            var value = data.GroupBy(i => new { i.MerchantId, i.OrderCode, i.CreateDate, i.ProductName, i.ShippingFee, i.TotalPayment, i.TotalPrice, i.Status }).Select(g => new HistoryOrderDTO
             {
                 MerchantId = g.Key.MerchantId,
                 ShippingFee = g.Key.ShippingFee,
                 TotalPrice = g.Key.TotalPrice,
                 TotalPayment = g.Key.TotalPayment,
                 Status = g.Key.Status,
+                OrderCode = g.Key.OrderCode,
+                ProductName = g.Key.ProductName,
+                CreateDate = g.Key.CreateDate,
                 ToTalProduct = g.Sum(a => a.QuantityOrderItem),
                 ToTalOrderItem = g.Count()
             });
-            return value.ToList();
+            var history = new List<HistoryOrderDTO>();
+            if(NameProduct!=null)
+            {
+                foreach(var item in value)
+                {
+                    if (item.ProductName == NameProduct) history.Add(item);
+                }    
+            }    
+            return history;
         }
 
     }
