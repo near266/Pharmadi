@@ -122,56 +122,45 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
             return 0;
         }
-        public async Task<List<HistoryOrderDTO>> transactionHistory(Guid id, int? Status, string? OrderCode, DateTime? CreateDate, string? NameProduct)
-        {
-            var dataPurchaseOrders = _context.PurchaseOrders.AsQueryable();
-            dataPurchaseOrders = OrderCode != null ? dataPurchaseOrders.Where(i => i.OrderCode == OrderCode) : dataPurchaseOrders;
-            dataPurchaseOrders = CreateDate != null ? dataPurchaseOrders.Where(i => i.CreatedDate == CreateDate) : dataPurchaseOrders;
+        public async Task<PagedList<HistoryOrderDTO>> transactionHistory(Guid id, int? type, int? Status, string? OrderCode, string? productKey, DateTime? fromDate, DateTime? toDate, int page, int pageSize)
+        { 
+            var dataPurchaseOrders = _context.PurchaseOrders.Include(i=>i.OrderItems).AsQueryable();
+            //var dataProduct = _context.Products.AsQueryable();
+            dataPurchaseOrders = id != null ? dataPurchaseOrders.Where(i => i.MerchantId == id) : dataPurchaseOrders;
+
+            if (type ==1)
+            {
+                dataPurchaseOrders = OrderCode != null ? dataPurchaseOrders.Where(i => i.OrderCode.ToLower().Contains(OrderCode.ToLower())) : dataPurchaseOrders;
+            }
+            else if(type ==2)
+            {
+                dataPurchaseOrders = productKey != null ? dataPurchaseOrders.Where(i => i.OrderItems.Any(i=>i.Product.ProductName.ToLower().Contains(productKey.ToLower()))) : dataPurchaseOrders;
+            }
+            else
+            {
+                dataPurchaseOrders = fromDate != null ? dataPurchaseOrders.Where(i => i.CreatedDate >= fromDate) : dataPurchaseOrders;
+                dataPurchaseOrders = toDate != null ? dataPurchaseOrders.Where(i => i.CreatedDate <= toDate) : dataPurchaseOrders;
+            }
+
             dataPurchaseOrders = Status != null ? dataPurchaseOrders.Where(i => i.Status == Status) : dataPurchaseOrders;
 
-            dataPurchaseOrders = id != null ? dataPurchaseOrders.Where(i => i.MerchantId == id) : dataPurchaseOrders;
-            var dataProduct = _context.Products.AsQueryable();
-            dataProduct = NameProduct != null ? dataProduct.Where(i => i.ProductName.Equals(NameProduct)) : dataProduct;
-
-            var data = from s in dataPurchaseOrders
-                       join st in _context.OrderItems on s.Id equals st.PurchaseOrderId
-                       join sst in _context.Products on st.ProductId equals sst.Id
-                       select new HistoryOrderDTOs
-                       {
-                           MerchantId = s.MerchantId,
-                           ShippingFee = s.ShippingFee,
-                           TotalPrice = s.TotalPrice,
-                           TotalPayment = s.TotalPayment,
-                           Status = s.Status,
-                           OrderItemId = st.Id,
-                           QuantityOrderItem = st.Quantity,
-                           OrderCode = s.OrderCode,
-                           CreateDate = s.CreatedDate,
-                           ProductName = sst.ProductName
-                       };
-            var value = data.GroupBy(i => new { i.MerchantId, i.OrderCode, i.CreateDate, i.ProductName, i.ShippingFee, i.TotalPayment, i.TotalPrice, i.Status }).Select(g => new HistoryOrderDTO
+            var data = dataPurchaseOrders.Select(i => new HistoryOrderDTO
             {
-                MerchantId = g.Key.MerchantId,
-                ShippingFee = g.Key.ShippingFee,
-                TotalPrice = g.Key.TotalPrice,
-                TotalPayment = g.Key.TotalPayment,
-                Status = g.Key.Status,
-                OrderCode = g.Key.OrderCode,
-                ProductName = g.Key.ProductName,
-                CreateDate = g.Key.CreateDate,
-                ToTalProduct = g.Sum(a => a.QuantityOrderItem),
-                ToTalOrderItem = g.Count()
+                OrderCode = i.OrderCode,
+                CreateDate = i.CreatedDate,
+                TotalPayment = i.TotalPayment,
+                ToTalProduct = i.OrderItems.Where(o => o.PurchaseOrderId == i.Id).Select(i => i.ProductId).Distinct().Count(),
+                ToTalOrderItem = i.OrderItems.Where(o => o.PurchaseOrderId == i.Id).Select(i => i.Quantity).Sum(),
+                Status = i.Status,
             });
-            var history = new List<HistoryOrderDTO>();
-            if (NameProduct != null)
-            {
-                foreach (var item in value)
-                {
-                    if (item.ProductName == NameProduct) history.Add(item);
-                }
-                return history;
-            }
-            return value.ToList();
+            
+           var res =await  data.Skip(pageSize * (page - 1))
+                        .Take(pageSize)
+                        .ToListAsync();
+            var result = new PagedList<HistoryOrderDTO>();
+            result.Data = res.AsEnumerable();
+            result.TotalCount = data.Count();
+            return result;
         }
 
     }

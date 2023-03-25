@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Module.Ordering.Application.DTO
 {
-    public class HistoryOrderDTO
+   /* public class HistoryOrderDTO
     {
         public Guid MerchantId { get; set; }
         public Decimal ShippingFee { get; set; }
@@ -18,7 +18,20 @@ namespace Module.Ordering.Application.DTO
         public int Status { get; set; }
         public int ToTalProduct { get; set; }  // số sản phẩm
         public int ToTalOrderItem { get; set; }// số loại sp
+    }*/
+
+    public class HistoryOrderDTO
+    {
+        public Decimal TotalPayment { get; set; }
+        public string? OrderCode { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public int Status { get; set; }
+        public int ToTalProduct { get; set; }  // số sản phẩm
+        public int ToTalOrderItem { get; set; }// số loại sp
     }
+
+
+
     public class HistoryOrderDTOs
     {
         public Guid MerchantId { get; set; }
