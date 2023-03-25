@@ -7,6 +7,7 @@ using Jhipster.Service.Utilities;
 using Module.Ordering.Application.DTO;
 using System.Collections.Generic;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Jhipster.Helpers;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -21,7 +22,22 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         }
         public async Task<int> Add(PurchaseOrder request)
         {
-            request.OrderCode = "DH001";
+            var maxCode = MaxNumberOrderCurrent($"ĐFH{DateTime.Now.Year}_");
+            int number = 0;
+            try
+            {
+                string[] words = maxCode.Split('_');
+                number = int.Parse(words[1]);
+            }
+            catch
+            {
+                number = 1;
+            }
+
+            int yearnow = DateTime.Now.Year;
+            var shortCode = ShortIdHelper.GenerateCode(ShortIdHelper.ObjectConstant.order, yearnow, number + 1);
+
+            request.OrderCode = shortCode;
             await _context.PurchaseOrders.AddAsync(request);
             return await _context.SaveChangesAsync();
         }
@@ -76,14 +92,14 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         public async Task<PurchaseOrder> ViewDetail(Guid id)
         {
 
-            var result = await _context.PurchaseOrders.Include(i => i.Merchant).FirstOrDefaultAsync();
+            var result = await _context.PurchaseOrders.Where(i=>i.Id==id).FirstOrDefaultAsync();
             return result;
         }
 
         public async Task<PagedList<PurchaseOrder>> GetAllByUser(int page, int pageSize, int? status, Guid userId)
         {
 
-            var query = _context.PurchaseOrders.Include(i => i.Merchant).Where(i => i.MerchantId == userId).AsQueryable();
+            var query = _context.PurchaseOrders.Where(i => i.MerchantId == userId).AsQueryable();
             if (status != null)
             {
                 query = query.Where(i => i.Status == status);
@@ -162,6 +178,14 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             result.TotalCount = data.Count();
             return result;
         }
+
+        public string MaxNumberOrderCurrent(string staticCode)
+        {
+            var code =  _context.PurchaseOrders.Where(i => i.OrderCode.Contains(staticCode)).OrderByDescending(i => i.OrderCode).FirstOrDefault();
+            if (code == null) return string.Empty;
+            return code.OrderCode;
+        }
+
 
     }
 }

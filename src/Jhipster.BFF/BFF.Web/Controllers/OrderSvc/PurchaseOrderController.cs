@@ -17,6 +17,7 @@ using AutoMapper;
 using Module.Ordering.Application.Commands.OrderItemCm;
 using Module.Ordering.Application.Commands.CartCm;
 using Module.Ordering.Application.Queries.CartQ;
+using Module.Factor.Application.Queries.MerchantQ;
 
 namespace BFF.Web.ProductSvc
 {
@@ -49,6 +50,21 @@ namespace BFF.Web.ProductSvc
                 request.Status = 1;
                 request.MerchantId = new Guid(GetUserIdFromContext());
                 request.CreatedDate = DateTime.Now;
+
+
+                //lay thong tin merchant
+                var cusRequest = new MerchantViewDetailQuery
+                {
+                    Id = request.MerchantId
+                };
+                var cus =await _mediator.Send(cusRequest);
+
+                request.MerchantName = cus.MerchantName;
+                request.PhoneNumber = cus.PhoneNumber;
+                request.ContactName = cus.ContactName;
+                request.ContractNumber = cus.ContractNumber;
+                request.Address = cus.Address;
+
 
                 if (request.TotalPrice <= 1000000) request.ShippingFee = 50000;
 
@@ -225,52 +241,52 @@ namespace BFF.Web.ProductSvc
             try
             {
                 //status ==2 xac nhan don hang
-                if (request.Status == 2)
-                {
-                    // lay ds item trong don hang can phe duyet
-                    var step1 = new OrderItemGetAllByOrderQuery
-                    {
-                        purchaseOrderId = request.Id,
-                        page = 1,
-                        pageSize = 1000
-                    };
-                    var temp1 = await _mediator.Send(step1);
+                //if (request.Status == 2)
+                //{
+                //    // lay ds item trong don hang can phe duyet
+                //    var step1 = new OrderItemGetAllByOrderQuery
+                //    {
+                //        purchaseOrderId = request.Id,
+                //        page = 1,
+                //        pageSize = 1000
+                //    };
+                //    var temp1 = await _mediator.Send(step1);
 
-                    // tien hanh check so luong trong kho
-                    foreach (var item in temp1.Data)
-                    {
-                        var step2 = new CountProductQuery
-                        {
-                            id = item.ProductId,
-                        };
-                        var temp2 = await _mediator.Send(step2);
-                        if (temp2 < item.Quantity) throw new ArgumentException("There are not enough products in Warehouse", nameof(item.Product.ProductName));
-                    }
-                    // khi tat ca so luong du tien hanh cap nhat lai kho
-                    foreach (var item in temp1.Data)
-                    {
-                        var step3 = new ListLotDateByProductQuery
-                        {
-                            id = item.ProductId,
-                        };
-                        var temp3 = await _mediator.Send(step3);
-                        //for(int i=0;i<temp3.Count(); i++)
-                        //{
-                        //    var quantity = item.Quantity;
-                        //    while(quantity > item2.AvailabelQuantity)
-                        //    {
-                        //        var step4 = new WarehouseProductDeleteCommand
-                        //        {
-                        //            Id = item2.Id,
-                        //        };
-                        //        await _mediator.Send(step4);
-                        //        quantity -= item2.AvailabelQuantity;
-                        //    }
-                        //    //if(quantity)
-                        //}
-                    }
+                //    // tien hanh check so luong trong kho
+                //    foreach (var item in temp1.Data)
+                //    {
+                //        var step2 = new CountProductQuery
+                //        {
+                //            id = item.ProductId,
+                //        };
+                //        var temp2 = await _mediator.Send(step2);
+                //        if (temp2 < item.Quantity) throw new ArgumentException("There are not enough products in Warehouse", nameof(item.Product.ProductName));
+                //    }
+                //    // khi tat ca so luong du tien hanh cap nhat lai kho
+                //    foreach (var item in temp1.Data)
+                //    {
+                //        var step3 = new ListLotDateByProductQuery
+                //        {
+                //            id = item.ProductId,
+                //        };
+                //        var temp3 = await _mediator.Send(step3);
+                //        //for(int i=0;i<temp3.Count(); i++)
+                //        //{
+                //        //    var quantity = item.Quantity;
+                //        //    while(quantity > item2.AvailabelQuantity)
+                //        //    {
+                //        //        var step4 = new WarehouseProductDeleteCommand
+                //        //        {
+                //        //            Id = item2.Id,
+                //        //        };
+                //        //        await _mediator.Send(step4);
+                //        //        quantity -= item2.AvailabelQuantity;
+                //        //    }
+                //        //    //if(quantity)
+                //        //}
+                //    }
 
-                }
+                //}
 
                 var result = await _mediator.Send(request);
                 return Ok(result);

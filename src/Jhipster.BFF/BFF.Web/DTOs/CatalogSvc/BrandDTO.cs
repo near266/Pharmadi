@@ -32,7 +32,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public Guid Id { get; set; }
         public string BrandName { get; set; }
         [JsonIgnore]
-        public Guid GroupBrandId { get; set; }
+        public Guid? GroupBrandId { get; set; }
         public string LogoBrand { get; set; }
         public string Intro { get; set; }
         public bool? Pin { get; set; }
