@@ -19,7 +19,7 @@ namespace Module.Catalog.Application.Commands.BrandCm
         public Guid Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
         public string BrandName { get; set; }
-        public Guid? GroupBrandId { get; set; }
+        public Guid GroupBrandId { get; set; }
         public string LogoBrand { get; set; }
         public string Intro { get; set; }
         public bool? Pin { get; set; }

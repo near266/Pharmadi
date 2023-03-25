@@ -381,13 +381,13 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return query2;
         }
 
-        public async Task<IEnumerable<SearchProductDTO>> GetListProductSimilarCategoryByBrandId(Guid brandId)
+        public async Task<IEnumerable<ProductSearchDTO>> GetListProductSimilarCategoryByBrandId(Guid brandId, Guid? userId)
         {
             var pro =_context.Products.Where(i=>i.BrandId== brandId).Select(i=>i.Id).ToList();
             var Cate =  await _context.CategoryProducts.Where(i=>pro.Contains(i.ProductId)).Select(i=>i.CategoryId).ToListAsync();
             var Listpro = await _context.CategoryProducts.Where(i => Cate.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
 
-            var result = await _context.Products.Where(i => Listpro.Contains(i.Id)).Select(i => new SearchProductDTO
+            var result = await _context.Products.Where(i => Listpro.Contains(i.Id)).Select(i => new ProductSearchDTO
             {
 
                 Id = i.Id,
@@ -397,8 +397,11 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
-                Specification = i.Specification
-               
+                Specification = i.Specification,
+                SaleNumber = 0,
+                LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
+                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
+
             }).ToListAsync();
             return result;
         }
