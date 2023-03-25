@@ -5,14 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Module.Ordering.Application.Queries.PurchaseOrderQ
 {
     public class HistoryPurchaseOrderQuery : IRequest<List<HistoryOrderDTO>>
     {
-        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Guid id { get; set; }
         public int? Status { get; set; }
         public string? OrderCode { get; set; }

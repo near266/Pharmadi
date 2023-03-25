@@ -26,7 +26,7 @@ namespace Module.Catalog.Application.Persistences
 
   
 
-        Task<IEnumerable<SearchProductDTO>> GetListProductSimilarCategoryByBrandId(Guid brandId);
+        Task<IEnumerable<ProductSearchDTO>> GetListProductSimilarCategoryByBrandId(Guid brandId, Guid? userId);
 
       
 

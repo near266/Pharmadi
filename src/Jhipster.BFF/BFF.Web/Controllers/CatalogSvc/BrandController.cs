@@ -8,6 +8,8 @@ using Jhipster.Service.Utilities;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
 using BFF.Web.Constants;
+using Module.Catalog.Shared.DTOs;
+using BFF.Web.DTOs.CatalogSvc;
 
 namespace BFF.Web.ProductSvc
 {
@@ -163,6 +165,32 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request ImageBrand fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpPost("AddBrandToGroup")]
+        public async Task<ActionResult<int>> AddBrandToGroup([FromBody] AddBrandToGroupRequest request)
+        {
+            _logger.LogInformation($"REST request AddBrandToGroup : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+       
+                foreach (var rq in request.BrandIds)
+                {
+                    var br = new BrandUpdateCommand { 
+                      Id=rq.Id,
+                      GroupBrandId=request.GroupId,
+                
+                      
+                    };
+                    var result =  await _mediator.Send(br);
+
+                }
+                return Ok(1);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request AddBrandToGroup fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

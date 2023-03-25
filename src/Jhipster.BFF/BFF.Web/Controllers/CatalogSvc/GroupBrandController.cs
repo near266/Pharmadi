@@ -8,6 +8,10 @@ using Jhipster.Service.Utilities;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
 using BFF.Web.Constants;
+using BFF.Web.DTOs.CatalogSvc;
+using AutoMapper;
+using Module.Catalog.Application.Commands.BrandCm;
+using Jhipster.Infrastructure.Migrations;
 
 namespace BFF.Web.ProductSvc
 {
@@ -17,6 +21,7 @@ namespace BFF.Web.ProductSvc
     {
         private readonly IMediator _mediator;
         private readonly ILogger<GroupBrandController> _logger;
+        private readonly IMapper _mapper;
 
         public GroupBrandController(IMediator mediator, ILogger<GroupBrandController> logger)
         {
@@ -132,6 +137,49 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request toPinGroupBrand  fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpPost("CreatNewGroupAndBrand")]
+        public async Task<ActionResult<int>> CreatNewGroupAndBrand([FromBody] CreatNewGroupAndBrandRequest request)
+        {
+            _logger.LogInformation($"REST request CreatNewGroupAndBrand : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                //Add Group
+                request.GroupBrand.Id = Guid.NewGuid();
+                var gr = new GroupBrandAddCommand
+                {
+                    Id = request.GroupBrand.Id,
+                    GroupBrandName = request.GroupBrand.GroupBrandName,
+                    Pin = request.GroupBrand.Pin,
+                    CreatedDate = DateTime.Now,
+                    CreatedBy = new Guid(GetUserIdFromContext()),
+                
+                };
+                 await _mediator.Send(gr);
+                //Add Brandto group
+                foreach (var item in request.Brands) {
+
+                    var Br = new BrandAddCommand { 
+                    Id= Guid.NewGuid(),
+                    GroupBrandId=gr.Id,
+                    BrandName=item.BrandName,
+                    LogoBrand=item.LogoBrand,
+                    Intro=item.Intro,
+                    Pin=item.Pin,
+                    CreatedDate= DateTime.Now,
+                    CreatedBy= new Guid(GetUserIdFromContext()),
+                    };
+                    await _mediator.Send(Br);
+                   
+                }
+
+                return Ok(1);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request CreatNewGroupAndBrand fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }
