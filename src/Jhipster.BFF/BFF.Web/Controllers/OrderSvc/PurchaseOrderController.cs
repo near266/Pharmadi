@@ -281,8 +281,8 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpGet("Merchant/transactionHistory")]
-        public async Task<IActionResult> transactionHistory([FromQuery] HistoryPurchaseOrderQuery rq)
+        [HttpPost("Merchant/transactionHistory")]
+        public async Task<IActionResult> transactionHistory([FromBody] HistoryPurchaseOrderQuery rq)
         {
 
             try

@@ -147,7 +147,7 @@ namespace BFF.Web.ProductSvc
             try
             {
                 //Add Group
-                request.GroupBrand.Id = new Guid();
+                request.GroupBrand.Id = Guid.NewGuid();
                 var gr = new GroupBrandAddCommand
                 {
                     Id = request.GroupBrand.Id,
@@ -162,7 +162,8 @@ namespace BFF.Web.ProductSvc
                 foreach (var item in request.Brands) {
 
                     var Br = new BrandAddCommand { 
-                    Id= new Guid(),
+                    Id= Guid.NewGuid(),
+                    GroupBrandId=gr.Id,
                     BrandName=item.BrandName,
                     LogoBrand=item.LogoBrand,
                     Intro=item.Intro,

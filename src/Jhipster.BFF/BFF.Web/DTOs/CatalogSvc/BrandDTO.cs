@@ -1,11 +1,11 @@
 ﻿using BFF.Web.DTOs.CatalogSvc;
 using Module.Catalog.Domain.Entities;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace BFF.Web.DTOs.CatalogSvc
@@ -31,6 +31,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         [JsonIgnore]
         public Guid Id { get; set; }
         public string BrandName { get; set; }
+        [JsonIgnore]
         public Guid GroupBrandId { get; set; }
         public string LogoBrand { get; set; }
         public string Intro { get; set; }
