@@ -8,6 +8,7 @@ using Module.Ordering.Application.Queries.OrderItemQ;
 using Module.Ordering.Application.Commands.OrderItemCm;
 using Module.Ordering.Domain.Entities;
 using Newtonsoft.Json;
+using BFF.Web.DTOs.OrderSvc;
 
 namespace BFF.Web.ProductSvc
 {
@@ -39,30 +40,51 @@ namespace BFF.Web.ProductSvc
         }
 
 
-        //[HttpPost("Add")]
-        //public async Task<ActionResult<int>> Add([FromBody] OrderItemAddCommand request)
-        //{
-        //    _logger.LogInformation($"REST request add OrderItem : {JsonConvert.SerializeObject(request)}");
-        //    try
-        //    {
-        //        request.Id = Guid.NewGuid();
-        //        var result = await _mediator.Send(request);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError($"REST request to add OrderItem fail: {ex.Message}");
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
+        [HttpPost("Add")]
+        public async Task<ActionResult<int>> Add([FromBody] List<OrderItemAddRq> request)
+        {
+            _logger.LogInformation($"REST request add OrderItem : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                int result = 0;
+                foreach(var item in request)
+                {
+                    var tem = new OrderItemAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        PurchaseOrderId = item.PurchaseOrderId,
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity
+                    };
+                    result = await _mediator.Send(tem);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to add OrderItem fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] OrderItemUpdateCommand request)
+        public async Task<IActionResult> Update([FromBody] List<OrderItemUpdateRq> request)
         {
             _logger.LogInformation($"REST request update OrderItem : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _mediator.Send(request);
+                int result = 0;
+                foreach (var item in request)
+                {
+                    var tem = new OrderItemUpdateCommand
+                    {
+                        Id = item.Id,
+                        PurchaseOrderId = item.PurchaseOrderId,
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity
+                    };
+                    result = await _mediator.Send(tem);
+                }
                 return Ok(result);
             }
             catch (Exception ex)
@@ -73,7 +95,7 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete([FromBody] OrderItemDeleteCommand request)
+        public async Task<IActionResult> Delete([FromBody] List<OrderItemDeleteCommand> request)
         {
             _logger.LogInformation($"REST request delete OrderItem : {JsonConvert.SerializeObject(request)}");
             try

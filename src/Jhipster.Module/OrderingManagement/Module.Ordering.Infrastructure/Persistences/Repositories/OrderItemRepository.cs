@@ -25,13 +25,30 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
            
         }
 
-        public async Task<int> Delete(Guid id)
+        public async Task<int> Delete(List<Guid> ids)
         {
-            var obj = await _context.OrderItems.FirstOrDefaultAsync(i => i.Id.Equals(id));
-            if (obj != null)
+            foreach (var id in ids)
             {
-                _context.OrderItems.Remove(obj);
-                return await _context.SaveChangesAsync();
+                var obj = await _context.OrderItems.FirstOrDefaultAsync(i => i.Id.Equals(id));
+                if (obj != null)
+                {
+                    _context.OrderItems.Remove(obj);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            return 1;
+        }
+
+        public async Task<int> Update(OrderItem request)
+        {
+            var old = await _context.OrderItems.FirstOrDefaultAsync(i => i.Id.Equals(request.Id));
+            if (old != null)
+            {
+
+                old = _mapper.Map<OrderItem, OrderItem>(request, old);
+
+                return await _context.SaveChangesAsync(default);
             }
             return 0;
         }
@@ -60,17 +77,6 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return res;
         }
 
-        public async Task<int> Update(OrderItem request)
-        {
-            var old = await _context.OrderItems.FirstOrDefaultAsync(i => i.Id.Equals(request.Id));
-            if (old != null)
-            {
-
-                old = _mapper.Map<OrderItem, OrderItem>(request, old);
-
-                return await _context.SaveChangesAsync(default);
-            }
-            return 0;
-        }
+        
     }
 }

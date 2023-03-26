@@ -13,7 +13,7 @@ namespace Module.Ordering.Application.Commands.OrderItemCm
 {
     public class OrderItemDeleteCommand : IRequest<int>
     {
-        public Guid Id { get; set; }    
+        public List<Guid> Ids { get; set; }    
     }
     public class OrderItemDeleteCommandHandler : IRequestHandler<OrderItemDeleteCommand, int>
     {
@@ -26,7 +26,7 @@ namespace Module.Ordering.Application.Commands.OrderItemCm
         }
         public async Task<int> Handle(OrderItemDeleteCommand request, CancellationToken cancellationToken)
         {
-            return await _repo.Delete(request.Id);
+            return await _repo.Delete(request.Ids);
         }
     }
 
