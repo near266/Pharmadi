@@ -210,8 +210,8 @@ namespace BFF.Web.Controllers.FactorSvc
         }
         [Authorize(Roles = RolesConstants.ADMIN)]
 
-        [HttpGet("MerchantGetAllAdmin")]
-        public async Task<IActionResult> MerchantGetAllAdmin([FromQuery] MerchantGetAllAdminQuery request)
+        [HttpPost("MerchantGetAllAdmin")]
+        public async Task<IActionResult> MerchantGetAllAdmin([FromBody] MerchantGetAllAdminQuery request)
         {
             _logger.LogDebug($"REST request MerchantGetAllAdmin : {JsonConvert.SerializeObject(request)}");
             try

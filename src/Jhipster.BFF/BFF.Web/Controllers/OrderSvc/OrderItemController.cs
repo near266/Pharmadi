@@ -8,6 +8,7 @@ using Module.Ordering.Application.Queries.OrderItemQ;
 using Module.Ordering.Application.Commands.OrderItemCm;
 using Module.Ordering.Domain.Entities;
 using Newtonsoft.Json;
+using BFF.Web.DTOs.OrderSvc;
 
 namespace BFF.Web.ProductSvc
 {
@@ -40,7 +41,7 @@ namespace BFF.Web.ProductSvc
 
 
         [HttpPost("Add")]
-        public async Task<ActionResult<int>> Add([FromBody] List<OrderItemAddCommand> request)
+        public async Task<ActionResult<int>> Add([FromBody] List<OrderItemAddRq> request)
         {
             _logger.LogInformation($"REST request add OrderItem : {JsonConvert.SerializeObject(request)}");
             try
@@ -48,8 +49,14 @@ namespace BFF.Web.ProductSvc
                 int result = 0;
                 foreach(var item in request)
                 {
-                    item.Id = Guid.NewGuid();
-                    result = await _mediator.Send(item);
+                    var tem = new OrderItemAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        PurchaseOrderId = item.PurchaseOrderId,
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity
+                    };
+                    result = await _mediator.Send(tem);
                 }
                 return Ok(result);
             }
@@ -61,7 +68,7 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] List<OrderItemUpdateCommand> request)
+        public async Task<IActionResult> Update([FromBody] List<OrderItemUpdateRq> request)
         {
             _logger.LogInformation($"REST request update OrderItem : {JsonConvert.SerializeObject(request)}");
             try
@@ -69,8 +76,14 @@ namespace BFF.Web.ProductSvc
                 int result = 0;
                 foreach (var item in request)
                 {
-                    item.Id = Guid.NewGuid();
-                    result = await _mediator.Send(item);
+                    var tem = new OrderItemUpdateCommand
+                    {
+                        Id = item.Id,
+                        PurchaseOrderId = item.PurchaseOrderId,
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity
+                    };
+                    result = await _mediator.Send(tem);
                 }
                 return Ok(result);
             }
@@ -87,11 +100,7 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request delete OrderItem : {JsonConvert.SerializeObject(request)}");
             try
             {
-                int result = 0;
-                foreach (var item in request)
-                {
-                    result = await _mediator.Send(item);
-                }
+                var result = await _mediator.Send(request);
                 return Ok(result);
             }
             catch (Exception ex)
