@@ -91,7 +91,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<BrandDTO>();
             if (type == 1)
             {
-                var data = await query.Where(i => i.GroupBrandId != null).Include(i => i.GroupBrand).Select(i => new BrandDTO
+                var data = await query.Where(i => i.GroupBrandId != null&& i.GroupBrandId==GroupBrandId).Include(i => i.GroupBrand).Select(i => new BrandDTO
                 {
                     Id = i.Id,
                     GroupBrandId = i.GroupBrandId,
