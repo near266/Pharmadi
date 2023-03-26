@@ -34,6 +34,21 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 return await _context.SaveChangesAsync();
             }
             return 0;
+
+
+        }
+
+        public async Task<int> Update(OrderItem request)
+        {
+            var old = await _context.OrderItems.FirstOrDefaultAsync(i => i.Id.Equals(request.Id));
+            if (old != null)
+            {
+
+                old = _mapper.Map<OrderItem, OrderItem>(request, old);
+
+                return await _context.SaveChangesAsync(default);
+            }
+            return 0;
         }
 
         public async Task<PagedList<OrderItem>> GetAllItemByOrder(int page, int pageSize, Guid OrderId)
@@ -60,17 +75,6 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return res;
         }
 
-        public async Task<int> Update(OrderItem request)
-        {
-            var old = await _context.OrderItems.FirstOrDefaultAsync(i => i.Id.Equals(request.Id));
-            if (old != null)
-            {
-
-                old = _mapper.Map<OrderItem, OrderItem>(request, old);
-
-                return await _context.SaveChangesAsync(default);
-            }
-            return 0;
-        }
+        
     }
 }

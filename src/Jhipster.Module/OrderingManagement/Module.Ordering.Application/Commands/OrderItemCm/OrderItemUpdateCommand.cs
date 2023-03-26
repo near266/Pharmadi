@@ -14,9 +14,9 @@ namespace Module.Ordering.Application.Commands.OrderItemCm
     public class OrderItemUpdateCommand : IRequest<int>
     {
         public Guid Id { get; set; }
-        public Guid PurchaseOrderId { get; set; }
-        public Guid ProductId { get; set; }
-        public int Quantity { get; set; }
+        public Guid? PurchaseOrderId { get; set; }
+        public Guid? ProductId { get; set; }
+        public int? Quantity { get; set; }
     }
     public class OrderItemUpdateCommandHandler : IRequestHandler<OrderItemUpdateCommand, int>
     {
