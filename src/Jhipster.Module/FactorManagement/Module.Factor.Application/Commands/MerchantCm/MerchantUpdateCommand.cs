@@ -10,6 +10,7 @@ namespace Module.Factor.Application.Commands.MerchantCm
     public class MerchantUpdateCommand: IRequest<int>
     {
         [Required(ErrorMessage = "{0} is required.")]
+        [JsonIgnore]
         public Guid Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
         public string MerchantName { get; set; }

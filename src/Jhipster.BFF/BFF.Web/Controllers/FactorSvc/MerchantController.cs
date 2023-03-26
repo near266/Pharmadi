@@ -37,6 +37,10 @@ namespace BFF.Web.Controllers.FactorSvc
             _mapper = mapper;
             _accountService = accountService;
         }
+        private string GetUserIdFromContext()
+        {
+            return User.FindFirst("UserId")?.Value;
+        }
         //[HttpPost("RegisterByUser")]
         //public async Task<IActionResult> RegisterByUser([FromBody] RegisterByUserDTO request)
         //{
@@ -90,17 +94,17 @@ namespace BFF.Web.Controllers.FactorSvc
 
 
                 //request.Roles.Add("")
-                var tem1 = _mapper.Map<RegisterRequest>(request);
+                var tem1 = _mapper.Map<RegisterAdminRequest>(request);
                 tem1.Id = request.Id.ToString();
                 tem1.Login = request.PhoneNumber;
                 //adduser
-                var step1 = await _accountService.RegisterAccount(tem1);
+                var step1 = await _accountService.RegisterAccountAdmin(tem1);
                 if (step1 != null)
                 {
                     var temp2 = new Merchant()
                     {
                         Id = new Guid(step1.Id),
-                        MerchantName = tem1.Login,
+                        MerchantName = request.Login,
                         PhoneNumber = tem1.PhoneNumber,
                         Status = 0,
                     };
@@ -126,6 +130,7 @@ namespace BFF.Web.Controllers.FactorSvc
             _logger.LogInformation($"REST request AddMerchant : {JsonConvert.SerializeObject(rq)}");
             try
             {
+                rq.Id = Guid.Parse(GetUserIdFromContext());
                 rq.LastModifiedDate = DateTime.Now;
                 rq.LastModifiedBy = rq.Id;
                 return Ok(await _mediator.Send(rq));
