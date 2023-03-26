@@ -45,7 +45,9 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<RegisterByUserDTO, RegisterRequest>();
             CreateMap<RegisterByUserDTO, Merchant>();
             CreateMap<RegisterByAdminDTO, RegisterAdminRequest>();
+            CreateMap<RegisterByUserDTO, RegisterAdminRequest>();
             CreateMap<RegisterByAdminDTO, Merchant>();
+            CreateMap<MerchantUpdateCommand, Merchant>();
 
             CreateMap<User,RegisterRequest>()
              .ForMember(userDto => userDto.Roles, opt => opt.MapFrom(user => user.UserRoles.Select(iur => iur.Role.Name).ToHashSet()))
@@ -62,7 +64,6 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<Merchant, Merchant>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<RegisterRequest, RegisterAccountCommand>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<RegisterAccountAdminCommand, RegisterAdminRequest>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
             #region 2.Module permission
             //CreateMap<Function, FunctionDTO>().ReverseMap();
             //CreateMap<FunctionTypeDTO, FunctionType>().ReverseMap();
