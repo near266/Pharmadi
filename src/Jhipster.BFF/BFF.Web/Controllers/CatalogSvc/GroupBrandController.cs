@@ -140,6 +140,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
         [HttpPost("CreatNewGroupAndBrand")]
         public async Task<ActionResult<int>> CreatNewGroupAndBrand([FromBody] CreatNewGroupAndBrandRequest request)
         {
