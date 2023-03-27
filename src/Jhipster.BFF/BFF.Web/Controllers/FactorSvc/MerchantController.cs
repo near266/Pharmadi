@@ -203,7 +203,7 @@ namespace BFF.Web.Controllers.FactorSvc
         }
         [Authorize(Roles = RolesConstants.MERCHANT)]
 
-        [HttpPut("MerchantUpdate")]
+        [HttpPost("MerchantUpdate")]
         public async Task<IActionResult> MerchantUpdate([FromBody] MerchantUpdateCommand request)
         {
             _logger.LogDebug($"REST request MerchantUpdate : {JsonConvert.SerializeObject(request)}");
@@ -239,7 +239,7 @@ namespace BFF.Web.Controllers.FactorSvc
         }
         [Authorize(Roles = RolesConstants.MERCHANT)]
 
-        [HttpGet("MerchantViewDetail")]
+        [HttpPost("MerchantViewDetail")]
         public async Task<IActionResult> MerchantViewDetail([FromQuery] MerchantViewDetailQuery request)
         {
             _logger.LogDebug($"REST request MerchantViewDetail : {JsonConvert.SerializeObject(request)}");
