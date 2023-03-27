@@ -39,7 +39,7 @@ namespace Module.Factor.Domain.Entities
         public DateTime? LicenseDate { get; set; }
         public string? LicensePlace { get; set; }
 
-        public string? GGPImage { get; set; }
+        public List<string>? GGPImage { get; set; }
 
         public string? Avatar { get; set; }
 

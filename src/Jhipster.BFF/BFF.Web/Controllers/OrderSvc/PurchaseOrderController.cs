@@ -102,6 +102,14 @@ namespace BFF.Web.ProductSvc
                 };
                 res1 = await _mediator.Send(step3);
 
+                var tem = new OrderStatusAddCommand
+                {
+                    Id = Guid.NewGuid(),
+                    PurchaseOrderId = request.Id,
+                    Status = 1,
+                    dateTime = request.CreatedDate
+                };
+                res1 = await _mediator.Send(tem);
                 return Ok(res1);
             }
             catch (Exception ex)
@@ -122,9 +130,10 @@ namespace BFF.Web.ProductSvc
                 request.Status = 2;
                 request.CreatedDate = DateTime.Now;
 
+                int result = 0;
                 // add order
                 var step1 = _mapper.Map<PurchaseOrderAddCommand>(request);
-                await _mediator.Send(step1);
+                result = await _mediator.Send(step1);
 
 
                 //add order item
@@ -137,11 +146,19 @@ namespace BFF.Web.ProductSvc
                         ProductId = c.ProductId,
                         Quantity = c.Quantity
                     };
-                    await _mediator.Send(res2);
+                    result = await _mediator.Send(res2);
                 }
 
+                var tem = new OrderStatusAddCommand
+                {
+                    Id = Guid.NewGuid(),
+                    PurchaseOrderId = request.Id,
+                    Status = 1,
+                    dateTime = request.CreatedDate
+                };
+                result = await _mediator.Send(tem);
 
-                return Ok(1);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -295,56 +312,68 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request update PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
-                //status ==2 xac nhan don hang
-                //if (request.Status == 2)
-                //{
-                //    // lay ds item trong don hang can phe duyet
-                //    var step1 = new OrderItemGetAllByOrderQuery
-                //    {
-                //        purchaseOrderId = request.Id,
-                //        page = 1,
-                //        pageSize = 1000
-                //    };
-                //    var temp1 = await _mediator.Send(step1);
+/*                status == 2 xac nhan don hang
+                if (request.Status == 2)
+                {
+                    // lay ds item trong don hang can phe duyet
+                    var step1 = new OrderItemGetAllByOrderQuery
+                    {
+                        purchaseOrderId = request.Id,
+                        page = 1,
+                        pageSize = 1000
+                    };
+                    var temp1 = await _mediator.Send(step1);
 
-                //    // tien hanh check so luong trong kho
-                //    foreach (var item in temp1.Data)
-                //    {
-                //        var step2 = new CountProductQuery
-                //        {
-                //            id = item.ProductId,
-                //        };
-                //        var temp2 = await _mediator.Send(step2);
-                //        if (temp2 < item.Quantity) throw new ArgumentException("There are not enough products in Warehouse", nameof(item.Product.ProductName));
-                //    }
-                //    // khi tat ca so luong du tien hanh cap nhat lai kho
-                //    foreach (var item in temp1.Data)
-                //    {
-                //        var step3 = new ListLotDateByProductQuery
-                //        {
-                //            id = item.ProductId,
-                //        };
-                //        var temp3 = await _mediator.Send(step3);
-                //        //for(int i=0;i<temp3.Count(); i++)
-                //        //{
-                //        //    var quantity = item.Quantity;
-                //        //    while(quantity > item2.AvailabelQuantity)
-                //        //    {
-                //        //        var step4 = new WarehouseProductDeleteCommand
-                //        //        {
-                //        //            Id = item2.Id,
-                //        //        };
-                //        //        await _mediator.Send(step4);
-                //        //        quantity -= item2.AvailabelQuantity;
-                //        //    }
-                //        //    //if(quantity)
-                //        //}
-                //    }
+                    // tien hanh check so luong trong kho
+                    foreach (var item in temp1.Data)
+                    {
+                        var step2 = new CountProductQuery
+                        {
+                            id = item.ProductId,
+                        };
+                        var temp2 = await _mediator.Send(step2);
+                        if (temp2 < item.Quantity) throw new ArgumentException("There are not enough products in Warehouse", nameof(item.Product.ProductName));
+                    }
+                    // khi tat ca so luong du tien hanh cap nhat lai kho
+                    foreach (var item in temp1.Data)
+                    {
+                        var step3 = new ListLotDateByProductQuery
+                        {
+                            id = item.ProductId,
+                        };
+                        var temp3 = await _mediator.Send(step3);
+                        //for(int i=0;i<temp3.Count(); i++)
+                        //{
+                        //    var quantity = item.Quantity;
+                        //    while(quantity > item2.AvailabelQuantity)
+                        //    {
+                        //        var step4 = new WarehouseProductDeleteCommand
+                        //        {
+                        //            Id = item2.Id,
+                        //        };
+                        //        await _mediator.Send(step4);
+                        //        quantity -= item2.AvailabelQuantity;
+                        //    }
+                        //    //if(quantity)
+                        //}
+                    }*/
 
-                //}
-
+                    //}
+                
                 var result = await _mediator.Send(request);
-                return Ok(result);
+                if(result==1)
+                {
+                    var tem = new OrderStatusAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        PurchaseOrderId = request.Id,
+                        Status = request.Status,
+                        dateTime = DateTime.Now
+                    };
+                    result = await _mediator.Send(tem);
+                    return Ok(result);
+                }
+                return Ok(-1);
             }
             catch (Exception ex)
             {
@@ -361,6 +390,22 @@ namespace BFF.Web.ProductSvc
                 var request = GetUserIdFromContext();
 
                 rq.id = Guid.Parse(request);
+                var result = await _mediator.Send(rq);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("GetAllOrderStatus")]
+        public async Task<IActionResult> GetAllOrderStatus([FromBody] GetAllOrderStatusQuery rq)
+        {
+
+            try
+            {
                 var result = await _mediator.Send(rq);
                 return Ok(result);
             }

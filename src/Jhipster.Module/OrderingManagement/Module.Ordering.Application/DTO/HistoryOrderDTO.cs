@@ -22,6 +22,7 @@ namespace Module.Ordering.Application.DTO
 
     public class HistoryOrderDTO
     {
+        public Guid OrderId { get; set; }
         public Decimal TotalPayment { get; set; }
         public string? OrderCode { get; set; }
         public DateTime? CreateDate { get; set; }

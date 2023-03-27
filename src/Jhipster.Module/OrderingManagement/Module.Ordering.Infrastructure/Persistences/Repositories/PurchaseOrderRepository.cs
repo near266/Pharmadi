@@ -163,6 +163,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
 
             var data = dataPurchaseOrders.Select(i => new HistoryOrderDTO
             {
+                OrderId = i.Id,
                 OrderCode = i.OrderCode,
                 CreateDate = i.CreatedDate,
                 TotalPayment = i.TotalPayment,

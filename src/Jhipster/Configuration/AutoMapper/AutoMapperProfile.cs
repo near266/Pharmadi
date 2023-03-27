@@ -172,6 +172,9 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<CartUpdateCommand,Cart>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<Cart, Cart>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<OrderStatusAddCommand, OrderStatus>().ReverseMap();
+            CreateMap<OrderStatus, OrderStatus>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             CreateMap<OrderItemRequest, OrderItem>().ReverseMap();
             CreateMap<OrderItemAddCommand, OrderItem>().ReverseMap();
             CreateMap<OrderItemUpdateCommand, OrderItem>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
