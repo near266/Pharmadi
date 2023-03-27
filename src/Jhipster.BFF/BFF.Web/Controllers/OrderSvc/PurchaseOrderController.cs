@@ -41,12 +41,21 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("UserId")?.Value;
         }
+       
+        [Authorize(Roles = RolesConstants.MERCHANT)]
+
         [HttpPost("AddByUser")]
         public async Task<ActionResult<int>> Add([FromBody] OrderAddRequestUser request)
         {
             _logger.LogInformation($"REST request add PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
+                var checkStatus = new PurchaseOrderCheckStatusCommand()
+                {
+                    Id = Guid.Parse(GetUserIdFromContext())
+                };
+                var Status = await _mediator.Send(checkStatus);
+                if (Status != 2) throw new Exception("Unverified Account");
                 request.Id = Guid.NewGuid();
                 request.CreatedBy = new Guid(GetUserIdFromContext());
                 request.Status = 1;
