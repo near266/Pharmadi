@@ -57,7 +57,7 @@ namespace BFF.Web.ProductSvc
                 {
                     Id = request.MerchantId
                 };
-                var cus =await _mediator.Send(cusRequest);
+                var cus = await _mediator.Send(cusRequest);
 
                 request.MerchantName = cus.MerchantName;
                 request.PhoneNumber = cus.PhoneNumber;
@@ -149,14 +149,52 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] PurchaseOrderUpdateCommand request)
+        public async Task<IActionResult> Update([FromBody] PurchaseOrderUpdateRequest request)
         {
             _logger.LogInformation($"REST request update PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.LastModifiedDate = DateTime.Now;
                 request.LastModifiedBy = new Guid(GetUserIdFromContext());
-                var result = await _mediator.Send(request);
+                var mapPurchaseOrder = _mapper.Map<PurchaseOrderUpdateCommand>(request);
+                var value = await _mediator.Send(mapPurchaseOrder);
+                int result = 0;
+                if (request.OrderItem.orderItemAdds.Count() > 0)
+                {
+                    foreach (var item in request.OrderItem.orderItemAdds)
+                    {
+                        var tem = new OrderItemAddCommand
+                        {
+                            Id = item.Id,
+                            PurchaseOrderId = item.PurchaseOrderId,
+                            ProductId = item.ProductId,
+                            Quantity = item.Quantity
+                        };
+                        result = await _mediator.Send(tem);
+                    }
+                }
+                if (request.OrderItem.orderItemUpdates.Count() > 0)
+                {
+                    foreach (var item in request.OrderItem.orderItemUpdates)
+                    {
+                        var tem = new OrderItemUpdateCommand
+                        {
+                            Id = item.Id,
+                            PurchaseOrderId = item.PurchaseOrderId,
+                            ProductId = item.ProductId,
+                            Quantity = item.Quantity
+                        };
+                        result = await _mediator.Send(tem);
+                    }
+                }
+                if (request.OrderItem.orderItemDelete.Count() > 0)
+                {
+                    var tem = new OrderItemDeleteCommand
+                    {
+                        Ids = request.OrderItem.orderItemDelete
+                    };
+                    result = await _mediator.Send(tem);
+                }
                 return Ok(result);
             }
             catch (Exception ex)
