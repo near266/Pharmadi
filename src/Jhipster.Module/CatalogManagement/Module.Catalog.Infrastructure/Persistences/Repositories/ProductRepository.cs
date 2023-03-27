@@ -109,6 +109,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Specification = i.Specification,
                 SaleNumber = 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
+                Archived=i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
             }).Skip(pageSize * (page - 1))
@@ -135,6 +136,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Image = i.Image,
                 Specification = i.Specification,
                 SaleNumber = 0,
+                Archived=i.Archived,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
@@ -193,6 +195,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Image = i.Image,
                 Specification = i.Specification,
                 SaleNumber = 0,
+                Archived=i.Archived,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
@@ -240,6 +243,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Specification = i.Specification,
                 SaleNumber = 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
+                Archived=i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
             }).Skip(pageSize * (page - 1))
@@ -284,6 +288,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Specification = i.Specification,
                 SaleNumber = 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
+                Archived=i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
             }).AsEnumerable();
@@ -313,6 +318,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Image = i.Image,
                     Specification = i.Specification,
                     SaleNumber = 0,
+                    Archived=i.Archived,
                     LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
@@ -336,6 +342,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Image = i.Image,
                     Specification = i.Specification,
                     SaleNumber = 0,
+                    Archived=i.Archived,
                     LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
@@ -374,7 +381,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Specification = i.Specification,
                 SaleNumber = 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
-                Brand = i.Brand
+                Brand = i.Brand,
+                Archived = i.Archived
 
             }).AsEnumerable();
 
@@ -399,6 +407,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Image = i.Image,
                 Specification = i.Specification,
                 SaleNumber = 0,
+                Archived=i.Archived,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
