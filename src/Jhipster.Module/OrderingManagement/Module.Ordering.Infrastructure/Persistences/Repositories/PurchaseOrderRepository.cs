@@ -8,6 +8,7 @@ using Module.Ordering.Application.DTO;
 using System.Collections.Generic;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Jhipster.Helpers;
+using JHipsterNet.Core.Pagination;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -185,7 +186,18 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             if (code == null) return string.Empty;
             return code.OrderCode;
         }
-
+        public async Task<int> AddHistoryOrder(HistoryOrder order)
+        {
+             await _context.HistoryOrders.AddAsync(order);
+            return await _context.SaveChangesAsync();
+        }    
+        public async Task<int> AddHistoryOrderByPurcharseId(Guid Id)
+        {
+            var purcharse =await _context.PurchaseOrders.FirstOrDefaultAsync(i => i.Id==Id);
+            var map = _mapper.Map<HistoryOrder>(purcharse);
+            await _context.HistoryOrders.AddAsync(map);
+            return await _context.SaveChangesAsync();
+        }    
 
     }
 }

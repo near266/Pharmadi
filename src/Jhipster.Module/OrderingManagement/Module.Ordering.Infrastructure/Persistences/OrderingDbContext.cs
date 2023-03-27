@@ -24,6 +24,7 @@ namespace Module.Ordering.Infrastructure.Persistences
         public DbSet<LabelProduct> LabelProducts { get; set; }
         public DbSet<CategoryProduct> CategoryProducts { get; set; }
         public DbSet<WarehouseProduct> WarehouseProducts { get; set; }
+        public DbSet<HistoryOrder> HistoryOrders { get; set; }
         public OrderingDbContext(DbContextOptions<OrderingDbContext> options) : base(options)
         {
 
