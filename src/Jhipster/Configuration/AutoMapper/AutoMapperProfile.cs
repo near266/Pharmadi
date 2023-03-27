@@ -48,6 +48,7 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<RegisterByUserDTO, RegisterAdminRequest>();
             CreateMap<RegisterByAdminDTO, Merchant>();
             CreateMap<MerchantUpdateCommand, Merchant>();
+            CreateMap<PurchaseOrderUpdateCommand, PurchaseOrderUpdateRequest>();
 
             CreateMap<User,RegisterRequest>()
              .ForMember(userDto => userDto.Roles, opt => opt.MapFrom(user => user.UserRoles.Select(iur => iur.Role.Name).ToHashSet()))
