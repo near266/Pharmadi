@@ -46,7 +46,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             query = StartDate != null ? query.Where(i => i.CreatedDate > StartDate) : query;
             query=EndDate!=null ?query.Where(i=>i.CreatedDate < EndDate) : query;   
             var data = query
-                        .Skip(pageSize * page)
+                        .Skip(pageSize * (page-1))
                         .Take(pageSize);
             var res = new PagedList<Merchant>();
             res.Data = data;
