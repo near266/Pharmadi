@@ -4,6 +4,7 @@ using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
 using Module.Catalog.Shared.DTOs;
+using Org.BouncyCastle.Crypto;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -165,6 +166,22 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var brand = await _context.Brands.Where(i=>i.GroupBrandId==Id).Select(i=>i.Id).ToListAsync();
 
             return brand;
+        }
+
+        public async Task<int> ArchiveBrand(Guid? Id)
+        {
+            var res = 0;
+         
+            
+                var obj = await _context.Brands.FirstOrDefaultAsync(i => i.Id.Equals(Id));
+                if (obj != null)
+                {
+                    obj.Archived = true;
+                    res = await _context.SaveChangesAsync();
+                }
+           
+
+            return res;
         }
     }
 }

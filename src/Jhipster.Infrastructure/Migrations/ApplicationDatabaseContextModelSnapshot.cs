@@ -748,11 +748,20 @@ namespace Jhipster.Infrastructure.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
+                    b.Property<int?>("AddressStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("text");
+
                     b.Property<string>("Branch")
                         .HasColumnType("text");
 
                     b.Property<int?>("Channel")
                         .HasColumnType("integer");
+
+                    b.Property<string>("City")
+                        .HasColumnType("text");
 
                     b.Property<string>("ContactName")
                         .HasMaxLength(100)
@@ -767,8 +776,14 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("District")
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .HasColumnType("text");
+
+                    b.Property<List<string>>("GGPImage")
+                        .HasColumnType("text[]");
 
                     b.Property<string>("GPPNumber")
                         .HasMaxLength(50)
@@ -780,6 +795,12 @@ namespace Jhipster.Infrastructure.Migrations
 
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("LicenseDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LicensePlace")
+                        .HasColumnType("text");
 
                     b.Property<string>("Location")
                         .HasMaxLength(2000)
@@ -799,6 +820,9 @@ namespace Jhipster.Infrastructure.Migrations
 
                     b.Property<int?>("Status")
                         .HasColumnType("integer");
+
+                    b.Property<string>("SubDistrict")
+                        .HasColumnType("text");
 
                     b.Property<string>("TaxCode")
                         .HasMaxLength(10)
@@ -837,6 +861,64 @@ namespace Jhipster.Infrastructure.Migrations
                     b.ToTable("Carts");
                 });
 
+            modelBuilder.Entity("Module.Ordering.Domain.Entities.HistoryOrder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContactName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContractNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("MerchantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("MerchantName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OrderCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("ShippingFee")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("TotalPayment")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HistoryOrders");
+                });
+
             modelBuilder.Entity("Module.Ordering.Domain.Entities.OrderItem", b =>
                 {
                     b.Property<Guid>("Id")
@@ -861,11 +943,40 @@ namespace Jhipster.Infrastructure.Migrations
                     b.ToTable("OrderItems");
                 });
 
+            modelBuilder.Entity("Module.Ordering.Domain.Entities.OrderStatus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PurchaseOrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("dateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderStatuses");
+                });
+
             modelBuilder.Entity("Module.Ordering.Domain.Entities.PurchaseOrder", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContactName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContractNumber")
+                        .HasColumnType("text");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
@@ -883,8 +994,14 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<Guid>("MerchantId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("MerchantName")
+                        .HasColumnType("text");
+
                     b.Property<string>("OrderCode")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
 
                     b.Property<decimal>("ShippingFee")

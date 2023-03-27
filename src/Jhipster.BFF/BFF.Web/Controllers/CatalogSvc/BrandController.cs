@@ -41,6 +41,7 @@ namespace BFF.Web.ProductSvc
                 request.CreatedDate = DateTime.Now;
                 var UserId= new Guid(GetUserIdFromContext());
                 request.CreatedBy= UserId;
+                request.Archived = false;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -61,6 +62,7 @@ namespace BFF.Web.ProductSvc
                 item.CreatedDate = DateTime.Now;
                 var UserId = new Guid(GetUserIdFromContext());
                 item.CreatedBy= UserId;
+                   
                 await _mediator.Send(item);
                 }
                 return Ok(1);
@@ -222,6 +224,26 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("BrandRepresentative")]
+        public async Task<IActionResult> BrandRepresentative([FromBody] BrandRepresentativeQuery request)
+        {
+            _logger.LogInformation($"REST request BrandRepresentative : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+
+               
+                    var result = await _mediator.Send(request);
+
+                
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request BrandRepresentative fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
     }
 }
 

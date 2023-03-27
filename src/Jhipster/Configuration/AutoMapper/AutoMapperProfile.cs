@@ -25,8 +25,11 @@ using Module.Ordering.Application.Commands.OrderItemCm;
 using Module.Ordering.Application.Commands.PurchaseOrderCm;
 using BFF.Web.DTOs.OrderSvc;
 using Jhipster.Domain.Services.Command;
+
 using Module.Catalog.Shared.DTOs;
 using Module.Catalog.Application.Queries.BrandQ;
+using Module.Ordering.Application.Commands.HistoryOrderCm;
+
 
 namespace Jhipster.Configuration.AutoMapper
 {
@@ -47,7 +50,10 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<RegisterByUserDTO, RegisterRequest>();
             CreateMap<RegisterByUserDTO, Merchant>();
             CreateMap<RegisterByAdminDTO, RegisterAdminRequest>();
+            CreateMap<RegisterByUserDTO, RegisterAdminRequest>();
             CreateMap<RegisterByAdminDTO, Merchant>();
+            CreateMap<MerchantUpdateCommand, Merchant>();
+            CreateMap<PurchaseOrderUpdateCommand, PurchaseOrderUpdateRequest>();
 
             CreateMap<User,RegisterRequest>()
              .ForMember(userDto => userDto.Roles, opt => opt.MapFrom(user => user.UserRoles.Select(iur => iur.Role.Name).ToHashSet()))
@@ -64,7 +70,6 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<Merchant, Merchant>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<RegisterRequest, RegisterAccountCommand>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<RegisterAccountAdminCommand, RegisterAdminRequest>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
             #region 2.Module permission
             //CreateMap<Function, FunctionDTO>().ReverseMap();
             //CreateMap<FunctionTypeDTO, FunctionType>().ReverseMap();
@@ -173,6 +178,9 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<CartUpdateCommand,Cart>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<Cart, Cart>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<OrderStatusAddCommand, OrderStatus>().ReverseMap();
+            CreateMap<OrderStatus, OrderStatus>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             CreateMap<OrderItemRequest, OrderItem>().ReverseMap();
             CreateMap<OrderItemAddCommand, OrderItem>().ReverseMap();
             CreateMap<OrderItemUpdateCommand, OrderItem>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -183,6 +191,11 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<PurchaseOrder, PurchaseOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<OrderAddRequestUser, PurchaseOrderAddCommand>();
             CreateMap<OrderAddRequestAdmin, PurchaseOrderAddCommand>();
+            CreateMap<HistoryOrderCommand, HistoryOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<HistoryOrder, PurchaseOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<PurchaseOrderUpdateRequest, PurchaseOrderUpdateCommand>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            //CreateMap<HistoryOrder, PurchaseOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             #endregion
         }
     }

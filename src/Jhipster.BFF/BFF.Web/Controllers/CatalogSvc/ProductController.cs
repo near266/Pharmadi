@@ -76,7 +76,8 @@ namespace BFF.Web.ProductSvc
                     Specification = request.Specification,
                     Number = request.Number,
                     CreatedBy = request.CreatedBy,
-                    CreatedDate = request.CreatedDate
+                    CreatedDate = request.CreatedDate,
+                    Archived=false
                 };
                 await _mediator.Send(step1);
 
@@ -430,6 +431,22 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to GetListProductSimilarCategoryByBrandId fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("Archived")]
+        public async Task<IActionResult> ArchivedProduct([FromBody] ProductArchivedCommand request)
+        {
+            _logger.LogInformation($"REST request ArchivedProduct : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to ArchivedProduct fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

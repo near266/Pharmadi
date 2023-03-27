@@ -1,19 +1,20 @@
 ﻿using AutoMapper;
-using BFF.Web.Constants;
 using BFF.Web.DTOs;
+using BFF.Web.DTOs.FactorSvc;
 using Jhipster.Domain.Services.Interfaces;
 using Jhipster.gRPC.Contracts.Shared.Identity;
-using LanguageExt.Pipes;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Module.Factor.Application.Commands.MerchantCm;
 using Module.Factor.Application.Persistences;
 using Module.Factor.Application.Queries.MerchantQ;
 using Module.Factor.Domain.Entities;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.Ocsp;
+using RestSharp;
+using RolesConstants = BFF.Web.Constants.RolesConstants;
 
 namespace BFF.Web.Controllers.FactorSvc
 {
@@ -28,14 +29,22 @@ namespace BFF.Web.Controllers.FactorSvc
         private readonly IMapper _mapper;
         private readonly IAccountService _accountService;
         private readonly IMediator _mediator;
-        public MerchantController(IMerchantRepository service, IMediator mediator, ILogger<MerchantController> logger, IUserService userService, IMapper mapper, IAccountService accountService)
+
+        private readonly IConfiguration _configuration;
+
+        public MerchantController(IMerchantRepository service, IConfiguration configuration, IMediator mediator, ILogger<MerchantController> logger, IUserService userService, IMapper mapper, IAccountService accountService)
         {
             _service = service;
             _mediator = mediator;
             _logger = logger;
+            _configuration = configuration;
             _userService = userService;
             _mapper = mapper;
             _accountService = accountService;
+        }
+        private string GetUserIdFromContext()
+        {
+            return User.FindFirst("UserId")?.Value;
         }
         //[HttpPost("RegisterByUser")]
         //public async Task<IActionResult> RegisterByUser([FromBody] RegisterByUserDTO request)
@@ -90,27 +99,24 @@ namespace BFF.Web.Controllers.FactorSvc
 
 
                 //request.Roles.Add("")
-                var tem1 = _mapper.Map<RegisterRequest>(request);
+                var tem1 = _mapper.Map<RegisterAdminRequest>(request);
                 tem1.Id = request.Id.ToString();
                 tem1.Login = request.PhoneNumber;
                 //adduser
-                var step1 = await _accountService.RegisterAccount(tem1);
-                if (step1 != null)
+                var step1 = await _accountService.RegisterAccountAdmin(tem1);
+                var body = new
                 {
-                    var temp2 = new Merchant()
-                    {
-                        Id = new Guid(step1.Id),
-                        MerchantName = tem1.Login,
-                        PhoneNumber = tem1.PhoneNumber,
-                        Status = 0,
-                    };
-                    var map = _mapper.Map<MerchantAddCommand>(temp2);
-                   var check=  await _mediator.Send(map);
-                   
-                    return Ok(step1.Id);
-                }
-                return Ok(Guid.NewGuid().ToString());
+                    Username = request.PhoneNumber,
+                    Password = request.Password,
+                    rememberMe = true
+                };
+                var client = new RestClient(_configuration.GetConnectionString("AIO"));
+               
+                var requestAddTranaction = new RestRequest($"/api/authenticate", Method.Post);
+                requestAddTranaction.AddJsonBody(body);
+                var reponse = await client.ExecuteAsync(requestAddTranaction);
 
+                return Ok(reponse.Content);
 
             }
             catch (Exception ex)
@@ -120,14 +126,15 @@ namespace BFF.Web.Controllers.FactorSvc
             }
         }
         [HttpPost("AddMerchant")]
-        public async Task<IActionResult> AddMerchant([FromBody] MerchantUpdateCommand rq)
+        public async Task<IActionResult> AddMerchant([FromBody] MerchantAddCommand rq)
         {
 
             _logger.LogInformation($"REST request AddMerchant : {JsonConvert.SerializeObject(rq)}");
             try
             {
-                rq.LastModifiedDate = DateTime.Now;
-                rq.LastModifiedBy = rq.Id;
+                rq.Id = Guid.Parse(GetUserIdFromContext());
+                rq.CreatedDate = DateTime.Now;
+                rq.CreatedBy = rq.Id;
                 return Ok(await _mediator.Send(rq));
 
             }
@@ -174,14 +181,18 @@ namespace BFF.Web.Controllers.FactorSvc
         }
         [Authorize(Roles = RolesConstants.ADMIN)]
 
-        [HttpDelete("DeleteMerchant")]
-        public async Task<IActionResult> DeleteMerchant([FromBody] MerchantDeleteCommand request)
+        [HttpPost("DeleteMerchant")]
+        public async Task<IActionResult> DeleteMerchant([FromBody] List<MerchantDeleteCommand> request)
         {
             _logger.LogDebug($"REST request DeleteMerchant : {JsonConvert.SerializeObject(request)}");
             try
             {
-                return Ok(await _mediator.Send(request));
-
+                foreach (var item in request)
+                {
+                    await _userService.deleteUserByMerchantId(item.Id);
+                    await _mediator.Send(item);
+                }
+                return Ok(1);
             }
             catch (Exception ex)
             {
@@ -192,7 +203,7 @@ namespace BFF.Web.Controllers.FactorSvc
         }
         [Authorize(Roles = RolesConstants.MERCHANT)]
 
-        [HttpPut("MerchantUpdate")]
+        [HttpPost("MerchantUpdate")]
         public async Task<IActionResult> MerchantUpdate([FromBody] MerchantUpdateCommand request)
         {
             _logger.LogDebug($"REST request MerchantUpdate : {JsonConvert.SerializeObject(request)}");
@@ -210,8 +221,8 @@ namespace BFF.Web.Controllers.FactorSvc
         }
         [Authorize(Roles = RolesConstants.ADMIN)]
 
-        [HttpGet("MerchantGetAllAdmin")]
-        public async Task<IActionResult> MerchantGetAllAdmin([FromQuery] MerchantGetAllAdminQuery request)
+        [HttpPost("MerchantGetAllAdmin")]
+        public async Task<IActionResult> MerchantGetAllAdmin([FromBody] MerchantGetAllAdminQuery request)
         {
             _logger.LogDebug($"REST request MerchantGetAllAdmin : {JsonConvert.SerializeObject(request)}");
             try
@@ -228,7 +239,7 @@ namespace BFF.Web.Controllers.FactorSvc
         }
         [Authorize(Roles = RolesConstants.MERCHANT)]
 
-        [HttpGet("MerchantViewDetail")]
+        [HttpPost("MerchantViewDetail")]
         public async Task<IActionResult> MerchantViewDetail([FromQuery] MerchantViewDetailQuery request)
         {
             _logger.LogDebug($"REST request MerchantViewDetail : {JsonConvert.SerializeObject(request)}");
@@ -259,6 +270,51 @@ namespace BFF.Web.Controllers.FactorSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to MerchantSearchToChooseQuery fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        [HttpPost("RequestAddressStatus")]
+        public async Task<IActionResult> RequestStatus([FromBody] UpdateAddressStatusCommand request)
+        {
+            _logger.LogDebug($"REST request RequestAddressStatus : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                request.Id = Guid.Parse(GetUserIdFromContext());
+                return Ok(await _mediator.Send(request));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to RequestAddressStatus fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        [HttpPost("ApproveAddressStatus")]
+        public async Task<IActionResult> ApproveAddressStatus([FromBody] List<ApproveAddressStatusRq> request)
+        {
+            _logger.LogDebug($"REST request ApproveAddressStatus : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                int result = 0;
+                foreach(var item in request)
+                {
+                    var tem = new UpdateAddressStatusCommand
+                    {
+                        Id = item.Id,
+                        Status = item.Status
+                    };
+                    result = await _mediator.Send(tem); 
+                }
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to ApproveAddressStatus fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
 

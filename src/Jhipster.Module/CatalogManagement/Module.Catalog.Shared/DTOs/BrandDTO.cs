@@ -29,6 +29,7 @@ namespace Module.Catalog.Shared.DTOs
         public string LogoBrand { get; set; }
         public string? Intro { get; set; }
         public bool? Pin { get; set; }
+        public bool? Archived { get; set; }
         [JsonIgnore]
         public Guid? CreatedBy { get; set; }
         [JsonIgnore]

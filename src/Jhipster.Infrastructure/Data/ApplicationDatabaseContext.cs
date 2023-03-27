@@ -52,6 +52,8 @@ namespace Jhipster.Infrastructure.Data
         public DbSet<Cart> Carts { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        public DbSet<HistoryOrder> HistoryOrders { get; set; }
+        public DbSet<OrderStatus> OrderStatuses { get; set; }
         #endregion
 
 

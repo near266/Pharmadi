@@ -46,7 +46,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             query = StartDate != null ? query.Where(i => i.CreatedDate > StartDate) : query;
             query=EndDate!=null ?query.Where(i=>i.CreatedDate < EndDate) : query;   
             var data = query
-                        .Skip(pageSize * page)
+                        .Skip(pageSize * (page-1))
                         .Take(pageSize);
             var res = new PagedList<Merchant>();
             res.Data = data;
@@ -69,7 +69,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         public async Task UpdateActiveMerchant(Guid id)
         {
             var data = await _context.Merchants.FirstOrDefaultAsync(i => i.Id == id);
-            data.Status = 1;
+            data.Status = 2;
             await _context.SaveChangesAsync();
         }
         public async Task<Merchant> ViewDetail(Guid id)
@@ -89,6 +89,17 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
             var data = query.AsEnumerable();
             return data;
+        }
+
+        public async Task<int> UpdateAddressStatus (Guid userid, int status)
+        {
+            var old = await _context.Merchants.FirstOrDefaultAsync(i => i.Id.Equals(userid));
+            if (old != null)
+            {
+                old.AddressStatus = status;
+                return await _context.SaveChangesAsync(default);
+            }
+            return -1;
         }
     }
 }

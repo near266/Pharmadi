@@ -141,6 +141,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
         [HttpPost("CreatNewGroupAndBrand")]
         public async Task<ActionResult<int>> CreatNewGroupAndBrand([FromBody] CreatNewGroupAndBrandRequest request)
         {
@@ -156,6 +157,7 @@ namespace BFF.Web.ProductSvc
                     Pin = request.GroupBrand.Pin,
                     CreatedDate = DateTime.Now,
                     CreatedBy = new Guid(GetUserIdFromContext()),
+
                 
                 };
                  await _mediator.Send(gr);
@@ -169,6 +171,7 @@ namespace BFF.Web.ProductSvc
                     LogoBrand=item.LogoBrand,
                     Intro=item.Intro,
                     Pin=item.Pin,
+                    Archived=false,
                     CreatedDate= DateTime.Now,
                     CreatedBy= new Guid(GetUserIdFromContext()),
                     };
@@ -220,7 +223,7 @@ namespace BFF.Web.ProductSvc
                         if (check == true)
                         {
 
-                            var resdelete = new BrandDeleteCommand { Id =(Guid) item.Id };
+                            var resdelete = new ArchiveBrandCommand { Id = item.Id };
                             await _mediator.Send(resdelete);
                         }
                         if (check == false)

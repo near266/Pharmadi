@@ -17,6 +17,9 @@ using AutoMapper;
 using Module.Ordering.Application.Commands.OrderItemCm;
 using Module.Ordering.Application.Commands.CartCm;
 using Module.Ordering.Application.Queries.CartQ;
+using Module.Factor.Application.Queries.MerchantQ;
+using Module.Ordering.Application.Commands.HistoryOrderCm;
+using BFF.Web.DTOs.PurchaseOrderSvc;
 
 namespace BFF.Web.ProductSvc
 {
@@ -38,17 +41,41 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("UserId")?.Value;
         }
+       
+        [Authorize(Roles = RolesConstants.MERCHANT)]
+
         [HttpPost("AddByUser")]
         public async Task<ActionResult<int>> Add([FromBody] OrderAddRequestUser request)
         {
             _logger.LogInformation($"REST request add PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
+                var checkStatus = new PurchaseOrderCheckStatusCommand()
+                {
+                    Id = Guid.Parse(GetUserIdFromContext())
+                };
+                var Status = await _mediator.Send(checkStatus);
+                if (Status != 2) throw new Exception("Unverified Account");
                 request.Id = Guid.NewGuid();
                 request.CreatedBy = new Guid(GetUserIdFromContext());
                 request.Status = 1;
                 request.MerchantId = new Guid(GetUserIdFromContext());
                 request.CreatedDate = DateTime.Now;
+
+
+                //lay thong tin merchant
+                var cusRequest = new MerchantViewDetailQuery
+                {
+                    Id = request.MerchantId
+                };
+                var cus = await _mediator.Send(cusRequest);
+
+                request.MerchantName = cus.MerchantName;
+                request.PhoneNumber = cus.PhoneNumber;
+                request.ContactName = cus.ContactName;
+                request.ContractNumber = cus.ContractNumber;
+                request.Address = cus.Address;
+
 
                 if (request.TotalPrice <= 1000000) request.ShippingFee = 50000;
 
@@ -84,6 +111,14 @@ namespace BFF.Web.ProductSvc
                 };
                 res1 = await _mediator.Send(step3);
 
+                var tem = new OrderStatusAddCommand
+                {
+                    Id = Guid.NewGuid(),
+                    PurchaseOrderId = request.Id,
+                    Status = 1,
+                    dateTime = request.CreatedDate
+                };
+                res1 = await _mediator.Send(tem);
                 return Ok(res1);
             }
             catch (Exception ex)
@@ -104,9 +139,10 @@ namespace BFF.Web.ProductSvc
                 request.Status = 2;
                 request.CreatedDate = DateTime.Now;
 
+                int result = 0;
                 // add order
                 var step1 = _mapper.Map<PurchaseOrderAddCommand>(request);
-                await _mediator.Send(step1);
+                result = await _mediator.Send(step1);
 
 
                 //add order item
@@ -119,11 +155,19 @@ namespace BFF.Web.ProductSvc
                         ProductId = c.ProductId,
                         Quantity = c.Quantity
                     };
-                    await _mediator.Send(res2);
+                    result = await _mediator.Send(res2);
                 }
 
+                var tem = new OrderStatusAddCommand
+                {
+                    Id = Guid.NewGuid(),
+                    PurchaseOrderId = request.Id,
+                    Status = 1,
+                    dateTime = request.CreatedDate
+                };
+                result = await _mediator.Send(tem);
 
-                return Ok(1);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -133,14 +177,52 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] PurchaseOrderUpdateCommand request)
+        public async Task<IActionResult> Update([FromBody] PurchaseOrderUpdateRequest request)
         {
             _logger.LogInformation($"REST request update PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
                 request.LastModifiedDate = DateTime.Now;
                 request.LastModifiedBy = new Guid(GetUserIdFromContext());
-                var result = await _mediator.Send(request);
+                var mapPurchaseOrder = _mapper.Map<PurchaseOrderUpdateCommand>(request);
+                var value = await _mediator.Send(mapPurchaseOrder);
+                int result = 0;
+                if (request.OrderItem.orderItemAdds.Count() > 0)
+                {
+                    foreach (var item in request.OrderItem.orderItemAdds)
+                    {
+                        var tem = new OrderItemAddCommand
+                        {
+                            Id = Guid.NewGuid(),
+                            PurchaseOrderId = mapPurchaseOrder.Id,
+                            ProductId = item.ProductId,
+                            Quantity = item.Quantity
+                        };
+                        result = await _mediator.Send(tem);
+                    }
+                }
+                if (request.OrderItem.orderItemUpdates.Count() > 0)
+                {
+                    foreach (var item in request.OrderItem.orderItemUpdates)
+                    {
+                        var tem = new OrderItemUpdateCommand
+                        {
+                            Id = item.Id,
+                            PurchaseOrderId = mapPurchaseOrder.Id,
+                            ProductId = item.ProductId,
+                            Quantity = item.Quantity
+                        };
+                        result = await _mediator.Send(tem);
+                    }
+                }
+                if (request.OrderItem.orderItemDelete.Count() > 0)
+                {
+                    var tem = new OrderItemDeleteCommand
+                    {
+                        Ids = request.OrderItem.orderItemDelete
+                    };
+                    result = await _mediator.Send(tem);
+                }
                 return Ok(result);
             }
             catch (Exception ex)
@@ -151,13 +233,28 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete([FromBody] PurchaseOrderDeleteCommand request)
+        public async Task<IActionResult> Delete([FromBody] DeletePurcharseOrderDTO request)
         {
             _logger.LogInformation($"REST request delete PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _mediator.Send(request);
-                return Ok(result);
+                var value = 0;
+                foreach (var item in request.Id)
+                {
+                    var history = new HistoryOrderCommand()
+                    {
+                        Id = item,
+                    };
+                    await _mediator.Send(history);
+                    var purcharse = new PurchaseOrderDeleteCommand()
+                    {
+                        Id = item,
+                    };
+                    var result = await _mediator.Send(purcharse);
+                    
+                    value += result;
+                }
+                return Ok(value);
             }
             catch (Exception ex)
             {
@@ -202,7 +299,7 @@ namespace BFF.Web.ProductSvc
         }
 
 
-        [HttpGet("ViewDetailPurchaseOrder")]
+        [HttpPost("ViewDetailPurchaseOrder")]
         public async Task<IActionResult> ViewDetailPurchaseOrder(PurchaseOrderViewDetailQuery request)
         {
             _logger.LogInformation($"REST request ViewDetailPurchaseOrder : {JsonConvert.SerializeObject(request)}");
@@ -224,7 +321,7 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request update PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
-                //status ==2 xac nhan don hang
+/*                status == 2 xac nhan don hang
                 if (request.Status == 2)
                 {
                     // lay ds item trong don hang can phe duyet
@@ -268,12 +365,24 @@ namespace BFF.Web.ProductSvc
                         //    }
                         //    //if(quantity)
                         //}
-                    }
+                    }*/
 
-                }
-
+                    //}
+                
                 var result = await _mediator.Send(request);
-                return Ok(result);
+                if(result==1)
+                {
+                    var tem = new OrderStatusAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        PurchaseOrderId = request.Id,
+                        Status = request.Status,
+                        dateTime = DateTime.Now
+                    };
+                    result = await _mediator.Send(tem);
+                    return Ok(result);
+                }
+                return Ok(-1);
             }
             catch (Exception ex)
             {
@@ -290,6 +399,22 @@ namespace BFF.Web.ProductSvc
                 var request = GetUserIdFromContext();
 
                 rq.id = Guid.Parse(request);
+                var result = await _mediator.Send(rq);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("GetAllOrderStatus")]
+        public async Task<IActionResult> GetAllOrderStatus([FromBody] GetAllOrderStatusQuery rq)
+        {
+
+            try
+            {
                 var result = await _mediator.Send(rq);
                 return Ok(result);
             }

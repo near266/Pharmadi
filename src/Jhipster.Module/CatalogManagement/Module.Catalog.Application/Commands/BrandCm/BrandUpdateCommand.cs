@@ -22,6 +22,7 @@ namespace Module.Catalog.Application.Commands.BrandCm
         public string LogoBrand { get; set; }
         public string? Intro { get; set; }
         public bool? Pin { get; set; }
+        public bool? Archived { get; set; }
         [JsonIgnore]
         public Guid? LastModifiedBy { get; set; }
         [JsonIgnore]

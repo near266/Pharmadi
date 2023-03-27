@@ -38,7 +38,6 @@ namespace BFF.Web.ProductSvc
             {
                 request.Id = Guid.NewGuid();
                 request.UserId = new Guid(GetUserIdFromContext());
-                request.IsChoice = false;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }

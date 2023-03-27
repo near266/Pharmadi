@@ -57,7 +57,8 @@ namespace BFF.Web.DTOs
     {
         [System.Text.Json.Serialization.JsonIgnore]
         public Guid? Id { get; set; }
-        public string Login { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string? Login { get; set; }
 
         public string? Email { get; set; }
 
@@ -127,9 +128,21 @@ namespace BFF.Web.DTOs
         public int? Rank { get; set; }
         public string? Branch { get; set; }
         public string? TypeCustomer { get; set; }
+
+        public string? City { get; set; }
+        public string? District { get; set; }
+
+        public string? SubDistrict { get; set; }
+        public DateTime? LicenseDate { get; set; }
+        public string? LicensePlace { get; set; }
+
+        public List<string>? GGPImage { get; set; }
+
+        public string? Avatar { get; set; }
         [System.Text.Json.Serialization.JsonIgnore]
 
         public int? Status { get; set; }
+        public int? AddressStatus { get; set; }
 
     }
 }

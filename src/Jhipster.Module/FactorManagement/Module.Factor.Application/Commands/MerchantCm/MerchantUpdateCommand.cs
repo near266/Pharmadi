@@ -10,6 +10,7 @@ namespace Module.Factor.Application.Commands.MerchantCm
     public class MerchantUpdateCommand: IRequest<int>
     {
         [Required(ErrorMessage = "{0} is required.")]
+        [JsonIgnore]
         public Guid Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
         public string MerchantName { get; set; }
@@ -25,6 +26,19 @@ namespace Module.Factor.Application.Commands.MerchantCm
         public string? Branch { get; set; }
         public string? Email { get; set; }
         public string? TypeCustomer { get; set; }
+
+        public string? City { get; set; }
+        public string? District { get; set; }
+
+        public string? SubDistrict { get; set; }
+        public DateTime? LicenseDate { get; set; }
+        public string? LicensePlace { get; set; }
+
+        public List<string>? GGPImage { get; set; }
+
+        public string? Avatar { get; set; }
+
+        public int? AddressStatus { get; set; }
         [JsonIgnore]
         public Guid? LastModifiedBy { get; set; }
         [JsonIgnore]
