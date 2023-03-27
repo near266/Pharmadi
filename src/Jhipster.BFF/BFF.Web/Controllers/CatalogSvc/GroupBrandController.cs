@@ -193,7 +193,6 @@ namespace BFF.Web.ProductSvc
             try
             {
                 var Gr =new GetListBrandByGroupIdQuery { Id= request.GroupId };
-                var LisGr = await _mediator.Send(Gr);
                 //Add
                 foreach (var item in request.Brands)
                 {
@@ -220,7 +219,8 @@ namespace BFF.Web.ProductSvc
                         //delete
                         if (check == true)
                         {
-                            var resdelete = new BrandDeleteCommand { Id = item.Id };
+
+                            var resdelete = new BrandDeleteCommand { Id =(Guid) item.Id };
                             await _mediator.Send(resdelete);
                         }
                         if (check == false)
@@ -228,7 +228,7 @@ namespace BFF.Web.ProductSvc
                             var resupdate = new BrandUpdateCommand
                             {
 
-                                Id = item.Id,
+                                Id = (Guid)item.Id,
                                 BrandName = item.BrandName,
                                 LogoBrand = item.LogoBrand,
                                 Intro = item.Intro,

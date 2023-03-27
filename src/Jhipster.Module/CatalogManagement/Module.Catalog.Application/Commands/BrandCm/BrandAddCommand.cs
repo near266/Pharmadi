@@ -16,7 +16,7 @@ namespace Module.Catalog.Application.Commands.BrandCm
     {
         [Required(ErrorMessage = "{0} is required.")]
         [JsonIgnore]
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
         public string BrandName { get; set; }
         public Guid GroupBrandId { get; set; }
