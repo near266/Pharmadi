@@ -9,7 +9,9 @@ namespace BFF.Web.DTOs.OrderSvc
 {
     public class OrderItemAdd
     {
+        [JsonIgnore]
         public Guid Id { get; set; }
+        [JsonIgnore]
         public Guid PurchaseOrderId { get; set; }
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }
@@ -18,7 +20,9 @@ namespace BFF.Web.DTOs.OrderSvc
     public class OrderItemUpdate
     {
         public Guid Id { get; set; }
+        [JsonIgnore]
         public Guid? PurchaseOrderId { get; set; }
+        [JsonIgnore]
         public Guid? ProductId { get; set; }
         public int? Quantity { get; set; }
     }

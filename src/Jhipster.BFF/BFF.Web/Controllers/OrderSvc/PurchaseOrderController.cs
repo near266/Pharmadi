@@ -165,8 +165,8 @@ namespace BFF.Web.ProductSvc
                     {
                         var tem = new OrderItemAddCommand
                         {
-                            Id = item.Id,
-                            PurchaseOrderId = item.PurchaseOrderId,
+                            Id = Guid.NewGuid(),
+                            PurchaseOrderId = mapPurchaseOrder.Id,
                             ProductId = item.ProductId,
                             Quantity = item.Quantity
                         };
@@ -180,7 +180,7 @@ namespace BFF.Web.ProductSvc
                         var tem = new OrderItemUpdateCommand
                         {
                             Id = item.Id,
-                            PurchaseOrderId = item.PurchaseOrderId,
+                            PurchaseOrderId = mapPurchaseOrder.Id,
                             ProductId = item.ProductId,
                             Quantity = item.Quantity
                         };
