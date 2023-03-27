@@ -10,7 +10,7 @@ namespace Module.Factor.Application.Commands.MerchantCm
     public class MerchantAddCommand: IRequest<int>
     {
         [Required(ErrorMessage = "{0} is required.")]
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
         public string MerchantName { get; set; }
         public string? TaxCode { get; set; }
@@ -34,7 +34,9 @@ namespace Module.Factor.Application.Commands.MerchantCm
         public string? GGPImage { get; set; }
 
         public string? Avatar { get; set; }
+        [JsonIgnore]
         public Guid? CreatedBy { get; set; }
+        [JsonIgnore]
         public DateTime CreatedDate { get; set; }
         [JsonIgnore]
         public int? Status { get; set; }

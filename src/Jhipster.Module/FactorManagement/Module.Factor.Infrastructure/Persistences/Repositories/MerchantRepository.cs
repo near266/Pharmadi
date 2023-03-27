@@ -69,7 +69,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         public async Task UpdateActiveMerchant(Guid id)
         {
             var data = await _context.Merchants.FirstOrDefaultAsync(i => i.Id == id);
-            data.Status = 1;
+            data.Status = 2;
             await _context.SaveChangesAsync();
         }
         public async Task<Merchant> ViewDetail(Guid id)
