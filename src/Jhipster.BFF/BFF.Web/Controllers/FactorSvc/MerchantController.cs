@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
-using BFF.Web.Constants;
 using BFF.Web.DTOs;
 using BFF.Web.DTOs.FactorSvc;
-using Jhipster.Crosscutting.Constants;
 using Jhipster.Domain.Services.Interfaces;
 using Jhipster.gRPC.Contracts.Shared.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
