@@ -19,6 +19,7 @@ using Module.Ordering.Application.Commands.CartCm;
 using Module.Ordering.Application.Queries.CartQ;
 using Module.Factor.Application.Queries.MerchantQ;
 using Module.Ordering.Application.Commands.HistoryOrderCm;
+using BFF.Web.DTOs.PurchaseOrderSvc;
 
 namespace BFF.Web.ProductSvc
 {
@@ -206,20 +207,24 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete([FromBody] List<PurchaseOrderDeleteCommand> request)
+        public async Task<IActionResult> Delete([FromBody] DeletePurcharseOrderDTO request)
         {
             _logger.LogInformation($"REST request delete PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
                 var value = 0;
-                foreach (var item in request)
+                foreach (var item in request.Id)
                 {
                     var history = new HistoryOrderCommand()
                     {
-                        Id = item.Id,
+                        Id = item,
                     };
                     await _mediator.Send(history);
-                    var result = await _mediator.Send(item);
+                    var purcharse = new PurchaseOrderDeleteCommand()
+                    {
+                        Id = item,
+                    };
+                    var result = await _mediator.Send(purcharse);
                     
                     value += result;
                 }
