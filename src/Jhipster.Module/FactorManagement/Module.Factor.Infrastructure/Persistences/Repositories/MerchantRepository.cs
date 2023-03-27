@@ -90,5 +90,16 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             var data = query.AsEnumerable();
             return data;
         }
+
+        public async Task<int> UpdateAddressStatus (Guid userid, int status)
+        {
+            var old = await _context.Merchants.FirstOrDefaultAsync(i => i.Id.Equals(userid));
+            if (old != null)
+            {
+                old.AddressStatus = status;
+                return await _context.SaveChangesAsync(default);
+            }
+            return -1;
+        }
     }
 }

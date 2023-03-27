@@ -40,6 +40,8 @@ namespace Module.Factor.Application.Commands.MerchantCm
         public int? Status { get; set; }
 
         public string? Email { get; set; }
+
+        public int? AddressStatus { get; set; }
     }
     public class MerchantAddCommandHandler: IRequestHandler<MerchantAddCommand, int>
     {

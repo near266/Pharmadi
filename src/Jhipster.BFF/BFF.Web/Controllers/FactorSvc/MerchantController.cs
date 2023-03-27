@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BFF.Web.Constants;
 using BFF.Web.DTOs;
+using BFF.Web.DTOs.FactorSvc;
 using Jhipster.Domain.Services.Interfaces;
 using Jhipster.gRPC.Contracts.Shared.Identity;
 using LanguageExt.Pipes;
@@ -268,6 +269,51 @@ namespace BFF.Web.Controllers.FactorSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to MerchantSearchToChooseQuery fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        [HttpPost("RequestAddressStatus")]
+        public async Task<IActionResult> RequestStatus([FromBody] UpdateAddressStatusCommand request)
+        {
+            _logger.LogDebug($"REST request RequestAddressStatus : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                request.Id = Guid.Parse(GetUserIdFromContext());
+                return Ok(await _mediator.Send(request));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to RequestAddressStatus fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+        [HttpPost("ApproveAddressStatus")]
+        public async Task<IActionResult> ApproveAddressStatus([FromBody] List<ApproveAddressStatusRq> request)
+        {
+            _logger.LogDebug($"REST request ApproveAddressStatus : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                int result = 0;
+                foreach(var item in request)
+                {
+                    var tem = new UpdateAddressStatusCommand
+                    {
+                        Id = item.Id,
+                        Status = item.Status
+                    };
+                    result = await _mediator.Send(tem); 
+                }
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to ApproveAddressStatus fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
 

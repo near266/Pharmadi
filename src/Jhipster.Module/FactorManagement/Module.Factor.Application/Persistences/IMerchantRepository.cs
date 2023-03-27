@@ -12,5 +12,6 @@ namespace Module.Factor.Application.Persistences
         Task<Merchant> ViewDetail(Guid id);
         Task<IEnumerable<Merchant>> SearchToChoose(string? keyword);
         Task UpdateActiveMerchant(Guid id);
+        Task<int> UpdateAddressStatus(Guid userid, int status);
     }
 }

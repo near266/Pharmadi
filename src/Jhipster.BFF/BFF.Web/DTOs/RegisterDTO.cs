@@ -141,6 +141,7 @@ namespace BFF.Web.DTOs
         [System.Text.Json.Serialization.JsonIgnore]
 
         public int? Status { get; set; }
+        public int? AddressStatus { get; set; }
 
     }
 }

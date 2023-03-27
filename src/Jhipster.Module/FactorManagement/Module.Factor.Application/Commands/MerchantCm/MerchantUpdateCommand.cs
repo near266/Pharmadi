@@ -37,6 +37,8 @@ namespace Module.Factor.Application.Commands.MerchantCm
         public string? GGPImage { get; set; }
 
         public string? Avatar { get; set; }
+
+        public int? AddressStatus { get; set; }
         [JsonIgnore]
         public Guid? LastModifiedBy { get; set; }
         [JsonIgnore]
