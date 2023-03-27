@@ -214,12 +214,13 @@ namespace BFF.Web.ProductSvc
                 var value = 0;
                 foreach (var item in request)
                 {
-                    var result = await _mediator.Send(item);
                     var history = new HistoryOrderCommand()
                     {
                         Id = item.Id,
                     };
                     await _mediator.Send(history);
+                    var result = await _mediator.Send(item);
+                    
                     value += result;
                 }
                 return Ok(value);
