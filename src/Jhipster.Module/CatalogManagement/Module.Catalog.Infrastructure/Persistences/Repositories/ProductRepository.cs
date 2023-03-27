@@ -39,7 +39,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU, string? ProductName, int? status)
         {
             var result = new PagedList<Product>();
-            var query1 = _context.Products.AsQueryable();
+            var query1 = _context.Products.Where(i => i.Archived == false).AsQueryable();
             if (SKU != null)
             {
                 SKU = SKU.ToLower();
@@ -92,7 +92,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ProductSearchDTO>> ViewProductForU(string? keyword, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
-            var query =  _context.Products.AsQueryable();
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
             if (keyword != null)
             {
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
@@ -114,7 +114,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
-                                  
+
             result.Data = query2.AsEnumerable();
             result.TotalCount = query.Count();
             return result;
@@ -122,8 +122,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ProductSearchDTO>> ViewProductBestSale(int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
-            var query = _context.Products.AsQueryable();
-          
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
+
             var query2 = await query.Select(i => new ProductSearchDTO
             {
                 Id = i.Id,
@@ -150,8 +150,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ProductSearchDTO>> ViewProductNew(int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
-            var query = _context.Products.AsQueryable();
-         
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
+
             var query2 = await query.Select(i => new ProductSearchDTO
             {
                 Id = i.Id,
@@ -177,7 +177,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ProductSearchDTO>> ViewProductPromotion(string? keyword, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
-            var query = _context.Products.AsQueryable();
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
             if (keyword != null)
             {
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
@@ -208,21 +208,21 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid?>? categoryIds, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
-            var query = _context.Products.Include(i=>i.Brand).AsQueryable();
+            var query = _context.Products.Include(i => i.Brand).Where(i => i.Archived == false).AsQueryable();
             if (keyword != null)
             {
                 keyword = keyword.ToLower();
                 query = query.Where(i => i.SKU.ToLower().Contains(keyword) || i.ProductName.ToLower().Contains(keyword));
             }
-            if (categoryIds!=null && categoryIds.Count()>0)
+            if (categoryIds != null && categoryIds.Count() > 0)
             {
                 query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(i => categoryIds.Contains(i.CategoryId)));
             }
-            if (brandIds!=null && brandIds.Count()>0)
+            if (brandIds != null && brandIds.Count() > 0)
             {
                 query = query.Where(i => brandIds.Contains(i.BrandId));
             }
-            if (tagIds!=null&& tagIds.Count()>0)
+            if (tagIds != null && tagIds.Count() > 0)
             {
                 query = query.Include(i => i.TagProducts).Where(i => i.TagProducts.Any(i => tagIds.Contains(i.TagId)));
             }
@@ -265,14 +265,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<ProductSearchDTO>> ViewListProductWithBrand(Guid Id, Guid? userId)
         {
-            var query = _context.Products.AsQueryable();
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
             var obj = query.FirstOrDefault(c => c.Id == Id);
             if (obj != null)
             {
                 query = query.Where(i => (obj.Brand == null || i.Brand.BrandName.ToLower().Contains(obj.Brand.BrandName.ToLower()) && i.Id != obj.Id));
             }
 
-            var query2 =  query.Select(i => new ProductSearchDTO
+            var query2 = query.Select(i => new ProductSearchDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
@@ -355,8 +355,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<ProductSearchDTO>> SearchToChoose(string? keyword)
         {
-            var query = _context.Products.AsQueryable();
-            if(keyword!=null)
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
+            if (keyword != null)
             {
                 keyword = keyword.ToLower();
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword) || i.SKU.ToLower().Contains(keyword));
@@ -383,8 +383,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<ProductSearchDTO>> GetListProductSimilarCategoryByBrandId(Guid brandId, Guid? userId)
         {
-            var pro =_context.Products.Where(i=>i.BrandId== brandId).Select(i=>i.Id).ToList();
-            var Cate =  await _context.CategoryProducts.Where(i=>pro.Contains(i.ProductId)).Select(i=>i.CategoryId).ToListAsync();
+            var pro = _context.Products.Where(i => i.BrandId == brandId).Select(i => i.Id).ToList();
+            var Cate = await _context.CategoryProducts.Where(i => pro.Contains(i.ProductId)).Select(i => i.CategoryId).ToListAsync();
             var Listpro = await _context.CategoryProducts.Where(i => Cate.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
 
             var result = await _context.Products.Where(i => Listpro.Contains(i.Id)).Select(i => new ProductSearchDTO
@@ -406,7 +406,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return result;
         }
 
-        public async Task<int> ArchivedProduct (List<Guid> ids)
+        public async Task<int> ArchivedProduct(List<Guid> ids)
         {
             var res = 0;
             foreach (var id in ids)
