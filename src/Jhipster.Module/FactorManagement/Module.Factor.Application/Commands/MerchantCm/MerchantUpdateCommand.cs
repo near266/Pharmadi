@@ -26,6 +26,17 @@ namespace Module.Factor.Application.Commands.MerchantCm
         public string? Branch { get; set; }
         public string? Email { get; set; }
         public string? TypeCustomer { get; set; }
+
+        public string? City { get; set; }
+        public string? District { get; set; }
+
+        public string? SubDistrict { get; set; }
+        public DateTime? LicenseDate { get; set; }
+        public string? LicensePlace { get; set; }
+
+        public string? GGPImage { get; set; }
+
+        public string? Avatar { get; set; }
         [JsonIgnore]
         public Guid? LastModifiedBy { get; set; }
         [JsonIgnore]

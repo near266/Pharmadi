@@ -32,5 +32,16 @@ namespace Module.Factor.Domain.Entities
         public int? Status { get; set; } // trạng thái active 0-1
         public string? Email { get; set; }
 
+        public string? City { get; set; }
+        public string? District { get; set; }
+        
+        public string? SubDistrict { get; set; }
+        public DateTime? LicenseDate { get; set; }
+        public string? LicensePlace { get; set; }
+
+        public string? GGPImage { get; set; }
+
+        public string? Avatar { get; set; }
+
     }
 }
