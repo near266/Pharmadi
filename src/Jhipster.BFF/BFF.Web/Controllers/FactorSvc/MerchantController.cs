@@ -1,19 +1,22 @@
 ﻿using AutoMapper;
 using BFF.Web.Constants;
 using BFF.Web.DTOs;
+using Jhipster.Crosscutting.Constants;
 using Jhipster.Domain.Services.Interfaces;
 using Jhipster.gRPC.Contracts.Shared.Identity;
-using LanguageExt.Pipes;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Module.Factor.Application.Commands.MerchantCm;
 using Module.Factor.Application.Persistences;
 using Module.Factor.Application.Queries.MerchantQ;
 using Module.Factor.Domain.Entities;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.Ocsp;
+using RestSharp;
+using RolesConstants = BFF.Web.Constants.RolesConstants;
 
 namespace BFF.Web.Controllers.FactorSvc
 {
@@ -28,11 +31,15 @@ namespace BFF.Web.Controllers.FactorSvc
         private readonly IMapper _mapper;
         private readonly IAccountService _accountService;
         private readonly IMediator _mediator;
-        public MerchantController(IMerchantRepository service, IMediator mediator, ILogger<MerchantController> logger, IUserService userService, IMapper mapper, IAccountService accountService)
+
+        private readonly IConfiguration _configuration;
+
+        public MerchantController(IMerchantRepository service, IConfiguration configuration, IMediator mediator, ILogger<MerchantController> logger, IUserService userService, IMapper mapper, IAccountService accountService)
         {
             _service = service;
             _mediator = mediator;
             _logger = logger;
+            _configuration = configuration;
             _userService = userService;
             _mapper = mapper;
             _accountService = accountService;
@@ -99,11 +106,19 @@ namespace BFF.Web.Controllers.FactorSvc
                 tem1.Login = request.PhoneNumber;
                 //adduser
                 var step1 = await _accountService.RegisterAccountAdmin(tem1);
+                var body = new
+                {
+                    Username = request.PhoneNumber,
+                    Password = request.Password,
+                    rememberMe = true
+                };
+                var client = new RestClient(_configuration.GetConnectionString("AIO"));
+               
+                var requestAddTranaction = new RestRequest($"/api/authenticate", Method.Post);
+                requestAddTranaction.AddJsonBody(body);
+                var reponse = await client.ExecuteAsync(requestAddTranaction);
 
-
-                return Ok(step1.Id);
-
-
+                return Ok(reponse.Content);
 
             }
             catch (Exception ex)
