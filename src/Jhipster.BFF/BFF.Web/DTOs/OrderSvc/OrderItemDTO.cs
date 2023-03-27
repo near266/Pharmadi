@@ -22,7 +22,7 @@ namespace BFF.Web.DTOs.OrderSvc
         public Guid Id { get; set; }
         [JsonIgnore]
         public Guid? PurchaseOrderId { get; set; }
-        [JsonIgnore]
+       
         public Guid? ProductId { get; set; }
         public int? Quantity { get; set; }
     }
