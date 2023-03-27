@@ -27,17 +27,18 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
 
         public async Task<int> Delete(List<Guid> ids)
         {
+            var res = 0;
             foreach (var id in ids)
             {
                 var obj = await _context.OrderItems.FirstOrDefaultAsync(i => i.Id.Equals(id));
                 if (obj != null)
                 {
                     _context.OrderItems.Remove(obj);
-                    await _context.SaveChangesAsync();
+                    res = await _context.SaveChangesAsync();
                 }
             }
 
-            return 1;
+            return res;
         }
 
         public async Task<int> Update(OrderItem request)

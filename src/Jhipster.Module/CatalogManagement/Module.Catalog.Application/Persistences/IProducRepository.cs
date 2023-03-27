@@ -20,15 +20,8 @@ namespace Module.Catalog.Application.Persistences
         Task<IEnumerable<ProductSearchDTO>> ViewListProductWithBrand(Guid Id,Guid? userId );
         Task<PagedList<ProductSearchDTO>> ViewListProductSimilarCategory(Guid Id,int page, int pageSize,Guid? userId);
         Task<List<List<string>>> FakeData();
-
-
         Task<IEnumerable<ProductSearchDTO>> SearchToChoose(string? keyword);
-
-  
-
         Task<IEnumerable<ProductSearchDTO>> GetListProductSimilarCategoryByBrandId(Guid brandId, Guid? userId);
-
-      
-
+        Task<int> ArchivedProduct(List<Guid> ids);
     }
 }

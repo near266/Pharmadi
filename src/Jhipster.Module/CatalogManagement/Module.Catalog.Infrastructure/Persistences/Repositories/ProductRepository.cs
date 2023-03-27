@@ -405,5 +405,21 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }).ToListAsync();
             return result;
         }
+
+        public async Task<int> ArchivedProduct (List<Guid> ids)
+        {
+            var res = 0;
+            foreach (var id in ids)
+            {
+                var obj = await _context.Products.FirstOrDefaultAsync(i => i.Id.Equals(id));
+                if (obj != null)
+                {
+                    obj.Archived = true;
+                    res = await _context.SaveChangesAsync();
+                }
+            }
+
+            return res;
+        }
     }
 }

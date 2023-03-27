@@ -20,8 +20,7 @@ namespace Module.Ordering.Application.Commands.PurchaseOrderCm
         }
         public async Task<int> Handle(PurchaseOrderUpdateStatusCommand request, CancellationToken cancellationToken)
         {
-            //return await _repo.UpdateStatus(request.Id, request.Status);
-            return 1;
+            return await _repo.UpdateStatus(request.Id, request.Status);
         }
     }
 
