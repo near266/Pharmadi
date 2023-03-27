@@ -43,5 +43,7 @@ namespace Module.Factor.Domain.Entities
 
         public string? Avatar { get; set; }
 
+        public int? AddressStatus { get; set; }
+
     }
 }
