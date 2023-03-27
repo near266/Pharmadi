@@ -50,6 +50,33 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("AddList")]
+        public async Task<ActionResult<int>> AddList([FromBody] AddListBrandCommand request)
+        {
+            _logger.LogInformation($"REST request add Brand : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                foreach(var item in request.Brands) { 
+                item.Id = Guid.NewGuid();
+                item.CreatedDate = DateTime.Now;
+                var UserId = new Guid(GetUserIdFromContext());
+                item.CreatedBy= UserId;
+                await _mediator.Send(item);
+                }
+                return Ok(1);
+                //request.Id = Guid.NewGuid();
+                //request.CreatedDate = DateTime.Now;
+                //var UserId = new Guid(GetUserIdFromContext());
+                //request.CreatedBy = UserId;
+                //var result = await _mediator.Send(request);
+                //return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to add Brand fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
         [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Update")]
@@ -137,7 +164,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-
+    
         [HttpPost("GetListBrandIsHaveGroup")]
         public async Task<IActionResult> GetListBrandIsHaveGroup([FromBody] GetListBrandIsHaveGroupIdQuery request)
         {
@@ -168,6 +195,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+       
         [HttpPost("AddBrandToGroup")]
         public async Task<ActionResult<int>> AddBrandToGroup([FromBody] AddBrandToGroupRequest request)
         {

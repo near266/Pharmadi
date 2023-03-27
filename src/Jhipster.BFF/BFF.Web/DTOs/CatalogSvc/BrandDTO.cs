@@ -1,5 +1,6 @@
 ﻿using BFF.Web.DTOs.CatalogSvc;
 using Module.Catalog.Domain.Entities;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -42,10 +43,47 @@ namespace BFF.Web.DTOs.CatalogSvc
         public DateTime CreatedDate { get; set; }
     }
 
+    //public class AddBrandDTOs
+    //{
+    //    [JsonIgnore]
+    //    public Guid Id { get; set; }
+    //    public string BrandName { get; set; }
+    //    public Guid GroupBrandId { get; set; }
+    //    public string LogoBrand { get; set; }
+    //    public string? Intro { get; set; }
+    //    public bool? Pin { get; set; }
+    //    [JsonIgnore]
+    //    public Guid? CreatedBy { get; set; }
+    //    [JsonIgnore]
+    //    public DateTime CreatedDate { get; set; }
+    //}
 
+    public class AddUpdateDeleteRequest
+    {
+        public Guid GroupId { get; set; }
+        public List<AddDeleteUpdateBrand> Brands { get; set; }
+    
+    }
 
+   
+    public class AddDeleteUpdateBrand {
+        public Guid Id { get; set; }
+        public string BrandName { get; set; }
+        [JsonIgnore]
+        public Guid GroupBrandId { get; set; }
+        public string LogoBrand { get; set; }
+        public string Intro { get; set; }
+        public bool? Pin { get; set; }
+        [JsonIgnore]
+        public Guid? CreatedBy { get; set; }
+        [JsonIgnore]
+        public DateTime CreatedDate { get; set; }
+        [JsonIgnore]
+        public Guid? LastModifiedBy { get; set; }
+        [JsonIgnore]
+        public DateTime? LastModifiedDate { get; set; }
 
-
+    }
     public class AddBrandToGroupRequest
     {
         public List<AddBrand> BrandIds { get; set; }

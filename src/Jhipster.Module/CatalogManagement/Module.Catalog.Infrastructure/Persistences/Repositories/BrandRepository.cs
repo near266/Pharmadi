@@ -136,5 +136,35 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             return await _context.Brands.Select(i => i.LogoBrand).ToListAsync();
         }
+
+        public async Task<int> AddListBrand(List<Brand> brands)
+        {
+            var result = 0;
+            foreach (var brand in brands)
+            {
+                await _context.Brands.AddAsync(brand);
+                await _context.SaveChangesAsync();
+                result++;
+            }
+            return result;
+        }
+
+        public async Task<bool> IsBrandEmtyGroup(Guid? Id)
+        {
+           var br= await _context.Brands.FirstOrDefaultAsync(i=>i.Id==Id);
+           var gr = await _context.GroupBrands.FirstOrDefaultAsync(i=>i.Id == br.GroupBrandId);
+            if (gr == null) {
+                return true;
+            
+            };
+            return false;
+        }
+
+        public async Task<List<Guid>> GetListBrandByGroupId(Guid? Id)
+        {
+            var brand = await _context.Brands.Where(i=>i.GroupBrandId==Id).Select(i=>i.Id).ToListAsync();
+
+            return brand;
+        }
     }
 }

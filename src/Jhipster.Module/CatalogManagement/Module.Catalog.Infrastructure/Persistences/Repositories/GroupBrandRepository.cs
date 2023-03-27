@@ -84,7 +84,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             return 0;
         }
-
-       
+        
+        
     }
 }

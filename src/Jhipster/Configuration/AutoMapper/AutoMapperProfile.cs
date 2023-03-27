@@ -25,6 +25,8 @@ using Module.Ordering.Application.Commands.OrderItemCm;
 using Module.Ordering.Application.Commands.PurchaseOrderCm;
 using BFF.Web.DTOs.OrderSvc;
 using Jhipster.Domain.Services.Command;
+using Module.Catalog.Shared.DTOs;
+using Module.Catalog.Application.Queries.BrandQ;
 
 namespace Jhipster.Configuration.AutoMapper
 {
@@ -97,9 +99,11 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<BrandAddCommand, Brand>();
             CreateMap<Brand, Brand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<BrandUpdateCommand, Brand>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
+            CreateMap<AddBrandDTO, Brand>();
             CreateMap<BrandPinCommand,Brand>();
             CreateMap<AddBrand,BrandUpdateCommand>().ReverseMap();
+            CreateMap<IsBrandEmtyGroupCommand,Brand>(); 
+            CreateMap<GetListBrandByGroupIdQuery,Brand>();
 
             //GroupBrand
             CreateMap<GroupBrandAddCommand, GroupBrand>();

@@ -1,5 +1,6 @@
 ﻿using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
+using System.Text.RegularExpressions;
 
 namespace Module.Catalog.Application.Persistences
 {

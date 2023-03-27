@@ -12,6 +12,7 @@ using BFF.Web.DTOs.CatalogSvc;
 using AutoMapper;
 using Module.Catalog.Application.Commands.BrandCm;
 using Jhipster.Infrastructure.Migrations;
+using Module.Catalog.Application.Queries.BrandQ;
 
 namespace BFF.Web.ProductSvc
 {
@@ -180,6 +181,72 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request CreatNewGroupAndBrand fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+        [HttpPost("DeleteAddUpdateGroup")]
+        public async Task<ActionResult<int>> DeleteAddUpdateGroup([FromBody] AddUpdateDeleteRequest request)
+        {
+            _logger.LogInformation($"REST request DeleteAddUpdateGroup : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var Gr =new GetListBrandByGroupIdQuery { Id= request.GroupId };
+                var LisGr = await _mediator.Send(Gr);
+                //Add
+                foreach (var item in request.Brands)
+                {
+                    if (item.Id == null)
+                    {
+                        var br = new BrandAddCommand
+                        {
+                            Id = Guid.NewGuid(),
+                            GroupBrandId = request.GroupId,
+                            BrandName = item.BrandName,
+                            LogoBrand = item.LogoBrand,
+                            Intro = item.Intro,
+                            Pin = item.Pin,
+                            CreatedBy = new Guid(GetUserIdFromContext()),
+                            CreatedDate = DateTime.Now,
+                        };
+                        await _mediator.Send(br);
+                    }
+                    else
+                    {
+                        //check del or up
+                        var res = new IsBrandEmtyGroupCommand { Id = item.Id };
+                        var check = await _mediator.Send(res);
+                        //delete
+                        if (check == true)
+                        {
+                            var resdelete = new BrandDeleteCommand { Id = item.Id };
+                            await _mediator.Send(resdelete);
+                        }
+                        if (check == false)
+                        {
+                            var resupdate = new BrandUpdateCommand
+                            {
+
+                                Id = item.Id,
+                                BrandName = item.BrandName,
+                                LogoBrand = item.LogoBrand,
+                                Intro = item.Intro,
+                                Pin = item.Pin,
+                                LastModifiedBy = new Guid(GetUserIdFromContext()),
+                                LastModifiedDate = DateTime.Now,
+
+                            };
+                            await _mediator.Send(resupdate);
+                        }
+                    }
+                }
+                return Ok(1);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request DeleteAddUpdateGroup fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }
