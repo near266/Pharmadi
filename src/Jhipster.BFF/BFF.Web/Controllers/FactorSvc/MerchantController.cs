@@ -99,21 +99,10 @@ namespace BFF.Web.Controllers.FactorSvc
                 tem1.Login = request.PhoneNumber;
                 //adduser
                 var step1 = await _accountService.RegisterAccountAdmin(tem1);
-                if (step1 != null)
-                {
-                    var temp2 = new Merchant()
-                    {
-                        Id = new Guid(step1.Id),
-                        MerchantName = request.Login,
-                        PhoneNumber = tem1.PhoneNumber,
-                        Status = 0,
-                    };
-                    var map = _mapper.Map<MerchantAddCommand>(temp2);
-                   var check=  await _mediator.Send(map);
-                   
-                    return Ok(step1.Id);
-                }
-                return Ok(Guid.NewGuid().ToString());
+
+
+                return Ok(step1.Id);
+
 
 
             }
@@ -124,15 +113,15 @@ namespace BFF.Web.Controllers.FactorSvc
             }
         }
         [HttpPost("AddMerchant")]
-        public async Task<IActionResult> AddMerchant([FromBody] MerchantUpdateCommand rq)
+        public async Task<IActionResult> AddMerchant([FromBody] MerchantAddCommand rq)
         {
 
             _logger.LogInformation($"REST request AddMerchant : {JsonConvert.SerializeObject(rq)}");
             try
             {
                 rq.Id = Guid.Parse(GetUserIdFromContext());
-                rq.LastModifiedDate = DateTime.Now;
-                rq.LastModifiedBy = rq.Id;
+                rq.CreatedDate = DateTime.Now;
+                rq.CreatedBy = rq.Id;
                 return Ok(await _mediator.Send(rq));
 
             }
