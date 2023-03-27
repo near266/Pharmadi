@@ -179,15 +179,18 @@ namespace BFF.Web.Controllers.FactorSvc
         }
         [Authorize(Roles = RolesConstants.ADMIN)]
 
-        [HttpDelete("DeleteMerchant")]
-        public async Task<IActionResult> DeleteMerchant([FromBody] MerchantDeleteCommand request)
+        [HttpPost("DeleteMerchant")]
+        public async Task<IActionResult> DeleteMerchant([FromBody] List<MerchantDeleteCommand> request)
         {
             _logger.LogDebug($"REST request DeleteMerchant : {JsonConvert.SerializeObject(request)}");
             try
             {
-                await _userService.deleteUserByMerchantId(request.Id);
-                return Ok(await _mediator.Send(request));
-
+                foreach (var item in request)
+                {
+                    await _userService.deleteUserByMerchantId(item.Id);
+                    await _mediator.Send(item);
+                }
+                return Ok(1);
             }
             catch (Exception ex)
             {
