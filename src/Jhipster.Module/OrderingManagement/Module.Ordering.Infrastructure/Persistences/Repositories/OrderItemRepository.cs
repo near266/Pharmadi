@@ -43,12 +43,14 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
 
         public async Task<int> Update(OrderItem request)
         {
+            var ProductId =  await _context.OrderItems.FirstOrDefaultAsync(i => i.Id.Equals(request.Id));
+
             var old = await _context.OrderItems.FirstOrDefaultAsync(i => i.Id.Equals(request.Id));
             if (old != null)
             {
 
                 old = _mapper.Map<OrderItem, OrderItem>(request, old);
-
+                old.ProductId = ProductId.ProductId;
                 return await _context.SaveChangesAsync(default);
             }
             return 0;
