@@ -185,6 +185,7 @@ namespace BFF.Web.Controllers.FactorSvc
             _logger.LogDebug($"REST request DeleteMerchant : {JsonConvert.SerializeObject(request)}");
             try
             {
+                await _userService.deleteUserByMerchantId(request.Id);
                 return Ok(await _mediator.Send(request));
 
             }

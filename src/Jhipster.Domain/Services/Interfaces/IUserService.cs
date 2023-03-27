@@ -26,5 +26,6 @@ namespace Jhipster.Domain.Services.Interfaces
         Task<List<ForgotPasswordMethodRsDTO>> ForgotPasswordMethod(string login);
         Task<User> RequestOTPFWPass(string login, string type, string value);
         Task<ForgotPasswordCompleteRpDTO> CompleteFwPass(string login, string key, string type);
+        Task deleteUserByMerchantId(Guid id);
     }
 }
