@@ -167,13 +167,18 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Delete")]
-        public async Task<IActionResult> Delete([FromBody] PurchaseOrderDeleteCommand request)
+        public async Task<IActionResult> Delete([FromBody] List<PurchaseOrderDeleteCommand> request)
         {
             _logger.LogInformation($"REST request delete PurchaseOrder : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _mediator.Send(request);
-                return Ok(result);
+                var value = 0;
+                foreach (var item in request)
+                {
+                    var result = await _mediator.Send(item);
+                    value += result;
+                }
+                return Ok(value);
             }
             catch (Exception ex)
             {

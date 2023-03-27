@@ -248,7 +248,18 @@ namespace Jhipster.Domain.Services
                 _log.LogDebug($"Deleted User: {user}");
             }
         }
-
+        // deleteUser By MerchantId
+        public virtual async Task deleteUserByMerchantId(Guid id)
+        {
+            var login =await _userManager.Users.Where(i=>i.Id==id.ToString()).Select(i=>i.Login).FirstOrDefaultAsync();
+            var user = await _userManager.FindByNameAsync(login);
+            if (user != null)
+            {
+                await DeleteUserRoles(user);
+                await _userManager.DeleteAsync(user);
+                _log.LogDebug($"Deleted User: {user}");
+            }
+        }
         public virtual async Task<List<ForgotPasswordMethodRsDTO>> ForgotPasswordMethod(string login)
         {
             var user = await _userManager.FindByNameAsync(login);
