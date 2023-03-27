@@ -299,7 +299,7 @@ namespace BFF.Web.ProductSvc
         }
 
 
-        [HttpGet("ViewDetailPurchaseOrder")]
+        [HttpPost("ViewDetailPurchaseOrder")]
         public async Task<IActionResult> ViewDetailPurchaseOrder(PurchaseOrderViewDetailQuery request)
         {
             _logger.LogInformation($"REST request ViewDetailPurchaseOrder : {JsonConvert.SerializeObject(request)}");
