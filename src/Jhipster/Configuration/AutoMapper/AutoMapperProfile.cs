@@ -25,6 +25,7 @@ using Module.Ordering.Application.Commands.OrderItemCm;
 using Module.Ordering.Application.Commands.PurchaseOrderCm;
 using BFF.Web.DTOs.OrderSvc;
 using Jhipster.Domain.Services.Command;
+using Module.Ordering.Application.Commands.HistoryOrderCm;
 
 namespace Jhipster.Configuration.AutoMapper
 {
@@ -181,6 +182,9 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<PurchaseOrder, PurchaseOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<OrderAddRequestUser, PurchaseOrderAddCommand>();
             CreateMap<OrderAddRequestAdmin, PurchaseOrderAddCommand>();
+            CreateMap<HistoryOrderCommand, HistoryOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<HistoryOrder, PurchaseOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             #endregion
         }
     }

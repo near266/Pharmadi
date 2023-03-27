@@ -355,7 +355,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<ProductSearchDTO>> SearchToChoose(string? keyword)
         {
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
+            var query = _context.Products.AsQueryable();
             if (keyword != null)
             {
                 keyword = keyword.ToLower();

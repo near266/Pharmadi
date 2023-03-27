@@ -18,6 +18,7 @@ using Module.Ordering.Application.Commands.OrderItemCm;
 using Module.Ordering.Application.Commands.CartCm;
 using Module.Ordering.Application.Queries.CartQ;
 using Module.Factor.Application.Queries.MerchantQ;
+using Module.Ordering.Application.Commands.HistoryOrderCm;
 
 namespace BFF.Web.ProductSvc
 {
@@ -214,6 +215,11 @@ namespace BFF.Web.ProductSvc
                 foreach (var item in request)
                 {
                     var result = await _mediator.Send(item);
+                    var history = new HistoryOrderCommand()
+                    {
+                        Id = item.Id,
+                    };
+                    await _mediator.Send(history);
                     value += result;
                 }
                 return Ok(value);
