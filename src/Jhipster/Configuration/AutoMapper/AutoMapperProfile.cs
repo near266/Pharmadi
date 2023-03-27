@@ -184,6 +184,8 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<OrderAddRequestAdmin, PurchaseOrderAddCommand>();
             CreateMap<HistoryOrderCommand, HistoryOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<HistoryOrder, PurchaseOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<PurchaseOrderUpdateRequest, PurchaseOrderUpdateCommand>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            //CreateMap<HistoryOrder, PurchaseOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             #endregion
         }
