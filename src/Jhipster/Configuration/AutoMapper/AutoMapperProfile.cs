@@ -109,6 +109,7 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<AddBrand,BrandUpdateCommand>().ReverseMap();
             CreateMap<IsBrandEmtyGroupCommand,Brand>(); 
             CreateMap<GetListBrandByGroupIdQuery,Brand>();
+            CreateMap<BrandDetailQuery,Brand>();
 
             //GroupBrand
             CreateMap<GroupBrandAddCommand, GroupBrand>();

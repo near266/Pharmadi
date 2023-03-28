@@ -21,6 +21,8 @@ namespace Module.Catalog.Shared.DTOs
         public List<string>? Image { get; set; }
         public string? Specification { get; set; }
         public IEnumerable<LabelProduct>? LabelProducts { get; set; }
+        public IEnumerable<CategoryProduct>? CategoryProducts { get; set; }
+        public Brand ? Brands { get; set; }
         public int SaleNumber { get; set; }
         public string CartNumber { get; set; } ="0";
         public bool? Archived { get; set; }
@@ -39,5 +41,12 @@ namespace Module.Catalog.Shared.DTOs
         public int Status { get; set; }
         public List<string>? Image { get; set; }
     }
-
+    public class SearchProductBrandId
+    {
+        public Guid Id { get; set; }
+        public string CategoryName { get; set; }
+        public string? Descripton { get; set; }
+        public IEnumerable<Product> Products { get; set; }
+        
+    }
 }

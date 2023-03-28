@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Jhipster.Service.Utilities;
 using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
@@ -11,12 +12,14 @@ using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Queries.ProductQ
 {
-    public  class GetListProductSimilarCategoryByBrandIdQuery : IRequest<IEnumerable<ProductSearchDTO>>
+    public  class GetListProductSimilarCategoryByBrandIdQuery : IRequest<PagedList<SearchProductBrandId>>
     {
+        public int page { get; set; }   
+        public int pageSize { get; set; }   
         public Guid brandId { get; set; }
         public Guid UserId { get; set; }
     }
-    public class GetListProductSimilarCategoryByBrandIdQueryHandler : IRequestHandler<GetListProductSimilarCategoryByBrandIdQuery, IEnumerable<ProductSearchDTO>>
+    public class GetListProductSimilarCategoryByBrandIdQueryHandler : IRequestHandler<GetListProductSimilarCategoryByBrandIdQuery, PagedList<SearchProductBrandId>>
     {
         private readonly IProductRepository _repo;
         private readonly IMapper _mapper;
@@ -25,9 +28,9 @@ namespace Module.Catalog.Application.Queries.ProductQ
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<IEnumerable<ProductSearchDTO>> Handle(GetListProductSimilarCategoryByBrandIdQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<SearchProductBrandId>> Handle(GetListProductSimilarCategoryByBrandIdQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.GetListProductSimilarCategoryByBrandId(request.brandId,request.UserId);
+            return await _repo.GetListProductSimilarCategoryByBrandId(request.page,request.pageSize,request.brandId,request.UserId);
         }
     }
 }
