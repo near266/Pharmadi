@@ -172,7 +172,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 Status = i.Status,
             });
             
-           var res =await  data.Skip(pageSize * (page - 1))
+           var res =await  data.OrderByDescending(i=>i.CreateDate).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
             var result = new PagedList<HistoryOrderDTO>();
