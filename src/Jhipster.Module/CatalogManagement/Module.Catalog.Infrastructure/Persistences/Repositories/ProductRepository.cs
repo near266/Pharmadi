@@ -7,6 +7,8 @@ using AutoMapper.Execution;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Module.Catalog.Shared.DTOs;
 using Jhipster.Domain;
+using AutoMapper.QueryableExtensions;
+using Microsoft.VisualBasic;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -389,30 +391,26 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return query2;
         }
 
-        public async Task<IEnumerable<ProductSearchDTO>> GetListProductSimilarCategoryByBrandId(Guid brandId, Guid? userId)
+        public async Task<PagedList<SearchProductBrandId>> GetListProductSimilarCategoryByBrandId(int page,int pageSize ,Guid brandId, Guid? userId)
         {
-            var pro = _context.Products.Where(i => i.BrandId == brandId).Select(i => i.Id).ToList();
-            var Cate = await _context.CategoryProducts.Where(i => pro.Contains(i.ProductId)).Select(i => i.CategoryId).ToListAsync();
-            var Listpro = await _context.CategoryProducts.Where(i => Cate.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
+            var res = new PagedList<SearchProductBrandId>();
+            var Pro = await _context.Products.Where(i=>i.BrandId == brandId).Select(i=>i.Id).ToListAsync();
+            var CatePro = await _context.CategoryProducts.Where(i=>Pro.Contains(i.ProductId)).Select(i=>i.CategoryId).ToListAsync();
+            var cate = await _context.CategoryProducts.Where(i => CatePro.Contains(i.CategoryId)).Select(i=>i.ProductId).ToListAsync();
+            var Procate = await _context.Products.Where(i => CatePro.Contains(i.Id)).ToListAsync();
+            var result = _context.Categories.Where(i => CatePro.Contains(i.Id)).Select( i => new SearchProductBrandId { 
+            Id=i.Id,
+            CategoryName=i.CategoryName,
+            Descripton=i.Descripton,
+            Products = _context.Products.Where(i=>cate.Contains(i.Id)).ToList(),
+            
+            }).Skip(pageSize * (page - 1))
+                        .Take(pageSize)
+                        .ToList();
+            res.Data = result.AsEnumerable();
+            res.TotalCount =Procate.Count;
+            return res;
 
-            var result = await _context.Products.Where(i => Listpro.Contains(i.Id)).Select(i => new ProductSearchDTO
-            {
-
-                Id = i.Id,
-                SKU = i.SKU,
-                Price = i.Price,
-                SalePrice = i.SalePrice,
-                ProductName = i.ProductName,
-                UnitName = i.UnitName,
-                Image = i.Image,
-                Specification = i.Specification,
-                SaleNumber = 0,
-                Archived=i.Archived,
-                LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
-                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
-
-            }).ToListAsync();
-            return result;
         }
 
         public async Task<int> ArchivedProduct(List<Guid> ids)

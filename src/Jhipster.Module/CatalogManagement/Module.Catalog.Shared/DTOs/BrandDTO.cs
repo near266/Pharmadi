@@ -35,4 +35,23 @@ namespace Module.Catalog.Shared.DTOs
         [JsonIgnore]
         public DateTime CreatedDate { get; set; }
     }
+    public class DetailBrand
+    {
+        [JsonIgnore]
+        public Guid Id { get; set; }
+        public string BrandName { get; set; }
+        public Guid? GroupBrandId { get; set; }
+        public GroupBrand? GroupBrand { get; set; }
+
+        public string LogoBrand { get; set; }
+        public string? Intro { get; set; }
+        public bool? Pin { get; set; }
+        public bool? Archived { get; set; }
+        public IEnumerable<string>? CateName { get; set; }
+        [JsonIgnore]
+        public Guid? CreatedBy { get; set; }
+        [JsonIgnore]
+        public DateTime CreatedDate { get; set; }
+    }
+
 }

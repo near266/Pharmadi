@@ -106,7 +106,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 }).Skip(pageSize * (page - 1))
                   .Take(pageSize).ToListAsync();
                 result.Data = data;
-                result.TotalCount = data.Count();
+                result.TotalCount = query.Count();
                 return result;
             }
             if (type == 2)
@@ -127,7 +127,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     .Skip(pageSize * (page - 1))
                         .Take(pageSize).ToListAsync();
                 result.Data = data;
-                result.TotalCount = data.Count();
+                result.TotalCount = query.Count();
                 return result;
             }
             if (type == 3)
@@ -148,7 +148,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     .Skip(pageSize * (page - 1))
                         .Take(pageSize).ToListAsync();
                 result.Data = data;
-                result.TotalCount = data.Count();
+                result.TotalCount = query.Count();
                 return result;
             }
             return result;
@@ -205,28 +205,28 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return res;
         }
 
-        public async Task<PagedList<BrandDTO>> BrandRepresentative(int page, int pageSize)
+        public async Task<DetailBrand> BrandDetail(Guid Id)
         {
             var query = _context.Brands.AsQueryable();
-            var result = new PagedList<BrandDTO>();
-          
-            
-                var data = await query.Where(i => i.Pin==true).Select(i => new BrandDTO
-                {
-                    Id = i.Id,
-                    GroupBrandId = i.GroupBrandId,
-                    Intro = i.Intro,
-                    BrandName = i.BrandName,
-                    LogoBrand = i.LogoBrand,
-                    Pin = i.Pin,
-                    GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(i => i.BrandId == i.Id).Count()
+            var Pr = await _context.Products.Where(i=>i.BrandId==Id).Select(i=>i.Id).ToListAsync();
+            var cate  = await _context.CategoryProducts.Where(i=>Pr.Contains(i.ProductId)).Select(i=>i.CategoryId).ToListAsync();
+            var catename = await _context.Categories.Where(i=>cate.Contains(i.Id)).Select(i=>i.CategoryName).ToListAsync();
 
-                }).Skip(pageSize * (page - 1))
-                  .Take(pageSize).ToListAsync();
-                result.Data = data;
-                result.TotalCount = data.Count();
-                return result;
+            var data = await query.Where(i => i.Id == Id).Select(i => new DetailBrand
+            {
+                Id = i.Id,
+                GroupBrandId = i.GroupBrandId,
+                Intro = i.Intro,
+                BrandName = i.BrandName,
+                LogoBrand = i.LogoBrand,
+                Pin = i.Pin,
+                CateName =catename ,
+                GroupBrand = i.GroupBrand,
+                
+
+            }).FirstOrDefaultAsync();
+              
+                return data;
             
         }
     }
