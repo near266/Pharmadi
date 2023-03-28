@@ -19,8 +19,46 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             _context = context;
             _mapper = mapper;
         }
+        public string GenerateNextProductCode(string currentSKUCode)
+        {
+            if (currentSKUCode.StartsWith("P"))
+            {
+                // Tách số từ chuỗi mã hiện tại
+                string currentOrderNumberString = currentSKUCode.Substring(1);
+                if (int.TryParse(currentOrderNumberString, out int currentOrderNumber))
+                {
+                    // Tăng giá trị số đó lên một đơn vị
+                    int nextOrderNumber = currentOrderNumber + 1;
+                    // Định dạng số thành chuỗi theo đúng định dạng
+                    string nextOrderNumberString = nextOrderNumber.ToString().PadLeft(5, '0');
+                    // Ghép lại thành chuỗi mã mới
+                    string nextOrderCode = $"P{nextOrderNumberString}";
+                    return nextOrderCode;
+                }
+            }
+
+            // Trả về null nếu chuỗi mã hiện tại không đúng định dạng
+            return null;
+        }
         public async Task<int> Add(Product request)
         {
+            string currentSKUCode;
+            var checkSKU = await _context.Products.Select(i => i.SKU).ToListAsync();
+            if (checkSKU == null) { currentSKUCode = "S00000"; }
+            else
+            {
+                var Number = new List<int>();
+                foreach (var item in checkSKU)
+                {
+                    var s = int.Parse(item.Substring(1));
+                    Number.Add(s);
+                };
+                var maxNumber = Number.Max();
+                currentSKUCode = $"P{maxNumber}";
+            }
+
+            request.SKU = GenerateNextProductCode(currentSKUCode);
+
             await _context.Products.AddAsync(request);
             return await _context.SaveChangesAsync();
         }
@@ -109,7 +147,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Specification = i.Specification,
                 SaleNumber = 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
-                Archived=i.Archived,
+                Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
             }).Skip(pageSize * (page - 1))
@@ -136,7 +174,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Image = i.Image,
                 Specification = i.Specification,
                 SaleNumber = 0,
-                Archived=i.Archived,
+                Archived = i.Archived,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
@@ -195,7 +233,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Image = i.Image,
                 Specification = i.Specification,
                 SaleNumber = 0,
-                Archived=i.Archived,
+                Archived = i.Archived,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
@@ -243,7 +281,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Specification = i.Specification,
                 SaleNumber = 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
-                Archived=i.Archived,
+                Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
             }).Skip(pageSize * (page - 1))
@@ -288,7 +326,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Specification = i.Specification,
                 SaleNumber = 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
-                Archived=i.Archived,
+                Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
             }).AsEnumerable();
@@ -318,7 +356,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Image = i.Image,
                     Specification = i.Specification,
                     SaleNumber = 0,
-                    Archived=i.Archived,
+                    Archived = i.Archived,
                     LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
@@ -342,7 +380,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Image = i.Image,
                     Specification = i.Specification,
                     SaleNumber = 0,
-                    Archived=i.Archived,
+                    Archived = i.Archived,
                     LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
@@ -407,7 +445,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Image = i.Image,
                 Specification = i.Specification,
                 SaleNumber = 0,
-                Archived=i.Archived,
+                Archived = i.Archived,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
