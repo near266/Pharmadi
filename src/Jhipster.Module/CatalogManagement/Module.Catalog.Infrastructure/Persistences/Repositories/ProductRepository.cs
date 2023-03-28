@@ -23,28 +23,23 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             if (currentSKUCode.StartsWith("P"))
             {
-                // Tách số từ chuỗi mã hiện tại
                 string currentOrderNumberString = currentSKUCode.Substring(1);
                 if (int.TryParse(currentOrderNumberString, out int currentOrderNumber))
                 {
-                    // Tăng giá trị số đó lên một đơn vị
                     int nextOrderNumber = currentOrderNumber + 1;
-                    // Định dạng số thành chuỗi theo đúng định dạng
                     string nextOrderNumberString = nextOrderNumber.ToString().PadLeft(5, '0');
-                    // Ghép lại thành chuỗi mã mới
                     string nextOrderCode = $"P{nextOrderNumberString}";
                     return nextOrderCode;
                 }
             }
 
-            // Trả về null nếu chuỗi mã hiện tại không đúng định dạng
             return null;
         }
         public async Task<int> Add(Product request)
         {
             string currentSKUCode;
             var checkSKU = await _context.Products.Select(i => i.SKU).ToListAsync();
-            if (checkSKU == null) { currentSKUCode = "S00000"; }
+            if (checkSKU == null) { currentSKUCode = "P00000"; }
             else
             {
                 var Number = new List<int>();
