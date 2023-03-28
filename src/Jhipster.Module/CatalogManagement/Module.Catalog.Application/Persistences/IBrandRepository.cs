@@ -19,6 +19,6 @@ namespace Module.Catalog.Application.Persistences
         Task<bool> IsBrandEmtyGroup(Guid? Id);
         Task<List<Guid>> GetListBrandByGroupId(Guid? groupId);
         Task<int> ArchiveBrand(Guid? Id);
-        Task<PagedList<BrandDTO>> BrandRepresentative();
+        Task<PagedList<BrandDTO>> BrandRepresentative(int page, int pageSize);
     }
 }

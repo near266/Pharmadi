@@ -183,5 +183,30 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
             return res;
         }
+
+        public async Task<PagedList<BrandDTO>> BrandRepresentative(int page, int pageSize)
+        {
+            var query = _context.Brands.AsQueryable();
+            var result = new PagedList<BrandDTO>();
+          
+            
+                var data = await query.Where(i => i.Pin==true).Select(i => new BrandDTO
+                {
+                    Id = i.Id,
+                    GroupBrandId = i.GroupBrandId,
+                    Intro = i.Intro,
+                    BrandName = i.BrandName,
+                    LogoBrand = i.LogoBrand,
+                    Pin = i.Pin,
+                    GroupBrand = i.GroupBrand,
+                    SumProduct = _context.Products.Where(i => i.BrandId == i.Id).Count()
+
+                }).Skip(pageSize * (page - 1))
+                  .Take(pageSize).ToListAsync();
+                result.Data = data;
+                result.TotalCount = data.Count();
+                return result;
+            
+        }
     }
 }
