@@ -130,6 +130,27 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 result.TotalCount = data.Count();
                 return result;
             }
+            if (type == 3)
+            {
+
+                var data = await query.Where(i => i.Pin==true).Include(i => i.GroupBrand).Select(i => new BrandDTO
+                {
+                    Id = i.Id,
+                    GroupBrandId = i.GroupBrandId,
+                    Intro = i.Intro,
+                    BrandName = i.BrandName,
+                    LogoBrand = i.LogoBrand,
+                    Pin = i.Pin,
+                    GroupBrand = i.GroupBrand,
+                    SumProduct = _context.Products.Where(i => i.BrandId == i.Id).Count()
+
+                })
+                    .Skip(pageSize * (page - 1))
+                        .Take(pageSize).ToListAsync();
+                result.Data = data;
+                result.TotalCount = data.Count();
+                return result;
+            }
             return result;
 
         }

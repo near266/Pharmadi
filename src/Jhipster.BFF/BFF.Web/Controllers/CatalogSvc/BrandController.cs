@@ -224,25 +224,25 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpPost("BrandRepresentative")]
-        public async Task<IActionResult> BrandRepresentative([FromBody] BrandRepresentativeQuery request)
-        {
-            _logger.LogInformation($"REST request BrandRepresentative : {JsonConvert.SerializeObject(request)}");
-            try
-            {
+        //[HttpPost("BrandRepresentative")]
+        //public async Task<IActionResult> BrandRepresentative([FromBody] BrandRepresentativeQuery request)
+        //{
+        //    _logger.LogInformation($"REST request BrandRepresentative : {JsonConvert.SerializeObject(request)}");
+        //    try
+        //    {
 
                
-                    var result = await _mediator.Send(request);
+        //            var result = await _mediator.Send(request);
 
                 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"REST request BrandRepresentative fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
-            }
-        }
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"REST request BrandRepresentative fail: {ex.Message}");
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
 
     }
 }
