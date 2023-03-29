@@ -26,6 +26,8 @@
     <ProjectReference Include="..\..\Jhipster.Module\CatalogManagement\Module.Catalog\Module.Catalog.csproj" />
     <ProjectReference Include="..\..\Jhipster.Module\FactorManagement\Module.Factor\Module.Factor.csproj" />
     <ProjectReference Include="..\..\Jhipster.Module\OrderingManagement\Module.Ordering\Module.Ordering.csproj" />
+    <ProjectReference Include="..\..\Jhipster.Module\Redis\Module.Redis.Library\Module.Redis.Library.csproj" />
+    <ProjectReference Include="..\..\Jhipster.Module\Redis\Module.Redis\Module.Redis.csproj" />
   </ItemGroup>
 
 </Project>

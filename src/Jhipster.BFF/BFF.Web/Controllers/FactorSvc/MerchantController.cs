@@ -15,6 +15,9 @@ using Module.Factor.Domain.Entities;
 using Newtonsoft.Json;
 using RestSharp;
 using RolesConstants = BFF.Web.Constants.RolesConstants;
+using Module.Redis.Library.Helpers;
+using Microsoft.Extensions.Caching.Distributed;
+using Module.Redis.Configurations;
 
 namespace BFF.Web.Controllers.FactorSvc
 {
@@ -29,16 +32,18 @@ namespace BFF.Web.Controllers.FactorSvc
         private readonly IMapper _mapper;
         private readonly IAccountService _accountService;
         private readonly IMediator _mediator;
-
+        private readonly RedisConfig _redisConfiguration;
+        private readonly IDistributedCache _cache;
         private readonly IConfiguration _configuration;
 
-        public MerchantController(IMerchantRepository service, IConfiguration configuration, IMediator mediator, ILogger<MerchantController> logger, IUserService userService, IMapper mapper, IAccountService accountService)
+        public MerchantController(IMerchantRepository service,IDistributedCache distributedCache, RedisConfig redisConfiguration, IConfiguration configuration, IMediator mediator, ILogger<MerchantController> logger, IUserService userService, IMapper mapper, IAccountService accountService)
         {
             _service = service;
             _mediator = mediator;
             _logger = logger;
             _configuration = configuration;
             _userService = userService;
+            _cache=distributedCache;
             _mapper = mapper;
             _accountService = accountService;
         }
@@ -226,11 +231,21 @@ namespace BFF.Web.Controllers.FactorSvc
         [HttpPost("MerchantSearchToChoose")]
         public async Task<IActionResult> MerchantSearchToChoose([FromBody] MerchantSearchToChooseQuery request)
         {
-            _logger.LogDebug($"REST request MerchantSearchToChooseQuery : {JsonConvert.SerializeObject(request)}");
+            _logger.LogInformation($"REST request to get all point :{JsonConvert.SerializeObject(request)}");
             try
             {
-                return Ok(await _mediator.Send(request));
+                IEnumerable<Merchant>? res;
 
+                    string recordKey = $"{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
+                    res = await _cache.GetRecordAsync<IEnumerable<Merchant>>(recordKey);
+
+                    if (res is null)
+                    {
+                        res = await _mediator.Send(request);
+                        await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromMinutes(30));
+                    }
+               
+                return Ok(res);
             }
             catch (Exception ex)
             {
