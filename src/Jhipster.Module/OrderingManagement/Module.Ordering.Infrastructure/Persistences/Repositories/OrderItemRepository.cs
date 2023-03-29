@@ -64,7 +64,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 Product = _context.Products.Where(i => i.Id == c.ProductId)
                                  .Include(i => i.LabelProducts).ThenInclude(i => i.Label)
                                  .FirstOrDefault(),
-                Quantity = c.Quantity
+                Quantity = c.Quantity,
+                ProductId = c.ProductId
             }).AsQueryable();
 
             var res = new PagedList<OrderItemResponse>();
