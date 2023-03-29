@@ -87,6 +87,28 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return res;
         }
 
-        
+        public async Task<PagedList<OrderItem>> GetAllItemByOrderAdmin(Guid OrderId)
+        {
+            var query = _context.OrderItems.Where(c => c.PurchaseOrderId == OrderId).Select(c => new OrderItem
+            {
+                Id = c.Id,
+                PurchaseOrderId = c.PurchaseOrderId,
+                Product = _context.Products.Where(i => i.Id == c.ProductId)
+                                 .Include(i => i.Brand)
+                                 //.Include(i => i.TagProducts).ThenInclude(i => i.Tag)
+                                 .Include(i => i.LabelProducts).ThenInclude(i => i.Label)
+                                 .FirstOrDefault(),
+                Quantity = c.Quantity
+            }).AsEnumerable();
+
+            var res = new PagedList<OrderItem>();
+            res.Data = query;
+            res.TotalCount = query.Count();
+            return res;
+        }
+
+
+
+
     }
 }

@@ -10,5 +10,6 @@ namespace Module.Ordering.Application.Persistences
         Task<int> Update(OrderItem request);
         Task<int> Delete(List<Guid> ids);
         Task<PagedList<OrderItemResponse>> GetAllItemByOrder(Guid OrderId);
+        Task<PagedList<OrderItem>> GetAllItemByOrderAdmin(Guid OrderId);
     }
 }
