@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Jhipster.Helpers;
 using JHipsterNet.Core.Pagination;
+using Module.Ordering.Shared.DTOs;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -90,12 +91,32 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return result;
         }
 
-        public async Task<PurchaseOrder> ViewDetail(Guid id)
+        public async Task<PurchaseOrderViewDetailDTO> ViewDetail(Guid id)
         {
 
-            var result = await _context.PurchaseOrders.Where(i=>i.Id==id).FirstOrDefaultAsync();
+            var result = await _context.PurchaseOrders.Include(i=>i.Merchant).Where(i=>i.Id==id).Select(i=> new PurchaseOrderViewDetailDTO
+            {
+                MerchantId = i.MerchantId,
+                Address = i.Address,
+                OrderCode = i.OrderCode,
+                MerchantName = i.MerchantName,
+                PhoneNumber = i.PhoneNumber,
+                ContactName = i.ContactName,
+                ContractNumber = i.ContractNumber,
+                ShippingFee = i.ShippingFee,
+                TaxCode = i.Merchant.TaxCode,
+                Status= i.Status,
+                Email = i.Merchant.Email,
+                CreatedBy = i.CreatedBy,
+                CreatedDate = i.CreatedDate,
+                TotalPayment = i.TotalPayment,
+                TotalPrice = i.TotalPrice
+                
+
+            }).FirstOrDefaultAsync();
             return result;
-        }
+
+    }
 
         public async Task<PagedList<PurchaseOrder>> GetAllByUser(int page, int pageSize, int? status, Guid userId)
         {
