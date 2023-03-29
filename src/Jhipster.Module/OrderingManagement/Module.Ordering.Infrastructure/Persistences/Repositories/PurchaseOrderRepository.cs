@@ -193,7 +193,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 Status = i.Status,
             });
             
-           var res =await  data.Skip(pageSize * (page - 1))
+           var res =await  data.OrderByDescending(i=>i.CreateDate).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
             var result = new PagedList<HistoryOrderDTO>();
@@ -223,7 +223,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         public async Task<int>CheckStatus(Guid id)
         {
             var data=await _context.Merchants.FirstOrDefaultAsync(i => i.Id==id);
-            return (int)data.Status;
+            return (int)data.AddressStatus;
         }
     }
 }

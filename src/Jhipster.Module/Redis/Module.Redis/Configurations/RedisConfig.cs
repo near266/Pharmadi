@@ -13,7 +13,7 @@ namespace Module.Redis.Configurations
     {
         public string Configuration { get; set; }
         public string InstanceName { get; set; }
-        public string RedisKey { get; set; }
         public bool RedisEnabled { get; set; }
+        public string RedisKey { get; set; }
     }
 }

@@ -22,6 +22,9 @@ using Module.Factor.Application.Persistences;
 using Module.Factor.Infrastructure.Persistence.Repositories;
 using Jhipster.Domain.Repositories.Interfaces;
 using Jhipster.Infrastructure.Data.Repositories;
+using Module.Redis;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text;
 
 [assembly: ApiController]
 
@@ -44,7 +47,7 @@ namespace Jhipster
             services
                 .AddAppSettingsModule(Configuration);
 
-            
+
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
 
             AddDatabase(services);
@@ -63,7 +66,7 @@ namespace Jhipster
                 .AddWebModule()
                 .AddRepositoryModule()
                 .AddServiceModule();
-
+           
             services
                 .AddMailModule(Configuration);
             services.AddCors(options =>
@@ -116,9 +119,10 @@ namespace Jhipster
 
             //services.AddBasketModule(Configuration);
             //// Redis
-            //services.AddRedisModule(Configuration);
+            services.AddRedisModule(Configuration);
+           
         }
-
+       
 
 
         protected virtual void AddBffGateway(IServiceCollection services)

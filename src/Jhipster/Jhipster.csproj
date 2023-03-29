@@ -58,6 +58,7 @@
 		<ProjectReference Include="..\Jhipster.Module\CatalogManagement\Module.Catalog\Module.Catalog.csproj" />
 		<ProjectReference Include="..\Jhipster.Module\PermissionManagement\Module.Permission.Application\Module.Permission.Application.csproj" />
 		<ProjectReference Include="..\Jhipster.Module\PermissionManagement\Module.Permission\Module.Permission.csproj" />
+		<ProjectReference Include="..\Jhipster.Module\Redis\Module.Redis\Module.Redis.csproj" />
 	</ItemGroup>
 
 </Project>
