@@ -202,7 +202,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         public async Task<int>CheckStatus(Guid id)
         {
             var data=await _context.Merchants.FirstOrDefaultAsync(i => i.Id==id);
-            return (int)data.Status;
+            return (int)data.AddressStatus;
         }
     }
 }
