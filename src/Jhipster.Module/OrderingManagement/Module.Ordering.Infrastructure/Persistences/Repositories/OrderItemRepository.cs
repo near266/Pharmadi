@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Module.Ordering.Application.Persistences;
 using Module.Ordering.Domain.Entities;
 using Module.Ordering.Infrastructure.Persistences;
-
-
+using Module.Ordering.Shared.DTOs;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -56,27 +55,35 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<OrderItem>> GetAllItemByOrder(int page, int pageSize, Guid OrderId)
+        public async Task<PagedList<OrderItemResponse>> GetAllItemByOrder(Guid OrderId)
         {
             var query = _context.OrderItems.Where(c => c.PurchaseOrderId == OrderId).Select(c => new OrderItem
             {
                 Id = c.Id,
                 PurchaseOrderId = c.PurchaseOrderId,
                 Product = _context.Products.Where(i => i.Id == c.ProductId)
-                                 .Include(i => i.Brand)
-                                 .Include(i => i.TagProducts).ThenInclude(i => i.Tag)
                                  .Include(i => i.LabelProducts).ThenInclude(i => i.Label)
                                  .FirstOrDefault(),
-                Quantity = c.Quantity
+                Quantity = c.Quantity,
+                ProductId = c.ProductId
             }).AsQueryable();
 
-            var data = await query
-                        .Skip(pageSize * (page - 1))
-                        .Take(pageSize).ToListAsync();
+            var res = new PagedList<OrderItemResponse>();
 
-            var res = new PagedList<OrderItem>();
-            res.Data = data;
-            res.TotalCount = query.Count();
+            var data = new List<OrderItemResponse>();
+            var q1 = await query.Select(i => i.Product.BrandId).Distinct().ToListAsync();
+            foreach (var item in q1)
+            {
+                var temp = new OrderItemResponse
+                {
+                    Brand = _context.Brands.Where(i => i.Id == item).FirstOrDefault(),
+                    OrderItems = query.Where(q => q.Product.BrandId == item).ToList(),
+                    BrandQuantity = query.Where(q => q.Product.BrandId == item).Select(i=>i.ProductId).Distinct().Count(),
+                };
+                data.Add(temp);
+            }
+            res.Data = data.AsEnumerable();
+            res.TotalCount = query.Select(i => i.ProductId).Distinct().Count();
             return res;
         }
 
