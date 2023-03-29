@@ -106,6 +106,22 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPost("GetAllOrderItemByOrderAdmin")]
+        public async Task<ActionResult<PagedList<OrderItem>>> GetAllOrderItemByAdmin(OrderItemGetAllByOrderAdminQuery request)
+        {
+            _logger.LogInformation($"REST request GetAllOrderItemByOrderAdmin : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to GetAllOrderItemByOrderAdmin  fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
 
