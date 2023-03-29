@@ -46,49 +46,14 @@ namespace BFF.Web.Controllers.FactorSvc
         {
             return User.FindFirst("UserId")?.Value;
         }
-        //[HttpPost("RegisterByUser")]
-        //public async Task<IActionResult> RegisterByUser([FromBody] RegisterByUserDTO request)
-        //{
-        //    _logger.LogInformation($"REST request RegisterByUser : {JsonConvert.SerializeObject(request)}");
-        //    try
-        //    {
-        //        var AddRole = new HashSet<string>();
-        //        AddRole.Add("ROLE_MERCHANT");
-        //        request.Id = Guid.NewGuid();
-        //        request.CreatedDate = DateTime.Now;
-        //        request.LangKey = "en";
-        //        request.Roles = AddRole;
-        //        request.Status = 0;
-
-        //        //request.Roles.Add("")
-        //        var tem1 = _mapper.Map<RegisterRequest>(request);
-        //        tem1.Id = request.Id.ToString();
-        //        //adduser
-        //        var step1 = await _accountService.RegisterAccount(tem1);
-
-        //        if (step1 != null)
-        //        {
-        //            var temp2 = _mapper.Map<Merchant>(request);
-        //            var map = _mapper.Map<MerchantAddCommand>(temp2);
-        //            var result = await _mediator.Send(map);
-        //            return Ok(result);
-        //        }
-        //        return null;
-
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError($"REST request to RegisterByUser fail: {ex.Message}");
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
+      
         [HttpPost("RegisterByUser")]
         public async Task<IActionResult> RegisterByUser([FromBody] RegisterByUserDTO request)
         {
             _logger.LogInformation($"REST request RegisterByUser : {JsonConvert.SerializeObject(request)}");
             try
             {
+                // role merchant
                 var AddRole = new HashSet<string>();
                 AddRole.Add("ROLE_MERCHANT");
 
@@ -96,20 +61,20 @@ namespace BFF.Web.Controllers.FactorSvc
                 request.CreatedDate = DateTime.Now;
                 request.LangKey = "en";
                 request.Roles = AddRole;
-
-
-                //request.Roles.Add("")
+                // đăng ký với sđt
                 var tem1 = _mapper.Map<RegisterAdminRequest>(request);
                 tem1.Id = request.Id.ToString();
                 tem1.Login = request.PhoneNumber;
                 //adduser
                 var step1 = await _accountService.RegisterAccountAdmin(tem1);
+                //addbody
                 var body = new
                 {
                     Username = request.PhoneNumber,
                     Password = request.Password,
                     rememberMe = true
                 };
+                //gen token
                 var client = new RestClient(_configuration.GetConnectionString("AIO"));
                
                 var requestAddTranaction = new RestRequest($"/api/authenticate", Method.Post);
