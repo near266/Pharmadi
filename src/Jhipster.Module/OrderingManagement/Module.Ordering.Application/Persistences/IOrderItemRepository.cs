@@ -1,7 +1,6 @@
 ﻿using Jhipster.Service.Utilities;
 using Module.Ordering.Domain.Entities;
-
-
+using Module.Ordering.Shared.DTOs;
 
 namespace Module.Ordering.Application.Persistences
 {
@@ -10,6 +9,6 @@ namespace Module.Ordering.Application.Persistences
         Task<int> Add(OrderItem request);
         Task<int> Update(OrderItem request);
         Task<int> Delete(List<Guid> ids);
-        Task<PagedList<OrderItem>> GetAllItemByOrder(int page, int pageSizem, Guid OrderId);
+        Task<PagedList<OrderItemResponse>> GetAllItemByOrder(Guid OrderId);
     }
 }
