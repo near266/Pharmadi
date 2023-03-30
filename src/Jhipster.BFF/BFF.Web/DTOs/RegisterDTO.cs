@@ -136,7 +136,7 @@ namespace BFF.Web.DTOs
         public DateTime? LicenseDate { get; set; }
         public string? LicensePlace { get; set; }
 
-        public List<string>? GGPImage { get; set; }
+        public List<string>? GPPImage { get; set; }
 
         public string? Avatar { get; set; }
         [System.Text.Json.Serialization.JsonIgnore]
