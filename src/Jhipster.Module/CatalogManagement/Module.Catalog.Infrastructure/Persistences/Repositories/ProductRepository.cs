@@ -255,7 +255,23 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             if (categoryIds != null && categoryIds.Count() > 0)
             {
+                var lisCate = await _context.CategoryProducts.Where(i=>categoryIds.Contains(i.CategoryId)).Select(i=>i.CategoryId).ToListAsync();
+                 var parentId = await _context.Categories.Where(i => lisCate.Contains(i.Id)).Select(i => i.ParentId).ToListAsync();
+                var listcate = await _context.Categories.Where(i=>parentId.Contains(i.Id)).Select(i=>i.Id).ToListAsync();
+                var ListcatePro = await _context.CategoryProducts.Where(i=>lisCate.Contains(i.CategoryId)).Select(i=>i.ProductId).ToListAsync();
+                if(parentId != null)
+                {
+                  
+                query =   query.Where(i=>ListcatePro.Contains(i.Id));
+
+                }
+                else
+                {
+
                 query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(i => categoryIds.Contains(i.CategoryId)));
+                }
+
+
             }
             if (brandIds != null && brandIds.Count() > 0)
             {
