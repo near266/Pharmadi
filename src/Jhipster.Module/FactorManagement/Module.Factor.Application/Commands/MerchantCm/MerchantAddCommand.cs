@@ -31,7 +31,7 @@ namespace Module.Factor.Application.Commands.MerchantCm
         public DateTime? LicenseDate { get; set; }
         public string? LicensePlace { get; set; }
 
-        public List<string>? GGPImage { get; set; }
+        public List<string>? GPPImage { get; set; }
 
         public string? Avatar { get; set; }
         [JsonIgnore]
