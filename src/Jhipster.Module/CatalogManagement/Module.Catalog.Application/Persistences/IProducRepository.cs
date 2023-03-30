@@ -18,7 +18,7 @@ namespace Module.Catalog.Application.Persistences
         Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid?>? categoryIds, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize,Guid? userId);
         Task<int> UpdataStatusProduct(Guid id ,int status);
         Task<IEnumerable<ProductSearchDTO>> ViewListProductWithBrand(Guid Id,Guid? userId );
-        Task<PagedList<ProductSearchDTO>> ViewListProductSimilarCategory(Guid Id,int page, int pageSize,Guid? userId);
+        Task<List<ProductSearchDTO>> ViewListProductSimilarCategory(Guid Id,Guid? userId);
         Task<List<List<string>>> FakeData();
         Task<IEnumerable<ProductSearchDTO>> SearchToChoose(string? keyword);
         Task<PagedList<SearchProductBrandId>> GetListProductSimilarCategoryByBrandId(int page, int pageSize, Guid brandId, Guid? userId);
