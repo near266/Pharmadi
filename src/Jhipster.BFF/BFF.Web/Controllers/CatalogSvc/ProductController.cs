@@ -210,7 +210,7 @@ namespace BFF.Web.ProductSvc
                     {
                         productId = request.Id
                     };
-                    _mediator.Send(step10);
+                     await _mediator.Send(step10);
 
                     foreach (var item in request.TagIds)
                     {
@@ -233,7 +233,7 @@ namespace BFF.Web.ProductSvc
                     {
                         productId = request.Id
                     };
-                    _mediator.Send(step10);
+                   await _mediator.Send(step10);
                     foreach (var item in request.LabelIds)
                     {
                         var step6 = new LabelProductAddCommand
