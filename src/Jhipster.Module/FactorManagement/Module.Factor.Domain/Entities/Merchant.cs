@@ -4,8 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Module.Factor.Domain.Entities
 {
-    public class Merchant : BaseEntity<Guid>
+    public class Merchant 
     {
+        [Key]
+        public Guid Id { get; set; }
+        
         [MaxLength(10)]
         //[Column("Ma so thue")]
         public string? TaxCode { get; set; }
@@ -29,7 +32,7 @@ namespace Module.Factor.Domain.Entities
         public int? Rank { get; set; }
         public string? Branch { get; set; }
         public string? TypeCustomer { get; set; }
-        public int? Status { get; set; } // trạng thái active 0-1
+        public int? Status { get; set; } // trạng thái active 1-2
         public string? Email { get; set; }
 
         public string? City { get; set; }
@@ -43,7 +46,12 @@ namespace Module.Factor.Domain.Entities
 
         public string? Avatar { get; set; }
 
-        public int? AddressStatus { get; set; }
+        public int? AddressStatus { get; set; }// trạng thái phê duyệt địa chỉ 1-2
+        public string? CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        [MaxLength(100)]
+        public string? LastModifiedBy { get; set; }
+        public DateTime? LastModifiedDate { get; set; }
 
     }
 }

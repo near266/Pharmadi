@@ -26,6 +26,20 @@ namespace BFF.Web.DTOs.OrderSvc
         [JsonIgnore]
         public DateTime CreatedDate { get; set; }
         public List<OrderItemRequest> orderItemRequests { get; set; }
+        public string? Email { get; set; }
+
+        public string? City { get; set; }
+        public string? District { get; set; }
+
+        public string? SubDistrict { get; set; }
+        public DateTime? LicenseDate { get; set; }
+        public string? LicensePlace { get; set; }
+
+        public List<string>? GGPImage { get; set; }
+
+        public string? Avatar { get; set; }
+
+        public int? AddressStatus { get; set; }
     }
 
     public class OrderItemRequest

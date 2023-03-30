@@ -221,10 +221,16 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             await _context.HistoryOrders.AddAsync(map);
             return await _context.SaveChangesAsync();
         }    
-        public async Task<int>CheckStatus(Guid id)
+        public async Task<StatusMerchantDTO> CheckStatus(Guid id)
         {
             var data=await _context.Merchants.FirstOrDefaultAsync(i => i.Id==id);
-            return (int)data.AddressStatus;
+            var value = new StatusMerchantDTO()
+            {
+                Status =(int) data.Status,
+                AddressStatus =(int) data.AddressStatus
+            };
+            return value;
+
         }
     }
 }

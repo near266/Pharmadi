@@ -55,7 +55,7 @@ namespace BFF.Web.ProductSvc
                     Id = Guid.Parse(GetUserIdFromContext())
                 };
                 var Status = await _mediator.Send(checkStatus);
-                if (Status != 2) throw new Exception("Unverified Account");
+                if (Status.Status != 2 || Status.AddressStatus!=2) throw new Exception("Unverified Account");
                 request.Id = Guid.NewGuid();
                 request.CreatedBy = new Guid(GetUserIdFromContext());
                 request.Status = 1;
@@ -138,7 +138,7 @@ namespace BFF.Web.ProductSvc
                 request.CreatedBy = new Guid(GetUserIdFromContext());
                 request.Status = 2;
                 request.CreatedDate = DateTime.Now;
-
+                request.AddressStatus = 2;
                 int result = 0;
                 // add order
                 var step1 = _mapper.Map<PurchaseOrderAddCommand>(request);

@@ -308,7 +308,7 @@ namespace BFF.Web.Controllers.FactorSvc
                     var tem = new UpdateAddressStatusCommand
                     {
                         Id = item.Id,
-                        Status = item.Status
+                       
                     };
                     result = await _mediator.Send(tem); 
                 }
