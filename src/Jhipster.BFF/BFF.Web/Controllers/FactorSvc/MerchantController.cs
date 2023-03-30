@@ -277,24 +277,26 @@ namespace BFF.Web.Controllers.FactorSvc
             }
 
         }
+        //[Authorize(Roles = RolesConstants.ADMIN)]
 
-        [HttpPost("RequestAddressStatus")]
-        public async Task<IActionResult> RequestStatus([FromBody] UpdateAddressStatusCommand request)
-        {
-            _logger.LogDebug($"REST request RequestAddressStatus : {JsonConvert.SerializeObject(request)}");
-            try
-            {
-                request.Id = Guid.Parse(GetUserIdFromContext());
-                return Ok(await _mediator.Send(request));
+        //[HttpPost("RequestAddressStatus")]
+        //public async Task<IActionResult> RequestStatus([FromBody] UpdateAddressStatusCommand request)
+        //{
+        //    _logger.LogDebug($"REST request RequestAddressStatus : {JsonConvert.SerializeObject(request)}");
+        //    try
+        //    {
+        //        request.Id = Guid.Parse(GetUserIdFromContext());
+        //        return Ok(await _mediator.Send(request));
 
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"REST request to RequestAddressStatus fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
-            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"REST request to RequestAddressStatus fail: {ex.Message}");
+        //        return StatusCode(500, ex.Message);
+        //    }
 
-        }
+        //}
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("ApproveAddressStatus")]
         public async Task<IActionResult> ApproveAddressStatus([FromBody] List<ApproveAddressStatusRq> request)
