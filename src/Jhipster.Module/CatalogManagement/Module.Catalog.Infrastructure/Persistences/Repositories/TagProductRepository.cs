@@ -20,28 +20,22 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> Delete(Guid productId, Guid tagId )
+        public async Task<int> Delete(Guid productId)
         {
-            var obj = await _context.TagProducts.FirstOrDefaultAsync(i => i.ProductId.Equals(productId)&& i.TagId==tagId);
+            var obj = await _context.TagProducts.Where(i => i.ProductId.Equals(productId)).ToListAsync();
             if (obj != null)
             {
-                _context.TagProducts.Remove(obj);
-                return await _context.SaveChangesAsync();
+                foreach(var item in obj)
+                {
+                    _context.TagProducts.Remove(item);
+                    await _context.SaveChangesAsync();
+                }
+                return 1;
+               
             }
             return 0;
         }
 
-        public async Task<int> Update(TagProduct request)
-        {
-            var old = await _context.TagProducts.FirstOrDefaultAsync(i => i.Id.Equals(request.Id));
-            if (old != null)
-            {
-
-                old = _mapper.Map<TagProduct, TagProduct>(request, old);
-
-                return await _context.SaveChangesAsync(default);
-            }
-            return 0;
-        }
+       
     }
 }

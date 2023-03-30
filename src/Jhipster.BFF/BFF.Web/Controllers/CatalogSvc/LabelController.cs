@@ -152,60 +152,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
-
-        [HttpPost("UpdateProductTag")]
-        public async Task<ActionResult<int>> UpdateProductTag([FromBody] List<LabelProductUpdateRequest> request)
-        {
-            _logger.LogInformation($"REST request Update TagProduct : {JsonConvert.SerializeObject(request)}");
-            try
-            {
-                var result = 0;
-                foreach (var item in request)
-                {
-                    var tem = new LabelProductUpdateCommand
-                    {
-                        ProductId = item.ProductId,
-                        LabelId = item.LabelId
-                    };
-                    result = await _mediator.Send(tem);
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"REST request to Update TagProduct fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
-            }
-        }
-        [Authorize(Roles = RolesConstants.ADMIN)]
-
-        [HttpPost("DeleteProductLabel")]
-        public async Task<ActionResult<int>> UpdateProductLabel([FromBody] List<LabelProductDeleteRequest> ids)
-        {
-            _logger.LogInformation($"REST request delete LabelProduct : {JsonConvert.SerializeObject(ids)}");
-            try
-            {
-                var result = 0;
-                foreach (var item in ids)
-                {
-                    var tem = new LabelProductDeleteCommand
-                    {
-                        Id = item.Id,
-                        productId = item.ProductId,
-                    };
-                    result = await _mediator.Send(tem);
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"REST request to delete LabelProduct fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
-            }
-        }
+      
     }
 }
 

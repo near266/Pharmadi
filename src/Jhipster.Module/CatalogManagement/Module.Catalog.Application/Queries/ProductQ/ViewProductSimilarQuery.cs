@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Queries.ProductQ
 {
-    public class ViewProductSimilarQuery : IRequest<List<ProductSearchDTO>>
+    public class ViewProductSimilarQuery : IRequest<PagedList<ProductSearchDTO>>
     {
         public Guid Id { get; set; }
         //public int page { get; set; }
         //public int pageSize { get; set; }
         public Guid? userId { get; set; }
     }
-    public class ViewProductSimilarQueryHandler : IRequestHandler<ViewProductSimilarQuery, List<ProductSearchDTO>>
+    public class ViewProductSimilarQueryHandler : IRequestHandler<ViewProductSimilarQuery, PagedList<ProductSearchDTO>>
     {
         private readonly IProductRepository _repo;
         private readonly IMapper _mapper;
@@ -28,7 +28,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<List<ProductSearchDTO>> Handle(ViewProductSimilarQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<ProductSearchDTO>> Handle(ViewProductSimilarQuery request, CancellationToken cancellationToken)
         {
             return await _repo.ViewListProductSimilarCategory(request.Id, request.userId);
         }

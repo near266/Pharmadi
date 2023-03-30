@@ -164,15 +164,89 @@ namespace BFF.Web.ProductSvc
 
 
         [HttpPost("Update")]
-        public async Task<IActionResult> Update([FromBody] ProductUpdateCommand request)
+        public async Task<IActionResult> Update([FromBody] ProductUpdateRequest request)
         {
             _logger.LogInformation($"REST request update Product : {JsonConvert.SerializeObject(request)}");
             try
             {
+                int result = 0;
                 request.LastModifiedDate = DateTime.Now;
-                var UserId = Guid.Parse(GetUserIdFromContext());
-                request.LastModifiedBy = UserId;
-                var result = await _mediator.Send(request);
+                request.LastModifiedBy = Guid.Parse(GetUserIdFromContext());
+                var step1 = new ProductUpdateCommand
+                {
+                    Id = request.Id,
+                    SKU = request.SKU,
+                    ProductName = request.ProductName,
+                    Function = request.Function,
+                    PostContentId = request.PostContentId,
+                    SalePrice = request.SalePrice,
+                    Price = request.Price,
+                    Description = request.Description,
+                    UnitName = request.UnitName,
+                    BrandId = request.BrandId,
+                    Status = request.Status,
+                    Image = request.Image,
+                    Industry = request.Industry,
+                    Effect = request.Effect,
+                    Preserve = request.Preserve,
+                    Dosage = request.Dosage,
+                    DosageForms = request.DosageForms,
+                    Country = request.Country,
+                    Ingredient = request.Country,
+                    Usage = request.Usage,
+                    Specification = request.Specification,
+                    Number = request.Number,
+                    LastModifiedBy = request.LastModifiedBy,
+                    LastModifiedDate = request.LastModifiedDate,
+                    Archived = request.Archived,
+                };
+
+                result = await _mediator.Send(step1);
+
+                //add tag product
+                if (request.TagIds != null)
+                {
+                    var step10 = new TagProductDeleteCommand
+                    {
+                        productId = request.Id
+                    };
+                    _mediator.Send(step10);
+
+                    foreach (var item in request.TagIds)
+                    {
+                        var step5 = new TagProductAddCommand
+                        {
+                            Id = Guid.NewGuid(),
+                            ProductId = request.Id,
+                            TagId = item
+
+                        };
+                        await _mediator.Send(step5);
+                    }
+                }
+
+
+                //add tag product
+                if (request.LabelIds != null)
+                {
+                    var step10 = new LabelProductDeleteCommand
+                    {
+                        productId = request.Id
+                    };
+                    _mediator.Send(step10);
+                    foreach (var item in request.LabelIds)
+                    {
+                        var step6 = new LabelProductAddCommand
+                        {
+                            Id = Guid.NewGuid(),
+                            ProductId = request.Id,
+                            LabelId = item
+
+                        };
+                        await _mediator.Send(step6);
+                    }
+                }
+
                 return Ok(result);
             }
             catch (Exception ex)
