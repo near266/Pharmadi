@@ -326,13 +326,13 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
-            }).AsEnumerable();
+            }).Take(10).AsEnumerable();
 
             return query2;
         }
 
 
-        public async Task<PagedList<ProductSearchDTO>> ViewListProductSimilarCategory(Guid Id, int page, int pageSize, Guid? userId)
+        public async Task<List<ProductSearchDTO>> ViewListProductSimilarCategory(Guid Id, Guid? userId)
         {
             var listProduct = new PagedList<ProductSearchDTO>();
             var listCatIds = await _context.CategoryProducts.Where(i => i.ProductId == Id).Select(i => i.CategoryId).ToListAsync();
@@ -361,7 +361,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
                 listProduct.Data = listProd;
                 listProduct.TotalCount = listProd.Count();
-                return listProduct;
+                return listProd.Take(10).ToList();
             }
             else
             {
@@ -385,10 +385,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
                 listProduct.Data = ListProd;
                 listProduct.TotalCount = ListProd.Count();
-                return listProduct;
+                return ListProd.Take(10).ToList();
             }
 
-            return listProduct;
+            return new List<ProductSearchDTO>();
         }
         public async Task<List<List<string>>> FakeData()
         {
