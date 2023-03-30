@@ -333,7 +333,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
 
 
-        public async Task<List<ProductSearchDTO>> ViewListProductSimilarCategory(Guid Id, Guid? userId)
+        public async Task<PagedList<ProductSearchDTO>> ViewListProductSimilarCategory(Guid Id, Guid? userId)
         {
             var listProduct = new PagedList<ProductSearchDTO>();
             var listCatIds = await _context.CategoryProducts.Where(i => i.ProductId == Id).Select(i => i.CategoryId).ToListAsync();
@@ -361,9 +361,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
                 }).AsEnumerable();
 
-                listProduct.Data = listProd;
+                listProduct.Data = listProd.Take(10).ToList();
                 listProduct.TotalCount = listProd.Count();
-                return listProd.Take(10).ToList();
+                return listProduct;
             }
             else
             {
@@ -385,12 +385,12 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
                 }).AsEnumerable();
 
-                listProduct.Data = ListProd;
+                listProduct.Data = ListProd.Take(10).ToList();
                 listProduct.TotalCount = ListProd.Count();
-                return ListProd.Take(10).ToList();
+                return listProduct;
             }
 
-            return new List<ProductSearchDTO>();
+            return new PagedList<ProductSearchDTO>();
         }
         public async Task<List<List<string>>> FakeData()
         {
