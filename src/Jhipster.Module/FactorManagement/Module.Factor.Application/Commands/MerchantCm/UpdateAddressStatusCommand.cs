@@ -10,7 +10,7 @@ namespace Module.Factor.Application.Commands.MerchantCm
     {
         [Required(ErrorMessage = "{0} is required.")]
         public Guid Id { get; set; }
-        public int Status { get; set; }
+       
     }
     public class UpdateAddressStatusCommandHandler : IRequestHandler<UpdateAddressStatusCommand, int>
     {
@@ -23,7 +23,7 @@ namespace Module.Factor.Application.Commands.MerchantCm
         }
         public async Task<int> Handle(UpdateAddressStatusCommand request, CancellationToken cancellationToken)
         {
-            return await _repo.UpdateAddressStatus(request.Id,request.Status);
+            return await _repo.UpdateAddressStatus(request.Id);
         }
     }
 

@@ -91,12 +91,13 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return data;
         }
 
-        public async Task<int> UpdateAddressStatus (Guid userid, int status)
+        public async Task<int> UpdateAddressStatus (Guid userid)
         {
             var old = await _context.Merchants.FirstOrDefaultAsync(i => i.Id.Equals(userid));
             if (old != null)
             {
-                old.AddressStatus = status;
+                old.Status = 2;
+                old.AddressStatus = 2;
                 return await _context.SaveChangesAsync(default);
             }
             return -1;
