@@ -225,6 +225,29 @@ namespace BFF.Web.Controllers.FactorSvc
             }
 
         }
+
+        [HttpGet("CheckMerchant")]
+        public async Task<IActionResult> CheckMerchant()
+        {
+            _logger.LogDebug($"REST request CheckMerchant");
+            try
+            {
+                var request = new MerchantViewDetailQuery
+                {
+                    Id = new Guid(GetUserIdFromContext())
+                };
+                var res = await _mediator.Send(request);
+                if (res.Status == 2 && res.AddressStatus == 2) return Ok(true);
+                else return Ok(false);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to CheckMerchant fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+
+        }
         [Authorize(Roles = RolesConstants.ADMIN)]
 
 

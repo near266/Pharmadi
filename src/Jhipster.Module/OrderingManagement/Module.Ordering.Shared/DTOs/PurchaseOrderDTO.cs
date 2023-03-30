@@ -8,6 +8,7 @@ namespace Module.Ordering.Shared.DTOs
 {
     public class PurchaseOrderViewDetailDTO
     {
+        public Guid Id { get; set; }
         public string OrderCode { get; set; }
         public Guid MerchantId { get; set; }
         public string? MerchantName { get; set; }

@@ -96,6 +96,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
 
             var result = await _context.PurchaseOrders.Include(i=>i.Merchant).Where(i=>i.Id==id).Select(i=> new PurchaseOrderViewDetailDTO
             {
+                Id = i.Id,
                 MerchantId = i.MerchantId,
                 Address = i.Address,
                 OrderCode = i.OrderCode,
