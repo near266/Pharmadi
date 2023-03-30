@@ -8,8 +8,6 @@ namespace Module.Catalog.Application.Commands.TagCm
     public class TagProductDeleteCommand : IRequest<int>
     {
         public Guid productId { get; set; }
-        [Required(ErrorMessage = "{0} is required.")]
-        public Guid Id { get; set; }
     }
     public class TagProductDeleteCommandHandler : IRequestHandler<TagProductDeleteCommand, int>
     {
@@ -22,7 +20,7 @@ namespace Module.Catalog.Application.Commands.TagCm
         }
         public async Task<int> Handle(TagProductDeleteCommand request, CancellationToken cancellationToken)
         {
-            return await _repo.Delete(request.productId, request.Id);
+            return await _repo.Delete(request.productId);
         }
     }
 

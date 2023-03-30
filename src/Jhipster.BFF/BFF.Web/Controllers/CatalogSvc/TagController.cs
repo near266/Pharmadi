@@ -127,34 +127,6 @@ namespace BFF.Web.ProductSvc
             try
             {
                 var result = 0;
-                foreach( var item in request)
-                {
-                    var tem = new TagProductAddCommand
-                    {
-                        Id = Guid.NewGuid(),
-                        ProductId = item.ProductId,
-                        TagId = item.TagId
-                    };
-                    result = await _mediator.Send(tem);
-                }
-                
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"REST request to add TagProduct fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
-            }
-        }
-        [Authorize(Roles = RolesConstants.ADMIN)]
-
-        [HttpPost("UpdateProductTag")]
-        public async Task<ActionResult<int>> UpdateProductTag([FromBody] List<TagProductUpdateRequest> request)
-        {
-            _logger.LogInformation($"REST request Update TagProduct : {JsonConvert.SerializeObject(request)}");
-            try
-            {
-                var result = 0;
                 foreach (var item in request)
                 {
                     var tem = new TagProductAddCommand
@@ -170,38 +142,12 @@ namespace BFF.Web.ProductSvc
             }
             catch (Exception ex)
             {
-                _logger.LogError($"REST request to Update TagProduct fail: {ex.Message}");
+                _logger.LogError($"REST request to add TagProduct fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
 
-
-        [HttpPost("DeleteProductTag")]
-        public async Task<ActionResult<int>> UpdateProductTag([FromBody] List<TagProductDeleteRequest> requests)
-        {
-            _logger.LogInformation($"REST request delete TagProduct : {JsonConvert.SerializeObject(requests)}");
-            try
-            {
-                var result = 0;
-                foreach (var item in requests)
-                {
-                    var tem = new TagProductDeleteCommand
-                    {
-                        productId = item.ProductId,
-                        Id = item.Id,
-                    };
-                    result = await _mediator.Send(tem);
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"REST request to delete TagProduct fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
-            }
-        }
+       
     }
 }
 

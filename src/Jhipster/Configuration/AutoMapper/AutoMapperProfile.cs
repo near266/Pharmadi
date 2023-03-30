@@ -124,7 +124,7 @@ namespace Jhipster.Configuration.AutoMapper
 
             CreateMap<LabelProductAddCommand, LabelProduct>();
             CreateMap<LabelProduct, LabelProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<LabelProductUpdateCommand, LabelProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            //CreateMap<LabelProductUpdateCommand, LabelProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             //Tag
             CreateMap<TagAddCommand, Tag>();
@@ -133,7 +133,7 @@ namespace Jhipster.Configuration.AutoMapper
 
             CreateMap<TagProductAddCommand, TagProduct>();
             CreateMap<TagProduct, TagProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<TagProductUpdateCommand, TagProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            //CreateMap<TagProductUpdateCommand, TagProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             //product
             CreateMap<ProductAddRequest, ProductAddCommand>();
             CreateMap<ProductAddCommand, Product>();

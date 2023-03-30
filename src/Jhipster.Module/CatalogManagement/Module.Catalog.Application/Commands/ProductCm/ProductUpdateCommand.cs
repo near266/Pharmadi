@@ -9,17 +9,16 @@ namespace Module.Catalog.Application.Commands.ProductCm
 {
     public class ProductUpdateCommand: IRequest<int>
     {
-        [JsonIgnore]
         public Guid Id { get; set; }
-        public string SKU { get; set; }
-        public string ProductName { get; set; }
+        public string? SKU { get; set; }
+        public string? ProductName { get; set; }
         public string? Function { get; set; }
         public decimal? Price { get; set; }
         public decimal? SalePrice { get; set; }
         public string? Description { get; set; }
         public string? UnitName { get; set; }
         public Guid? BrandId { get; set; }
-        public int Status { get; set; }
+        public int? Status { get; set; }
         public Guid? PostContentId { get; set; }
         public bool? HideProduct { get; set; }
         public List<string>? Image { get; set; }

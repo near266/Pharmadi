@@ -64,17 +64,17 @@ namespace BFF.Web.ProductSvc
 
 
                 //lay thong tin merchant
-                var cusRequest = new MerchantViewDetailQuery
-                {
-                    Id = request.MerchantId
-                };
-                var cus = await _mediator.Send(cusRequest);
+                //var cusRequest = new MerchantViewDetailQuery
+                //{
+                //    Id = request.MerchantId
+                //};
+                //var cus = await _mediator.Send(cusRequest);
 
-                request.MerchantName = cus.MerchantName;
-                request.PhoneNumber = cus.PhoneNumber;
-                request.ContactName = cus.ContactName;
-                request.ContractNumber = cus.ContractNumber;
-                request.Address = cus.Address;
+                //request.MerchantName = cus.MerchantName;
+                //request.PhoneNumber = cus.PhoneNumber;
+                //request.ContactName = cus.ContactName;
+                //request.ContractNumber = cus.ContractNumber;
+                //request.Address = cus.Address;
 
 
                 if (request.TotalPrice <= 1000000) request.ShippingFee = 50000;
