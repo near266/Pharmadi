@@ -9,6 +9,7 @@ using Module.Catalog.Shared.DTOs;
 using Jhipster.Domain;
 using AutoMapper.QueryableExtensions;
 using Microsoft.VisualBasic;
+using System.Linq;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -336,12 +337,13 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             var listProduct = new PagedList<ProductSearchDTO>();
             var listCatIds = await _context.CategoryProducts.Where(i => i.ProductId == Id).Select(i => i.CategoryId).ToListAsync();
-            var listId2 = await _context.Categories.Where(i => listCatIds.Contains(i.Id) && i.ParentId != null).Select(i => i.Id).ToListAsync();
+            var parentId =  await _context.Categories.Where(i => listCatIds.Contains(i.Id) && i.ParentId != null).Select(i => i.ParentId).ToListAsync();
+            var listId2 = await _context.Categories.Where(i => listCatIds.Contains(i.Id) && parentId.Contains(i.ParentId)).Select(i => i.Id).ToListAsync();
             var listId1 = await _context.Categories.Where(i => listCatIds.Contains(i.Id) && i.ParentId == null).Select(i => i.Id).ToListAsync();
             //var listProd = await _context.Products.ToListAsync();
             if (listId2 != null)
             {
-                var prodIds = await _context.CategoryProducts.Where(i => listId2.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
+                var prodIds = await _context.CategoryProducts.Where(i => listId2.Contains(i.CategoryId)&& i.ProductId ==Id).Select(i => i.ProductId).ToListAsync();
                 var listProd = _context.Products.Where(i => prodIds.Contains(i.Id)).Select(i => new ProductSearchDTO
                 {
                     Id = i.Id,
@@ -365,7 +367,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             else
             {
-                var prodId = await _context.CategoryProducts.Where(i => listId1.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
+                var prodId = await _context.CategoryProducts.Where(i => listId1.Contains(i.CategoryId) && i.ProductId == Id).Select(i => i.ProductId).ToListAsync();
                 var ListProd = _context.Products.Where(i => prodId.Contains(i.Id)).Select(i => new ProductSearchDTO
                 {
                     Id = i.Id,
