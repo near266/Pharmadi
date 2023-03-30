@@ -156,7 +156,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
         public async Task<List<string>>ImageBrand()
         {
-            return await _context.Brands.Select(i => i.LogoBrand).ToListAsync();
+            return await _context.Brands.Select(i => i.LogoBrand).Take(6).ToListAsync();
         }
 
         public async Task<int> AddListBrand(List<Brand> brands)
