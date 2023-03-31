@@ -19,26 +19,35 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             _context = context;
             _mapper = mapper;
         }
+
         public async Task<int> Add(Cart request)
         {
-            var obj = await _context.Carts.Where(i => i.UserId == request.UserId && i.ProductId == request.ProductId).FirstOrDefaultAsync();
-            if(obj!=null)
+            try
             {
-                request.Id = obj.Id;
-                request.Quantity = obj.Quantity + request.Quantity;
-                if(request.Quantity == 0)
+                var obj = await _context.Carts.FirstOrDefaultAsync(i => i.UserId == request.UserId && i.ProductId == request.ProductId);
+                if (obj != null)
                 {
-                    _context.Carts.Remove(obj);
-                    return await _context.SaveChangesAsync();
+                    request.Id = obj.Id;
+                    request.Quantity = obj.Quantity + request.Quantity;
+                    if (request.Quantity == 0)
+                    {
+                        _context.Carts.Remove(obj);
+                        return await _context.SaveChangesAsync();
+                    }
+                    obj = _mapper.Map<Cart, Cart>(request, obj);
+
+                    return await _context.SaveChangesAsync(default);
                 }
-                obj = _mapper.Map<Cart, Cart>(request, obj);
-
-                return await _context.SaveChangesAsync(default);
+                await _context.Carts.AddAsync(request);
+                return await _context.SaveChangesAsync();
             }
-            await _context.Carts.AddAsync(request);
-            return await _context.SaveChangesAsync();
+            catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+          
+           
         }
-
         public async Task<int> Delete(List<Guid> ids)
         {
             foreach (var id in ids)

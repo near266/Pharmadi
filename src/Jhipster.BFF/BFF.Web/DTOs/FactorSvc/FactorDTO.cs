@@ -9,6 +9,6 @@ namespace BFF.Web.DTOs.FactorSvc
     public class ApproveAddressStatusRq
     {
         public Guid Id { get; set; }
-        public int Status { get; set; }
+        
     }
 }
