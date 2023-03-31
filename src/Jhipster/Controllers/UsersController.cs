@@ -21,6 +21,7 @@ using Jhipster.Dto.Authentication;
 using Newtonsoft.Json;
 using System;
 using Module.Factor.Infrastructure.Persistences;
+using Jhipster.DTO;
 
 namespace Jhipster.Controllers
 {
@@ -127,16 +128,20 @@ namespace Jhipster.Controllers
         /// <param name="pageable"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers(IPageable pageable)
+        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
             _log.LogDebug("REST request to get a page of Users");
+            //var page = await _userManager.Users
+            //    .Include(it => it.UserRoles)
+            //    .ThenInclude(r => r.Role)
+            //    .UsePageableAsync(pageable);
+            //var userDtos = page.Content.Select(user => _mapper.Map<UserDto>(user));
+            //var headers = page.GeneratePaginationHttpHeaders();
+            //return Ok(userDtos).WithHeaders(headers);
             var page = await _userManager.Users
                 .Include(it => it.UserRoles)
-                .ThenInclude(r => r.Role)
-                .UsePageableAsync(pageable);
-            var userDtos = page.Content.Select(user => _mapper.Map<UserDto>(user));
-            var headers = page.GeneratePaginationHttpHeaders();
-            return Ok(userDtos).WithHeaders(headers);
+                .ThenInclude(r => r.Role).ToListAsync();
+            return Ok(page);
         }
 
         /// <summary>
@@ -218,19 +223,40 @@ namespace Jhipster.Controllers
         {
             _log.LogDebug($"REST request to get list staff");
 
-            var result = await _userManager.GetUsersInRoleAsync("ROlE_STAFF")
+            var result = await _userManager.GetUsersInRoleAsync(RolesConstants.ADMIN);
+            var resultausersup = await _userManager.GetUsersInRoleAsync(RolesConstants.SUPERVIOR);
             //.Include(it => it.UserRoles)
             //.ThenInclude(r => r.Role)
             //.ToListAsync()
             ;
             var userDto = _mapper.Map<List<UserDto>>(result);
+            var supDto = _mapper.Map<List<UserDto>>(resultausersup);
+
             foreach (var user in userDto)
             {
-                user.Roles.Add("ROLE_STAFF");
+                user.Roles.Add(RolesConstants.ADMIN);
             }
+            foreach (var user in supDto)
+            {
+                user.Roles.Add(RolesConstants.SUPERVIOR);
+            }
+            var value = userDto.Union(supDto).ToList();
             //.ThenInclude(r => r.Role)
             //.ToListAsync()
-            return Ok(userDto);
+            return Ok(value);
+        }
+        /// <summary>
+        /// thêm role cho user
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("search")]
+        [Authorize]
+        [Authorize(Roles = RolesConstants.ADMIN)]
+        public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleDTO rq)
+        {
+            _log.LogDebug($"REST request to update role");
+            return Ok(_userService.UpdateRoles(rq.user, rq.roles));
         }
     }
 }
