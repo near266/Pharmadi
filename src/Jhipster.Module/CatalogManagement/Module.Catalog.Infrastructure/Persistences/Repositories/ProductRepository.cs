@@ -257,7 +257,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 var lisCate = await _context.CategoryProducts.Where(i=>categoryIds.Contains(i.CategoryId)).Select(i=>i.CategoryId).ToListAsync();
                  var parentId = await _context.Categories.Where(i => lisCate.Contains(i.Id)).Select(i => i.ParentId).ToListAsync();
-                var listcate = await _context.Categories.Where(i=> categoryIds.Contains(i.Id) ).Select(i=>i.Id).ToListAsync();
+                var listcate = await _context.Categories.Where(i=> categoryIds.Contains(i.Id) && parentId.Contains(i.ParentId) ).Select(i=>i.Id).ToListAsync();
                 var ListcatePro = await _context.CategoryProducts.Where(i=> listcate.Contains(i.CategoryId)).Select(i=>i.ProductId).ToListAsync();
                 if(parentId != null)
                 {

@@ -14,7 +14,7 @@ namespace Module.Catalog.Application.Commands.BrandCm
 {
     public class BrandAddCommand: IRequest<int>
     {
-        [Required(ErrorMessage = "{0} is required.")]
+       
         [JsonIgnore]
         public Guid? Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
