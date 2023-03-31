@@ -222,19 +222,27 @@ namespace Jhipster.Controllers
         {
             _log.LogDebug($"REST request to get list staff");
 
-            var result = await _userManager.GetUsersInRoleAsync("ROlE_STAFF")
+            var result = await _userManager.GetUsersInRoleAsync(RolesConstants.ADMIN);
+            var resultausersup = await _userManager.GetUsersInRoleAsync(RolesConstants.SUPERVIOR);
             //.Include(it => it.UserRoles)
             //.ThenInclude(r => r.Role)
             //.ToListAsync()
             ;
             var userDto = _mapper.Map<List<UserDto>>(result);
+            var supDto = _mapper.Map<List<UserDto>>(resultausersup);
+
             foreach (var user in userDto)
             {
-                user.Roles.Add("ROLE_STAFF");
+                user.Roles.Add(RolesConstants.ADMIN);
             }
+            foreach (var user in supDto)
+            {
+                user.Roles.Add(RolesConstants.SUPERVIOR);
+            }
+            var value = userDto.Union(supDto).ToList();
             //.ThenInclude(r => r.Role)
             //.ToListAsync()
-            return Ok(userDto);
+            return Ok(value);
         }
     }
 }
