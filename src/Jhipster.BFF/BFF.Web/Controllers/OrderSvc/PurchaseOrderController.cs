@@ -367,8 +367,7 @@ namespace BFF.Web.ProductSvc
                         //}
                     }*/
 
-                    //}
-                
+                    //}              
                 var result = await _mediator.Send(request);
                 if(result==1)
                 {
@@ -421,6 +420,44 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
 
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("RebuyOrder")]
+        public async Task<IActionResult> RebuyOrder([FromQuery] Guid orderid)
+        {
+            _logger.LogInformation($"REST request update PurchaseOrder : {JsonConvert.SerializeObject(orderid)}");
+            try
+            {
+                var userId = new Guid(GetUserIdFromContext());
+
+                //get all orderItem in purchaseOrder
+                var step1 = new OrderItemGetAllByOrderAdminQuery
+                {
+                    purchaseOrderId = orderid
+                };
+                int result = 0;
+                var res1 = await _mediator.Send(step1);
+
+                //all to cart
+                foreach( var item in res1.Data)
+                {
+                    var step2 = new CartAddCommand
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = item.Product.Id,
+                        UserId = userId,
+                        Quantity = item.Quantity,
+                        IsChoice = true
+                    };
+                    result = await _mediator.Send(step2);   
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to RebuyOrder fail: {ex.Message}");
                 return StatusCode(500, ex.Message);
             }
         }

@@ -295,7 +295,15 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request search Product : {JsonConvert.SerializeObject(request)}");
             try
             {
-                request.userId = Guid.Parse(GetUserIdFromContext());
+                try
+                {
+                    request.userId = Guid.Parse(GetUserIdFromContext());
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"REST request to search Product fail: {ex.Message}");
+                    return StatusCode(401, ex.Message);
+                }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -381,8 +389,11 @@ namespace BFF.Web.ProductSvc
                 {
                     request.userId = Guid.Parse(GetUserIdFromContext());
                 }
-                catch
-                { }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"REST request to ViewProductNew fail: {ex.Message}");
+                    return StatusCode(500, ex.Message);
+                }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -405,7 +416,9 @@ namespace BFF.Web.ProductSvc
                     request.userId = Guid.Parse(GetUserIdFromContext());
                 }
                 catch
-                { }
+                { 
+
+                }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
