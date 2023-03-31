@@ -21,6 +21,7 @@ using Jhipster.Dto.Authentication;
 using Newtonsoft.Json;
 using System;
 using Module.Factor.Infrastructure.Persistences;
+using Jhipster.DTO;
 
 namespace Jhipster.Controllers
 {
@@ -243,6 +244,19 @@ namespace Jhipster.Controllers
             //.ThenInclude(r => r.Role)
             //.ToListAsync()
             return Ok(value);
+        }
+        /// <summary>
+        /// thêm role cho user
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("search")]
+        [Authorize]
+        [Authorize(Roles = RolesConstants.ADMIN)]
+        public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleDTO rq)
+        {
+            _log.LogDebug($"REST request to update role");
+            return Ok(_userService.UpdateRoles(rq.user, rq.roles));
         }
     }
 }
