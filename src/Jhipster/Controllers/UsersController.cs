@@ -127,16 +127,20 @@ namespace Jhipster.Controllers
         /// <param name="pageable"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers(IPageable pageable)
+        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
             _log.LogDebug("REST request to get a page of Users");
+            //var page = await _userManager.Users
+            //    .Include(it => it.UserRoles)
+            //    .ThenInclude(r => r.Role)
+            //    .UsePageableAsync(pageable);
+            //var userDtos = page.Content.Select(user => _mapper.Map<UserDto>(user));
+            //var headers = page.GeneratePaginationHttpHeaders();
+            //return Ok(userDtos).WithHeaders(headers);
             var page = await _userManager.Users
                 .Include(it => it.UserRoles)
-                .ThenInclude(r => r.Role)
-                .UsePageableAsync(pageable);
-            var userDtos = page.Content.Select(user => _mapper.Map<UserDto>(user));
-            var headers = page.GeneratePaginationHttpHeaders();
-            return Ok(userDtos).WithHeaders(headers);
+                .ThenInclude(r => r.Role).ToListAsync();
+            return Ok(page);
         }
 
         /// <summary>
