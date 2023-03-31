@@ -127,8 +127,8 @@ namespace Jhipster.Controllers
         /// </summary>
         /// <param name="pageable"></param>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
+        [HttpPost("GetAllUsers")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers([FromBody] ViewEmployeeDTO rq)
         {
             _log.LogDebug("REST request to get a page of Users");
             //var page = await _userManager.Users
@@ -138,10 +138,16 @@ namespace Jhipster.Controllers
             //var userDtos = page.Content.Select(user => _mapper.Map<UserDto>(user));
             //var headers = page.GeneratePaginationHttpHeaders();
             //return Ok(userDtos).WithHeaders(headers);
-            var page = await _userManager.Users
+            var page =  _userManager.Users
                 .Include(it => it.UserRoles)
-                .ThenInclude(r => r.Role).ToListAsync();
-            return Ok(page);
+                .ThenInclude(r => r.Role).AsQueryable();
+            page = rq.FromDate != null ? page.Where(i => i.CreatedDate > rq.FromDate) : page;
+            page = rq.Name != null ? page.Where(i => i.UserName==rq.Name) : page;
+            page = rq.ToDate != null ? page.Where(i => i.CreatedDate < rq.ToDate) : page;
+            page = rq.PhoneNumber != null ? page.Where(i => i.PhoneNumber == rq.PhoneNumber) : page;
+           
+            var value = _mapper.Map<List<UserDto>>(page);
+            return Ok(value);
         }
 
         /// <summary>
