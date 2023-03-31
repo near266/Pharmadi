@@ -22,6 +22,8 @@ using Newtonsoft.Json;
 using System;
 using Module.Factor.Infrastructure.Persistences;
 using Jhipster.DTO;
+using System.Drawing.Printing;
+using Jhipster.Service.Utilities;
 
 namespace Jhipster.Controllers
 {
@@ -128,7 +130,7 @@ namespace Jhipster.Controllers
         /// <param name="pageable"></param>
         /// <returns></returns>
         [HttpPost("GetAllUsers")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers([FromBody] ViewEmployeeDTO rq)
+        public async Task<IActionResult> GetAllUsers([FromBody] ViewEmployeeDTO rq)
         {
             _log.LogDebug("REST request to get a page of Users");
             //var page = await _userManager.Users
@@ -138,16 +140,20 @@ namespace Jhipster.Controllers
             //var userDtos = page.Content.Select(user => _mapper.Map<UserDto>(user));
             //var headers = page.GeneratePaginationHttpHeaders();
             //return Ok(userDtos).WithHeaders(headers);
-            var page =  _userManager.Users
+            var page = _userManager.Users
                 .Include(it => it.UserRoles)
                 .ThenInclude(r => r.Role).AsQueryable();
             page = rq.FromDate != null ? page.Where(i => i.CreatedDate > rq.FromDate) : page;
-            page = rq.Name != null ? page.Where(i => i.UserName==rq.Name) : page;
+            page = rq.Name != null ? page.Where(i => i.UserName == rq.Name) : page;
             page = rq.ToDate != null ? page.Where(i => i.CreatedDate < rq.ToDate) : page;
             page = rq.PhoneNumber != null ? page.Where(i => i.PhoneNumber == rq.PhoneNumber) : page;
-           
-            var value = _mapper.Map<List<UserDto>>(page);
-            return Ok(value);
+            
+            var value = _mapper.Map<List<UserDto>>(page).Skip(rq.PageSize * (rq.Page - 1))
+                        .Take(rq.PageSize); ;
+            var key = new PagedList<UserDto>();
+            key.Data = value;
+            key.TotalCount=page.Count();
+            return Ok(key);
         }
 
         /// <summary>
@@ -256,13 +262,15 @@ namespace Jhipster.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("search")]
+        [HttpPost("UpdateRole")]
         [Authorize]
         [Authorize(Roles = RolesConstants.ADMIN)]
         public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleDTO rq)
         {
             _log.LogDebug($"REST request to update role");
-            return Ok(_userService.UpdateRoles(rq.user, rq.roles));
+            var user = await _userManager.Users.Where(i => i.Id == rq.user).FirstOrDefaultAsync();
+            _userService.UpdateRoles(user, rq.roles);
+            return Ok(1);
         }
     }
 }
