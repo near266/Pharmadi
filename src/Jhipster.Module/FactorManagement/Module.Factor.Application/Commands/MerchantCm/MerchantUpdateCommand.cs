@@ -37,6 +37,8 @@ namespace Module.Factor.Application.Commands.MerchantCm
         public List<string>? GPPImage { get; set; }
 
         public string? Avatar { get; set; }
+        [JsonIgnore]
+        public int? Status { get; set; } // trạng thái active 1-2
 
         public int? AddressStatus { get; set; }
         [JsonIgnore]

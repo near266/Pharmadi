@@ -179,6 +179,8 @@ namespace BFF.Web.Controllers.FactorSvc
             _logger.LogDebug($"REST request MerchantUpdate : {JsonConvert.SerializeObject(request)}");
             try
             {
+                request.AddressStatus = 1;
+                request.Status = 1;
                 return Ok(await _mediator.Send(request));
 
             }
