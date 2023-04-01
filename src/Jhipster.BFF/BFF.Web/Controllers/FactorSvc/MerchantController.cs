@@ -210,7 +210,7 @@ namespace BFF.Web.Controllers.FactorSvc
         [Authorize(Roles = RolesConstants.MERCHANT)]
 
         [HttpPost("MerchantViewDetail")]
-        public async Task<IActionResult> MerchantViewDetail([FromQuery] MerchantViewDetailQuery request)
+        public async Task<IActionResult> MerchantViewDetail([FromBody] MerchantViewDetailQuery request)
         {
             _logger.LogDebug($"REST request MerchantViewDetail : {JsonConvert.SerializeObject(request)}");
             try
