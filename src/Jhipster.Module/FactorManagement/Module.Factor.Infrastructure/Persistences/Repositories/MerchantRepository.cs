@@ -33,7 +33,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<Merchant>> GetAllAdmin(int page, int pageSize, string? name, DateTime? StartDate, DateTime? EndDate, int? Status)
+        public async Task<PagedList<Merchant>> GetAllAdmin(int page, int pageSize, string? name, DateTime? StartDate, DateTime? EndDate, int? Status,string? Email,string? PhoneNumber)
         {
             var query = _context.Merchants.AsQueryable();
             if (name != null)
@@ -43,6 +43,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
            
             query = Status != null ? query.Where(i => i.Status == Status) : query;
+            query = Email != null ? query.Where(i => i.Email == Email) : query;
+            query = PhoneNumber != null ? query.Where(i => i.PhoneNumber == PhoneNumber) : query;
             query = StartDate != null ? query.Where(i => i.CreatedDate > StartDate) : query;
             query=EndDate!=null ?query.Where(i=>i.CreatedDate < EndDate) : query;   
             var data = query
