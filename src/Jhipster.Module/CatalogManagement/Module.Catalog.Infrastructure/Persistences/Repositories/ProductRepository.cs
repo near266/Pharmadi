@@ -244,7 +244,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return result;
         }
 
-        public async Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid?>? categoryIds,List<Guid?>? cateLevel2Ids, List<Guid?>? brandIds , List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
+        public async Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid> categoryIds,List<Guid> cateLevel2Ids, List<Guid?>? brandIds , List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
             var query = _context.Products.Include(i => i.Brand).Where(i => i.Archived == false).AsQueryable();
@@ -253,26 +253,56 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 keyword = keyword.ToLower();
                 query = query.Where(i => i.SKU.ToLower().Contains(keyword) || i.ProductName.ToLower().Contains(keyword));
             }
-            if (categoryIds != null && categoryIds.Count() > 0)
-            {
-                var lisCate = await _context.CategoryProducts.Where(i=>categoryIds.Contains(i.CategoryId)).Select(i=>i.CategoryId).ToListAsync();
-                 var parentId = await _context.Categories.Where(i => lisCate.Contains(i.Id)).Select(i => i.ParentId).ToListAsync();
-                var listcate = await _context.Categories.Where(i=> categoryIds.Contains(i.Id) && parentId.Contains(i.ParentId) ).Select(i=>i.Id).ToListAsync();
-                var ListcatePro = await _context.CategoryProducts.Where(i=> listcate.Contains(i.CategoryId)).Select(i=>i.ProductId).ToListAsync();
-                if(parentId != null)
-                {
+            //if (categoryIds != null && categoryIds.Count() > 0)
+            //{
+            //    var lisCate = await _context.CategoryProducts.Where(i=>categoryIds.Contains(i.CategoryId)).Select(i=>i.CategoryId).ToListAsync();
+            //     var parentId = await _context.Categories.Where(i => lisCate.Contains(i.Id)).Select(i => i.ParentId).ToListAsync();
+            //    var listcate = await _context.Categories.Where(i=> categoryIds.Contains(i.Id) && parentId.Contains(i.ParentId) ).Select(i=>i.Id).ToListAsync();
+            //    var ListcatePro = await _context.CategoryProducts.Where(i=> listcate.Contains(i.CategoryId)).Select(i=>i.ProductId).ToListAsync();
+            //    if(parentId != null)
+            //    {
                   
-                query =   query.Where(i=>ListcatePro.Contains(i.Id));
+            //    query =   query.Where(i=>ListcatePro.Contains(i.Id));
 
-                }
-                else
+            //    }
+            //    else
+            //    {
+
+            //    query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(i => categoryIds.Contains(i.CategoryId)));
+            //    }
+
+
+            //}
+            if(categoryIds!=null && categoryIds.Count() > 0)
+            {
+
+                //check cate2 có không nếu không có thì chỉ tìm kiếm theo cate1 
+                if(cateLevel2Ids!=null && cateLevel2Ids.Count()>0)
                 {
+                    // lần lượt for với item là cate1
+                    foreach (var item in categoryIds)
+                    {
+                        // thực hiện lấy list child của từng item 
+                        var childs = await _context.Categories.Where(i => i.ParentId == item).Select(i => i.Id).ToListAsync();
 
-                query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(i => categoryIds.Contains(i.CategoryId)));
+                        // dùng hàm SequenceEqual để check xem 2 list có phần tử chung hay không
+                        // nếu item có child( là 1 list) và 1 vài phần tử đó cũng thuộc cate2 thì thực hiện remove item( vì mk sẽ tìm kiếm theo cate2 chứ ko tìm kiếm theo parent của nó nữa)
+                        if (cateLevel2Ids.SequenceEqual(childs))
+                        {
+                            categoryIds.Remove(item);
+                        }
+                    }
+                    // sau khi quá trình check kết thúc
+                    // kết quả thu được là xóa tất cả cate1 mà có child nằm trong cateLevel2Ids
+                    // thực hiện gộp 2 mảng cate1 và cate2 để được list cuối cùng và tìm kiếm 
+                    categoryIds.AddRange(cateLevel2Ids);
                 }
 
-
+                query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => categoryIds.Contains(cp.CategoryId)));
+               
             }
+
+
             if (brandIds != null && brandIds.Count() > 0)
             {
                 query = query.Where(i => brandIds.Contains(i.BrandId));

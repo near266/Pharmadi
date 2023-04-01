@@ -12,8 +12,8 @@ namespace Module.Catalog.Application.Queries.ProductQ
     public class SearchProductQuery : IRequest<PagedList<ProductSearchDTO>>
     {
         public string? keyword { get; set; }
-        public List<Guid?>? categoryIds { get; set; }
-        public List<Guid?>? cateLevel2Ids { get; set; }
+        public List<Guid> categoryIds { get; set; }
+        public List<Guid> cateLevel2Ids { get; set; }
         public List<Guid?>? brandIds { get; set; }
         public List<Guid?>? tagIds { get; set; }
         public int page { get; set; }
