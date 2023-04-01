@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Commands.GroupBrandCm
@@ -14,6 +15,7 @@ namespace Module.Catalog.Application.Commands.GroupBrandCm
     public class GroupBrandAddCommand : IRequest<int>
     {
         [Required(ErrorMessage = "{0} is required.")]
+        [JsonIgnore]
         public Guid Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
         public string GroupBrandName { get; set; }

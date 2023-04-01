@@ -15,7 +15,7 @@ namespace Module.Catalog.Application.Persistences
         Task<PagedList<ProductSearchDTO>> ViewProductBestSale(int page, int pageSize, Guid? userId);
         Task<PagedList<ProductSearchDTO>> ViewProductNew(int page, int pageSize, Guid? userId);
         Task<PagedList<ProductSearchDTO>> ViewProductPromotion(string? keyword,int page, int pageSize, Guid? userId);
-        Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid?>? categoryIds, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize,Guid? userId);
+        Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid?>? categoryIds,List<Guid?> cateLevel2Ids, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize,Guid? userId);
         Task<int> UpdataStatusProduct(Guid id ,int status);
         Task<IEnumerable<ProductSearchDTO>> ViewListProductWithBrand(Guid Id,Guid? userId );
         Task<PagedList<ProductSearchDTO>> ViewListProductSimilarCategory(Guid Id,Guid? userId);

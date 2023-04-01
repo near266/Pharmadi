@@ -244,7 +244,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return result;
         }
 
-        public async Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid?>? categoryIds, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
+        public async Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid?>? categoryIds,List<Guid?>? cateLevel2Ids, List<Guid?>? brandIds , List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
             var query = _context.Products.Include(i => i.Brand).Where(i => i.Archived == false).AsQueryable();
