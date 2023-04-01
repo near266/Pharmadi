@@ -77,7 +77,8 @@ namespace BFF.Web.ProductSvc
                     Number = request.Number,
                     CreatedBy = request.CreatedBy,
                     CreatedDate = request.CreatedDate,
-                    Archived=false
+                    Archived=false,
+                    HideProduct=request.HideProduct,
                 };
                 await _mediator.Send(step1);
 
