@@ -13,6 +13,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
     {
         public string? keyword { get; set; }
         public List<Guid?>? categoryIds { get; set; }
+        public List<Guid?>? cateLevel2Ids { get; set; }
         public List<Guid?>? brandIds { get; set; }
         public List<Guid?>? tagIds { get; set; }
         public int page { get; set; }
@@ -30,7 +31,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
         }
         public async Task<PagedList<ProductSearchDTO>> Handle(SearchProductQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.SearchProduct(request.keyword, request.categoryIds, request.brandIds, request.tagIds,request.page, request.pageSize, request.userId);
+            return await _repo.SearchProduct(request.keyword, request.categoryIds,request.cateLevel2Ids, request.brandIds, request.tagIds,request.page, request.pageSize, request.userId);
         }
     }
 

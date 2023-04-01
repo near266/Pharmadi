@@ -155,6 +155,7 @@ namespace BFF.Web.ProductSvc
                     Id = request.GroupBrand.Id,
                     GroupBrandName = request.GroupBrand.GroupBrandName,
                     Pin = request.GroupBrand.Pin,
+                    LogoGroupBrand= request.GroupBrand.LogoGroupBrand,
                     CreatedDate = DateTime.Now,
                     CreatedBy = new Guid(GetUserIdFromContext()),
 
