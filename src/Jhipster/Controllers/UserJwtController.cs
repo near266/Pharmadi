@@ -41,18 +41,18 @@ namespace Jhipster.Controllers
         public async Task<ActionResult<JwtToken>> Authorize([FromBody] LoginDto loginDto)
         {
             string login = string.Empty;
-            if (!string.IsNullOrEmpty(loginDto.Username) && string.IsNullOrEmpty(login))
-            {
-                var u = await _userManager.FindByEmailAsync(loginDto.Username);
-                if (u != null)
-                    login = u.Login;
-            }
-            if (!string.IsNullOrEmpty(loginDto.Username) && string.IsNullOrEmpty(login))
-            {
-                var u = _userManager.Users.FirstOrDefault(i => i.PhoneNumber == loginDto.Username);
-                if (u != null)
-                    login = u.Login;
-            }
+            //if (!string.IsNullOrEmpty(loginDto.Username) && string.IsNullOrEmpty(login))
+            //{
+            //    var u = await _userManager.FindByEmailAsync(loginDto.Username);
+            //    if (u != null)
+            //        login = u.Login;
+            //}
+            //if (!string.IsNullOrEmpty(loginDto.Username) && string.IsNullOrEmpty(login))
+            //{
+            //    var u = _userManager.Users.FirstOrDefault(i => i.PhoneNumber == loginDto.Username);
+            //    if (u != null)
+            //        login = u.Login;
+            //}
             if (!string.IsNullOrEmpty(loginDto.Username) && string.IsNullOrEmpty(login))
             {
                 login = loginDto.Username;
