@@ -200,6 +200,8 @@ namespace BFF.Web.ProductSvc
                     LastModifiedBy = request.LastModifiedBy,
                     LastModifiedDate = request.LastModifiedDate,
                     Archived = request.Archived,
+                    HideProduct=request.HideProduct,
+                    
                 };
 
                 result = await _mediator.Send(step1);
