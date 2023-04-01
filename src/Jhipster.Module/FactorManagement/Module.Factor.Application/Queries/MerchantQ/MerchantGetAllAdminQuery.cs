@@ -18,6 +18,8 @@ namespace Module.Factor.Application.Queries.MerchantQ
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int? Status { get; set; }
+        public string? Email { get;set; }
+        public string? PhoneNumber { get; set; }
     }
     public class MerchantGetAllAdminQueryHandler : IRequestHandler<MerchantGetAllAdminQuery, PagedList<Merchant>>
     {
@@ -30,7 +32,7 @@ namespace Module.Factor.Application.Queries.MerchantQ
         }
         public async Task<PagedList<Merchant>> Handle(MerchantGetAllAdminQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.GetAllAdmin(request.page, request.pageSize, request.name, request.StartDate, request.EndDate, request.Status);
+            return await _repo.GetAllAdmin(request.page, request.pageSize, request.name, request.StartDate, request.EndDate, request.Status,request.Email,request.PhoneNumber);
         }
     }
 
