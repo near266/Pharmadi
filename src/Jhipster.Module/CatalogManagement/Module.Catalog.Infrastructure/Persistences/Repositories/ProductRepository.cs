@@ -42,7 +42,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             string currentSKUCode;
             var checkSKU = await _context.Products.Select(i => i.SKU).ToListAsync();
-            if (checkSKU == null) { currentSKUCode = "P00000"; }
+            if (checkSKU == null || checkSKU.Count() == 0) { currentSKUCode = "P00000"; }
             else
             {
                 var Number = new List<int>();
