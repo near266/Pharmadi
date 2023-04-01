@@ -266,11 +266,15 @@ namespace Jhipster.Controllers
         [HttpPost("UpdateRole")]
         [Authorize]
         [Authorize(Roles = RolesConstants.ADMIN)]
-        public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleDTO rq)
+        public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleDTORq rq)
         {
             _log.LogDebug($"REST request to update role");
-            var user = await _userManager.Users.Where(i => i.Id == rq.user).FirstOrDefaultAsync();
-            _userService.UpdateRoles(user, rq.roles);
+            foreach (var item in rq.listusers)
+
+            {
+                var user = await _userManager.Users.Where(i => i.Id == item.user).FirstOrDefaultAsync();
+                _userService.UpdateRoles(user, item.roles);
+            }
             return Ok(1);
         }
     }
