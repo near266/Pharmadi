@@ -28,6 +28,7 @@ namespace Module.Ordering.Infrastructure.Extensions
             services.AddScoped(typeof(IOrderItemRepostitory), typeof(OrderItemRepository));
             services.AddScoped(typeof(IPurchaseOrderRepostitory), typeof(PurchaseOrderRepository));
              services.AddScoped(typeof(IOrderStatusRepostitory),typeof(OrderStatusRepository));
+            services.AddScoped(typeof(IProductSaleRepostitory), typeof(ProductSaleRepository));
             return services;
         }
            
