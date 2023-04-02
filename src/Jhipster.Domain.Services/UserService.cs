@@ -374,7 +374,7 @@ namespace Jhipster.Domain.Services
             var userRoles = await _userManager.GetRolesAsync(user);
             var rolesToRemove = userRoles.Except(roles).ToArray();
             var rolesToAdd = roles.Except(userRoles).Distinct().ToArray();
-           // await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+            await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
             await _userManager.AddToRolesAsync(user, rolesToAdd);
         }
 
