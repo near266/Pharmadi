@@ -39,7 +39,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             if (name != null)
             {
                 name = name.ToLower();
-                query = query.Where(i => i.ContactName.ToLower().Contains(name));
+                query = query.Where(i => i.MerchantName.ToLower().Contains(name));
             }
 
             query = Status != null ? query.Where(i => i.Status == Status) : query;
