@@ -29,7 +29,7 @@ using Jhipster.Domain.Services.Command;
 using Module.Catalog.Shared.DTOs;
 using Module.Catalog.Application.Queries.BrandQ;
 using Module.Ordering.Application.Commands.HistoryOrderCm;
-
+using Module.Ordering.Application.Commands.ProductSaleCm;
 
 namespace Jhipster.Configuration.AutoMapper
 {
@@ -201,6 +201,8 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<PurchaseOrderUpdateRequest, PurchaseOrderUpdateCommand>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             //CreateMap<HistoryOrder, PurchaseOrder>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+            CreateMap<ProductSaleAddCommand, ProductSale>();
+            CreateMap<ProductSale, ProductSale>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             #endregion
         }
     }

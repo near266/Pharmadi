@@ -147,10 +147,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
-                SaleNumber = 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 Archived = i.Archived,
-                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
+                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault()
 
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -175,12 +175,12 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
-                SaleNumber = 0,
                 Archived = i.Archived,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
-                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
+                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault()
 
-            }).Skip(pageSize * (page - 1))
+            }).OrderByDescending(i=>i.SaleNumber).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
@@ -204,7 +204,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
-                SaleNumber = 0,
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 Discount = i.Price - i.SalePrice,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
@@ -235,7 +235,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
-                SaleNumber = 0,
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 Archived = i.Archived,
                 Discount = i.Price - i.SalePrice,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
@@ -334,7 +334,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
-                SaleNumber = 0,
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
@@ -379,7 +379,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
-                SaleNumber = 0,
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
@@ -411,7 +411,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     UnitName = i.UnitName,
                     Image = i.Image,
                     Specification = i.Specification,
-                    SaleNumber = 0,
+                    SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                     Archived = i.Archived,
                     LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
@@ -435,7 +435,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     UnitName = i.UnitName,
                     Image = i.Image,
                     Specification = i.Specification,
-                    SaleNumber = 0,
+                    SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                     Archived = i.Archived,
                     LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"

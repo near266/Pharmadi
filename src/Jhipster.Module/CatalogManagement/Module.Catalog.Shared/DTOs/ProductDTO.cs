@@ -24,7 +24,7 @@ namespace Module.Catalog.Shared.DTOs
         public IEnumerable<LabelProduct>? LabelProducts { get; set; }
         public IEnumerable<CategoryProduct>? CategoryProducts { get; set; }
         public Brand ? Brands { get; set; }
-        public int SaleNumber { get; set; }
+        public int? SaleNumber { get; set; }
         public string CartNumber { get; set; } ="0";
         public bool? Archived { get; set; }
         [JsonIgnore]
