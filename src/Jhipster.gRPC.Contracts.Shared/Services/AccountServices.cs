@@ -64,5 +64,19 @@ namespace Jhipster.gRPC.Contracts.Shared.Services
             return res;
 
         }
+
+        public async Task<RegisterAdminResponse> RegisterEmployee(RegisterEmployeeByUserDTO request, CallContext context = default)
+        {
+            if (await _userManager.FindByNameAsync(request.Login.ToLowerInvariant()) != null)
+                throw new LoginAlreadyUsedException();
+            if (await _userManager.FindByEmailAsync(request.Email.ToLowerInvariant()) != null)
+                throw new EmailAlreadyUsedException();
+
+            var newUser = await _userService.CreateUser(_mapper.Map<User>(request), request.Password);
+           
+
+            var res = _mapper.Map<RegisterAdminResponse>(newUser);
+            return res;
+        }
     }
 }

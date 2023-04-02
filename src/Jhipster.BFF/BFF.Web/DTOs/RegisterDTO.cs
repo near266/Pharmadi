@@ -87,7 +87,7 @@ namespace BFF.Web.DTOs
        
 
     }
-
+    
     public class RegisterByAdminDTO
     {
         [System.Text.Json.Serialization.JsonIgnore]
