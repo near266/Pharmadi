@@ -15,7 +15,7 @@ namespace Module.Catalog.Application.Commands.GroupBrandCm
     public class GroupBrandUpdateCommand : IRequest<int>
     {
         [Required(ErrorMessage = "{0} is required.")]
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public string GroupBrandName { get; set; }
         public string? LogoGroupBrand { get; set; }
         public bool? Pin { get; set; }
