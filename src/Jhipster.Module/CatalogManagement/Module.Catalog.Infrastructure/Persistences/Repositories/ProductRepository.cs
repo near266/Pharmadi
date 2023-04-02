@@ -209,7 +209,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
-            }).OrderByDescending(a=>a.Discount).Skip(pageSize * (page - 1))
+            }).OrderBy(a=>a.Discount).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
@@ -241,7 +241,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
-            }).OrderByDescending(a => a.Discount).Skip(pageSize * (page - 1))
+            }).OrderBy(a => a.Discount).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
