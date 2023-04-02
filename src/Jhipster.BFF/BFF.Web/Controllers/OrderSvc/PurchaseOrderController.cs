@@ -136,9 +136,9 @@ namespace BFF.Web.ProductSvc
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedBy = new Guid(GetUserIdFromContext());
-                request.Status = 2;
+                request.Status = 1;
                 request.CreatedDate = DateTime.Now;
-                request.AddressStatus = 2;
+                request.AddressStatus = 1;
                 int result = 0;
                 // add order
                 var step1 = _mapper.Map<PurchaseOrderAddCommand>(request);
