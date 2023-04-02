@@ -20,6 +20,7 @@ using Module.Ordering.Application.Queries.CartQ;
 using Module.Factor.Application.Queries.MerchantQ;
 using Module.Ordering.Application.Commands.HistoryOrderCm;
 using BFF.Web.DTOs.PurchaseOrderSvc;
+using Module.Ordering.Application.Commands.ProductSaleCm;
 
 namespace BFF.Web.ProductSvc
 {
@@ -62,19 +63,6 @@ namespace BFF.Web.ProductSvc
                 request.MerchantId = new Guid(GetUserIdFromContext());
                 request.CreatedDate = DateTime.Now;
 
-
-                //lay thong tin merchant
-                //var cusRequest = new MerchantViewDetailQuery
-                //{
-                //    Id = request.MerchantId
-                //};
-                //var cus = await _mediator.Send(cusRequest);
-
-                //request.MerchantName = cus.MerchantName;
-                //request.PhoneNumber = cus.PhoneNumber;
-                //request.ContactName = cus.ContactName;
-                //request.ContractNumber = cus.ContractNumber;
-                //request.Address = cus.Address;
 
 
                 if (request.TotalPrice <= 1000000) request.ShippingFee = 50000;
@@ -367,7 +355,28 @@ namespace BFF.Web.ProductSvc
                         //}
                     }*/
 
-                    //}              
+                    //}
+                if(request.Status==5)
+                {
+                    var step1 = new OrderItemGetAllByOrderAdminQuery
+                    {
+                        purchaseOrderId = request.Id
+                    };
+                    var res1 = await _mediator.Send(step1);
+
+                    //all to product sale
+                    foreach (var item in res1.Data)
+                    {
+                        var step2 = new ProductSaleAddCommand
+                        {
+                            ProductId = item.Product.Id,
+                            Quantity = item.Quantity,
+                            dateTime = DateTime.Now
+                        };
+                        await _mediator.Send(step2);
+                    }
+
+                }
                 var result = await _mediator.Send(request);
                 if(result==1)
                 {
