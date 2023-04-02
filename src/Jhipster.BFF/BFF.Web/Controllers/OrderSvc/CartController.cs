@@ -38,6 +38,7 @@ namespace BFF.Web.ProductSvc
             {
                 request.Id = Guid.NewGuid();
                 request.UserId = new Guid(GetUserIdFromContext());
+                request.LastModifiedDate = DateTime.Now;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -54,6 +55,7 @@ namespace BFF.Web.ProductSvc
             try
             {
                 request.UserId = Guid.Parse(GetUserIdFromContext());
+                request.LastModifiedDate = DateTime.Now;
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }

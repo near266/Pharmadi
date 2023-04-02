@@ -18,6 +18,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
         public async Task<int> Add(Label request)
         {
+            request.LastModifiedDate = request.CreatedDate;
             await _context.Labels.AddAsync(request);
             return await _context.SaveChangesAsync();
         }
@@ -51,6 +52,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<Label>();
             var query1 = _context.Labels.AsQueryable();
             var data = await query1
+                        .OrderByDescending(i=>i.LastModifiedDate)
                         .Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();
