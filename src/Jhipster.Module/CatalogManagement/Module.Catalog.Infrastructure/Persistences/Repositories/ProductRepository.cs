@@ -483,13 +483,13 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             Id=i.Id,
             CategoryName=i.CategoryName,
             Descripton=i.Descripton,
-            Products = _context.Products.Where(i=>cate.Contains(i.Id)).ToList(),
+            Products = _context.Products.Where(i => i.BrandId == brandId).ToList(),
             
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToList();
             res.Data = result.AsEnumerable();
-            res.TotalCount =Procate.Count;
+            res.TotalCount = result.Count;
             return res;
 
         }
