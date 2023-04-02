@@ -62,7 +62,11 @@ namespace BFF.Web.DTOs.CatalogSvc
     public class AddUpdateDeleteRequest
     {
         public Guid GroupId { get; set; }
-        public List<AddDeleteUpdateBrand> Brands { get; set; }
+        public string GroupBrandName { get; set; }
+        public string? LogoGroupBrand { get; set; }
+        public bool? Pin { get; set; }
+     
+        public List<AddDeleteUpdateBrand?>? Brands { get; set; }
     
     }
 

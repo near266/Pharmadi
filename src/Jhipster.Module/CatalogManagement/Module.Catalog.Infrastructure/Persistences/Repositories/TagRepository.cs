@@ -17,6 +17,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
         public async Task<int> Add(Tag request)
         {
+            request.LastModifiedDate = request.CreatedDate;
             await _context.Tags.AddAsync(request);
             return await _context.SaveChangesAsync();
         }
@@ -62,6 +63,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<Tag>();
             var query1 = _context.Tags.AsQueryable();
             var data = await query1
+                .OrderByDescending(i => i.LastModifiedDate)
                         .Skip(pageSize * (page-1))
                         .Take(pageSize)
                         .ToListAsync();

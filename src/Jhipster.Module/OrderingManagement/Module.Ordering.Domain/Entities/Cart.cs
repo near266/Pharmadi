@@ -10,5 +10,6 @@ namespace Module.Ordering.Domain.Entities
         public int? Quantity { get; set; }
         public Product Product { get; set; }
         public bool? IsChoice { get; set; }
+        public DateTime? LastModifiedDate { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Module.Catalog.Shared.DTOs
@@ -26,6 +27,9 @@ namespace Module.Catalog.Shared.DTOs
         public int SaleNumber { get; set; }
         public string CartNumber { get; set; } ="0";
         public bool? Archived { get; set; }
+        [JsonIgnore]
+        public decimal? Discount { get; set; }
+
     }
     public class SearchProductDTO {
         public Guid Id { get; set; }

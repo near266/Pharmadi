@@ -15,6 +15,8 @@ namespace Module.Ordering.Application.Commands.CartCm
         public Guid? ProductId { get; set; }
         public int? Quantity { get; set; }
         public bool? IsChoice { get; set; }
+        [JsonIgnore]
+        public DateTime? LastModifiedDate { get; set; }
     }
     public class CartUpdateCommandHandler : IRequestHandler<CartUpdateCommand, int>
     {

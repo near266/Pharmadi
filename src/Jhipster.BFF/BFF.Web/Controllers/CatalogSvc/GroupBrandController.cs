@@ -197,51 +197,64 @@ namespace BFF.Web.ProductSvc
             try
             {
                 var Gr =new GetListBrandByGroupIdQuery { Id= request.GroupId };
-                //Add
-                foreach (var item in request.Brands)
+                var updategr = new GroupBrandUpdateCommand
                 {
-                    if (item.Id == null)
+                    Id = request.GroupId,
+                    GroupBrandName= request.GroupBrandName,
+                    LogoGroupBrand=request.LogoGroupBrand,
+                    Pin=request.Pin,
+                    LastModifiedBy= new Guid(GetUserIdFromContext()),
+                    LastModifiedDate= DateTime.Now,
+                };
+                await _mediator.Send(updategr);
+                //Add
+                if (request.Brands != null)
+                {
+                    foreach (var item in request.Brands)
                     {
-                        var br = new BrandAddCommand
+                        if (item.Id == null)
                         {
-                            Id = Guid.NewGuid(),
-                            GroupBrandId = request.GroupId,
-                            BrandName = item.BrandName,
-                            LogoBrand = item.LogoBrand,
-                            Intro = item.Intro,
-                            Pin = item.Pin,
-                            CreatedBy = new Guid(GetUserIdFromContext()),
-                            CreatedDate = DateTime.Now,
-                        };
-                        await _mediator.Send(br);
-                    }
-                    else
-                    {
-                        //check del or up
-                        var res = new IsBrandEmtyGroupCommand { Id = item.Id };
-                        var check = await _mediator.Send(res);
-                        //delete
-                        if (check == true)
-                        {
-
-                            var resdelete = new ArchiveBrandCommand { Id = item.Id };
-                            await _mediator.Send(resdelete);
-                        }
-                        if (check == false)
-                        {
-                            var resupdate = new BrandUpdateCommand
+                            var br = new BrandAddCommand
                             {
-
-                                Id = (Guid)item.Id,
+                                Id = Guid.NewGuid(),
+                                GroupBrandId = request.GroupId,
                                 BrandName = item.BrandName,
                                 LogoBrand = item.LogoBrand,
                                 Intro = item.Intro,
                                 Pin = item.Pin,
-                                LastModifiedBy = new Guid(GetUserIdFromContext()),
-                                LastModifiedDate = DateTime.Now,
-
+                                CreatedBy = new Guid(GetUserIdFromContext()),
+                                CreatedDate = DateTime.Now,
                             };
-                            await _mediator.Send(resupdate);
+                            await _mediator.Send(br);
+                        }
+                        else
+                        {
+                            //check del or up
+                            var res = new IsBrandEmtyGroupCommand { Id = item.Id };
+                            var check = await _mediator.Send(res);
+                            //delete
+                            if (check == true)
+                            {
+
+                                var resdelete = new ArchiveBrandCommand { Id = item.Id };
+                                await _mediator.Send(resdelete);
+                            }
+                            if (check == false)
+                            {
+                                var resupdate = new BrandUpdateCommand
+                                {
+
+                                    Id = (Guid)item.Id,
+                                    BrandName = item.BrandName,
+                                    LogoBrand = item.LogoBrand,
+                                    Intro = item.Intro,
+                                    Pin = item.Pin,
+                                    LastModifiedBy = new Guid(GetUserIdFromContext()),
+                                    LastModifiedDate = DateTime.Now,
+
+                                };
+                                await _mediator.Send(resupdate);
+                            }
                         }
                     }
                 }

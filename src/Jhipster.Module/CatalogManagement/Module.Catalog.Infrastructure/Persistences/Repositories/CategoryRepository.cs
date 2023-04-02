@@ -19,6 +19,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
         public async Task<int> Add(Category request)
         {
+            request.LastModifiedDate = request.CreatedDate;
             await _context.Categories.AddAsync(request);
             return await _context.SaveChangesAsync();
         }
@@ -52,6 +53,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<Category>();
             var query1 = _context.Categories.AsQueryable();
             var data = await query1
+                        .OrderByDescending(x => x.LastModifiedDate)
                         .Skip(pageSize * page)
                         .Take(pageSize)
                         .ToListAsync();
@@ -82,10 +84,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             //    Categories = _context.Categories.Where(i=>i.ParentId==i.Id).AsEnumerable()
 
             //}).AsEnumerable();
-            var result = _context.Categories.Where(i => i.ParentId == null).AsEnumerable();
+            var result = _context.Categories.Where(i => i.ParentId == null).OrderBy(i=>i.CategoryName).AsEnumerable();
             foreach (var item in result)
             {
-                item.Categories = _context.Categories.Where(i => i.ParentId == item.Id).AsEnumerable();
+                item.Categories = _context.Categories.Where(i => i.ParentId == item.Id).OrderBy(i => i.CategoryName).AsEnumerable();
             }
             return result;
         }
