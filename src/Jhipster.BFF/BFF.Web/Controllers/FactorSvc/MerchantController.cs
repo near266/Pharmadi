@@ -37,14 +37,14 @@ namespace BFF.Web.Controllers.FactorSvc
         private readonly IDistributedCache _cache;
         private readonly IConfiguration _configuration;
 
-        public MerchantController(IMerchantRepository service,IDistributedCache distributedCache, RedisConfig redisConfiguration, IConfiguration configuration, IMediator mediator, ILogger<MerchantController> logger, IUserService userService, IMapper mapper, IAccountService accountService)
+        public MerchantController(IMerchantRepository service, IDistributedCache distributedCache, RedisConfig redisConfiguration, IConfiguration configuration, IMediator mediator, ILogger<MerchantController> logger, IUserService userService, IMapper mapper, IAccountService accountService)
         {
             _service = service;
             _mediator = mediator;
             _logger = logger;
             _configuration = configuration;
             _userService = userService;
-            _cache=distributedCache;
+            _cache = distributedCache;
             _mapper = mapper;
             _accountService = accountService;
         }
@@ -87,7 +87,7 @@ namespace BFF.Web.Controllers.FactorSvc
                 };
                 //gen token
                 var client = new RestClient(_configuration.GetConnectionString("AIO"));
-               
+
                 var requestAddTranaction = new RestRequest($"/api/authenticate", Method.Post);
                 requestAddTranaction.AddJsonBody(body);
                 var reponse = await client.ExecuteAsync(requestAddTranaction);
@@ -155,6 +155,35 @@ namespace BFF.Web.Controllers.FactorSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        /// <summary>
+        /// Tạo tài khoản employee
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Authorize(Roles = RolesConstants.ADMIN)]
+
+        [HttpPost("RegisterEmployee")]
+        public async Task<IActionResult> RegisterEmployee([FromBody] RegisterEmployeeByUserDTO request)
+        {
+            _logger.LogDebug($"REST request RegisterByAdmin : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                request.Id = Guid.NewGuid().ToString();
+                request.CreatedDate = DateTime.Now;
+                request.LangKey = "en";
+               
+                //adduser
+                var step1 = await _accountService.RegisterEmployee(request);
+
+                return Ok(1);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to RegisterByAdmin fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
         [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("DeleteMerchant")]
@@ -197,7 +226,7 @@ namespace BFF.Web.Controllers.FactorSvc
                     request.AddressStatus = 1;
                     request.Status = 1;
                     return Ok(await _mediator.Send(request));
-                }    
+                }
             }
             catch (Exception ex)
             {
@@ -276,15 +305,15 @@ namespace BFF.Web.Controllers.FactorSvc
             {
                 IEnumerable<Merchant>? res;
 
-                    string recordKey = $"{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
-                    res = await _cache.GetRecordAsync<IEnumerable<Merchant>>(recordKey);
+                string recordKey = $"{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
+                res = await _cache.GetRecordAsync<IEnumerable<Merchant>>(recordKey);
 
-                    if (res is null)
-                    {
-                        res = await _mediator.Send(request);
-                        await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromMinutes(30));
-                    }
-               
+                if (res is null)
+                {
+                    res = await _mediator.Send(request);
+                    await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromMinutes(30));
+                }
+
                 return Ok(res);
             }
             catch (Exception ex)
@@ -322,14 +351,14 @@ namespace BFF.Web.Controllers.FactorSvc
             try
             {
                 int result = 0;
-                foreach(var item in request)
+                foreach (var item in request)
                 {
                     var tem = new UpdateAddressStatusCommand
                     {
                         Id = item.Id,
-                       
+
                     };
-                    result = await _mediator.Send(tem); 
+                    result = await _mediator.Send(tem);
                 }
                 return Ok(result);
 

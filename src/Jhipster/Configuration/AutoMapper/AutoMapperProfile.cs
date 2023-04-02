@@ -53,6 +53,10 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<RegisterByUserDTO, RegisterAdminRequest>();
             CreateMap<RegisterByAdminDTO, Merchant>();
             CreateMap<MerchantUpdateCommand, Merchant>();
+            CreateMap<User, RegisterEmployeeByUserDTO>()
+            .ForMember(userDto => userDto.Roles, opt => opt.MapFrom(user => user.UserRoles.Select(iur => iur.Role.Name).ToHashSet()))
+           .ReverseMap()
+               .ForPath(user => user.UserRoles, opt => opt.MapFrom(userDto => userDto.Roles.Select(role => new UserRole { Role = new Domain.Role { Name = role }, UserId = userDto.Id }).ToHashSet()));
             CreateMap<PurchaseOrderUpdateCommand, PurchaseOrderUpdateRequest>();
 
             CreateMap<User,RegisterRequest>()
