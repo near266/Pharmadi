@@ -18,6 +18,7 @@ using RolesConstants = BFF.Web.Constants.RolesConstants;
 using Module.Redis.Library.Helpers;
 using Microsoft.Extensions.Caching.Distributed;
 using Module.Redis.Configurations;
+using Jhipster.Domain;
 
 namespace BFF.Web.Controllers.FactorSvc
 {
@@ -51,7 +52,12 @@ namespace BFF.Web.Controllers.FactorSvc
         {
             return User.FindFirst("UserId")?.Value;
         }
-      
+        private List<string> GetListUserRole()
+        {
+            var key = User.FindFirst("auth")?.Value;
+            return key.Split(',').ToList();
+        }
+
         [HttpPost("RegisterByUser")]
         public async Task<IActionResult> RegisterByUser([FromBody] RegisterByUserDTO request)
         {
@@ -179,10 +185,19 @@ namespace BFF.Web.Controllers.FactorSvc
             _logger.LogDebug($"REST request MerchantUpdate : {JsonConvert.SerializeObject(request)}");
             try
             {
-                request.AddressStatus = 1;
-                request.Status = 1;
-                return Ok(await _mediator.Send(request));
-
+                var role = GetListUserRole();
+                if (role.Any(s => s.Contains(RolesConstants.ADMIN)) == true)
+                {
+                    request.AddressStatus = 2;
+                    request.Status = 2;
+                    return Ok(await _mediator.Send(request));
+                }
+                else
+                {
+                    request.AddressStatus = 1;
+                    request.Status = 1;
+                    return Ok(await _mediator.Send(request));
+                }    
             }
             catch (Exception ex)
             {
