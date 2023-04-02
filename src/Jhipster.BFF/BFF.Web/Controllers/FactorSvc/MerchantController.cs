@@ -91,7 +91,20 @@ namespace BFF.Web.Controllers.FactorSvc
                 var requestAddTranaction = new RestRequest($"/api/authenticate", Method.Post);
                 requestAddTranaction.AddJsonBody(body);
                 var reponse = await client.ExecuteAsync(requestAddTranaction);
+                //add merchant
+                if(reponse.Content!=null)
+                {
+                    var rqMerchant = new MerchantAddCommand()
+                    {
+                        Id=Guid.Parse(step1.Id),  
+                        PhoneNumber=request.PhoneNumber,
+                        MerchantName = request.Email,
+                        CreatedDate=DateTime.Now,
 
+                    };
+                    await _mediator.Send(rqMerchant);
+
+                }    
                 return Ok(reponse.Content);
 
             }
