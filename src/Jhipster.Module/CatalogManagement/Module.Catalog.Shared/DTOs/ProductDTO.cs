@@ -28,7 +28,7 @@ namespace Module.Catalog.Shared.DTOs
         public string CartNumber { get; set; } ="0";
         public bool? Archived { get; set; }
         [JsonIgnore]
-        public decimal? Discount { get; set; }
+        public float? Discount { get; set; }
 
     }
     public class SearchProductDTO {
