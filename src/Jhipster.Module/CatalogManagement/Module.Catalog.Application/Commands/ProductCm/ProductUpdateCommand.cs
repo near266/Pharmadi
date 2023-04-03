@@ -37,6 +37,7 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public Guid? LastModifiedBy { get; set; }
         [JsonIgnore]
         public DateTime? LastModifiedDate { get; set; }
+        public bool? CanOrder { get; set; }
     }
     public class ProductUpdateCommandHandler : IRequestHandler<ProductUpdateCommand, int>
     {

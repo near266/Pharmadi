@@ -38,6 +38,7 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public Guid? CreatedBy { get; set; }
         [JsonIgnore]
         public DateTime CreatedDate { get; set; }
+        public bool? CanOrder { get; set; }
     }
     public class ProductAddCommandHandler : IRequestHandler<ProductAddCommand, int>
     {

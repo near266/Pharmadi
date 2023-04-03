@@ -35,6 +35,7 @@ namespace Module.Catalog.Domain.Entities
         public string? Specification { get; set; }
         public int? Number { get; set; }
         public bool? Archived { get; set; }
+        public bool? CanOrder { get; set; }
         public PostContent? PostContent { get; set; }
         public IEnumerable<LabelProduct> LabelProducts { get; set; }
         public IEnumerable<TagProduct> TagProducts { get; set; }

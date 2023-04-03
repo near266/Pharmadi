@@ -29,6 +29,7 @@ namespace Module.Catalog.Shared.DTOs
         public bool? Archived { get; set; }
         [JsonIgnore]
         public float? Discount { get; set; }
+        public bool? CanOrder { get; set; }
 
     }
     public class SearchProductDTO {
