@@ -80,7 +80,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 old.LastModifiedDate= DateTime.UtcNow;
                 old.LastModifiedBy=brand.LastModifiedBy; 
                 old.Pin= brand.Pin;
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return 1;
             }
             return 0;
@@ -92,7 +92,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<BrandDTO>();
             if (type == 1)
             {
-                var data = await query.Where(i => i.GroupBrandId != null&& i.GroupBrandId==GroupBrandId).Include(i => i.GroupBrand).Select(i => new BrandDTO
+                var data = await query.Where(i => i.GroupBrandId != null&& i.GroupBrandId==GroupBrandId && i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
                 {
                     Id = i.Id,
                     GroupBrandId = i.GroupBrandId,
@@ -112,7 +112,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if (type == 2)
             {
 
-                var data = await query.Where(i => i.GroupBrandId == null).Include(i => i.GroupBrand).Select(i => new BrandDTO
+                var data = await query.Where(i => i.GroupBrandId == null && i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
                 {
                     Id = i.Id,
                     GroupBrandId = i.GroupBrandId,
@@ -133,7 +133,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if (type == 3)
             {
 
-                var data = await query.Where(i => i.Pin==true).Include(i => i.GroupBrand).Select(i => new BrandDTO
+                var data = await query.Where(i => i.Pin == true && i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
                 {
                     Id = i.Id,
                     GroupBrandId = i.GroupBrandId,
