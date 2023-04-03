@@ -87,6 +87,7 @@ namespace BFF.Web.ProductSvc
                     CreatedDate = request.CreatedDate,
                     Archived=false,
                     HideProduct=request.HideProduct,
+                    CanOrder=request.CanOrder
                 };
                 await _mediator.Send(step1);
 
@@ -209,6 +210,7 @@ namespace BFF.Web.ProductSvc
                     LastModifiedDate = request.LastModifiedDate,
                     Archived = request.Archived,
                     HideProduct=request.HideProduct,
+                    CanOrder=request.CanOrder
                     
                 };
 

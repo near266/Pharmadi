@@ -54,6 +54,8 @@ namespace BFF.Web.DTOs.CatalogSvc
         public Guid? CreatedBy { get; set; }
         [System.Text.Json.Serialization.JsonIgnore]
         public DateTime CreatedDate { get; set; }
+        public bool? CanOrder { get; set; }
+
         public List<CategoryProductAddRequest>? categoryProductAdds { get; set; }
         public List<WarehouseProductAddRequest>? warehouseProductAdds { get; set; }
         public List<Guid>? TagIds { get; set; }
@@ -138,6 +140,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public DateTime? LastModifiedDate { get; set; }
         public List<Guid>? TagIds { get; set; }
         public List<Guid>? LabelIds { get; set; }
+        public bool? CanOrder { get; set; }
 
 
     }
