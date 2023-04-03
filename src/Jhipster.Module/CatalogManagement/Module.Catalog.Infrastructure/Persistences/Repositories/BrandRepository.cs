@@ -198,7 +198,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 if (obj != null)
                 {
                     obj.Archived = true;
-                    res = await _context.SaveChangesAsync();
+                    res =  _context.SaveChanges();
                 }
            
 
