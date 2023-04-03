@@ -273,7 +273,7 @@ namespace Jhipster.Controllers
 
             {
                 var user = await _userManager.Users.Where(i => i.Id == item.user).FirstOrDefaultAsync();
-                _userService.UpdateRoles(user, item.roles);
+                await _userService.UpdateRoles(user, item.roles);
             }
             return Ok(1);
         }

@@ -87,7 +87,7 @@ namespace BFF.Web.DTOs
        
 
     }
-
+    
     public class RegisterByAdminDTO
     {
         [System.Text.Json.Serialization.JsonIgnore]
@@ -119,8 +119,8 @@ namespace BFF.Web.DTOs
 
         public string? TaxCode { get; set; }
         public string MerchantName { get; set; }
-        public string Address { get; set; }
-        public string Location { get; set; }
+        public string? Address { get; set; }
+        public string? Location { get; set; }
         public string? ContactName { get; set; }
         public string? GPPNumber { get; set; }
         public string? ContractNumber { get; set; }

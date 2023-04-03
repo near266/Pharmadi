@@ -12,5 +12,6 @@ namespace Module.Ordering.Domain.Entities
         public Guid  PurchaseOrderId { get; set; }
         public int Status { get; set; }
         public DateTime dateTime { get; set; }
+        //public  PurchaseOrder PurchaseOrder { get; set; }
     }
 }

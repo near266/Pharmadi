@@ -7,6 +7,7 @@ using Jhipster.Service.Utilities;
 using Module.Catalog.Domain.Entities;
 using Module.Ordering.Shared.DTOs;
 using static System.Net.Mime.MediaTypeNames;
+using System.Linq;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -68,26 +69,36 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         {
 
             var view = new ViewCartDTO();
-            var query = _context.Carts.Where(c => c.UserId == userId).Select(c => new Cart
+            var query =  _context.Carts.Where(c => c.UserId == userId).Select(c => new Cart
             {
                 Id = c.Id,
                 UserId = c.UserId,
                 Product = _context.Products.Where(i => i.Id == c.ProductId)
                                 //.Include(i => i.TagProducts).ThenInclude(i => i.Tag)
-                                //.Include(i => i.LabelProducts).ThenInclude(i => i.Label)
+                                .Include(i => i.LabelProducts).ThenInclude(i => i.Label)
                                 .FirstOrDefault(),
+                LastModifiedDate = c.LastModifiedDate,
                 Quantity = c.Quantity,
                 IsChoice = c.IsChoice
-            }).AsQueryable();
+            }).OrderByDescending(i=>i.LastModifiedDate).AsQueryable();
 
             var res = new List<ViewCartByBrandDTO>();
-            var q1 = await _context.Carts.Include(i => i.Product).Where(i => i.UserId == userId).Select(i => i.Product.BrandId).Distinct().ToListAsync();
+            var q1 = new List<Guid>();
+            foreach (var item in query)
+            {
+                var id = (Guid)item.Product.BrandId;
+                if (!q1.Contains(id))
+                {
+                    q1.Add(id);
+                }
+            }
+           
             foreach (var item in q1)
             {
                 var temp = new ViewCartByBrandDTO
                 {
                     Brand = _context.Brands.Where(i => i.Id == item).FirstOrDefault(),
-                    Carts = query.Where(q => q.Product.BrandId == item).ToList()
+                    Carts = query.Where(q => q.Product.BrandId == item).OrderByDescending(i=>i.LastModifiedDate).ToList()
                 };
                 res.Add(temp);
             }

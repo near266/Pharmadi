@@ -39,6 +39,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             int yearnow = DateTime.Now.Year;
             var shortCode = ShortIdHelper.GenerateCode(ShortIdHelper.ObjectConstant.order, yearnow, number + 1);
 
+            request.LastModifiedDate = request.CreatedDate;
             request.OrderCode = shortCode;
             await _context.PurchaseOrders.AddAsync(request);
             return await _context.SaveChangesAsync();
@@ -82,6 +83,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 query = query.Where(i => i.Merchant.MerchantName.ToLower().Contains(customerkey));
             }
             var data = await query
+                         .OrderByDescending(i=>i.LastModifiedDate)
                         .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();

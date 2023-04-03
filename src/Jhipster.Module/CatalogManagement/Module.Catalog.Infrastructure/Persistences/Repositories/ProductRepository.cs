@@ -42,7 +42,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             string currentSKUCode;
             var checkSKU = await _context.Products.Select(i => i.SKU).ToListAsync();
-            if (checkSKU == null) { currentSKUCode = "P00000"; }
+            if (checkSKU == null || checkSKU.Count() == 0) { currentSKUCode = "P00000"; }
             else
             {
                 var Number = new List<int>();
@@ -56,6 +56,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
 
             request.SKU = GenerateNextProductCode(currentSKUCode);
+
+            // gán để khi view all sắp xếp theo thời gian update mới nhất
+            request.LastModifiedDate = request.CreatedDate;
 
             await _context.Products.AddAsync(request);
             return await _context.SaveChangesAsync();
@@ -91,6 +94,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 query1 = query1.Where(i => i.Status == status);
             }
             var data = await query1
+                        .OrderByDescending(i=>i.LastModifiedDate)
                         .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
@@ -143,10 +147,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
-                SaleNumber = 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 Archived = i.Archived,
-                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
+                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault()
 
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -171,12 +175,12 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
-                SaleNumber = 0,
                 Archived = i.Archived,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
-                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
+                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault()
 
-            }).Skip(pageSize * (page - 1))
+            }).OrderByDescending(i=>i.SaleNumber).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
@@ -200,11 +204,12 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
-                SaleNumber = 0,
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
+                Discount = (float?)((i.SalePrice / i.Price) * 100),
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
-            }).Skip(pageSize * (page - 1))
+            }).OrderBy(a=>a.Discount).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
@@ -230,12 +235,13 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
-                SaleNumber = 0,
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 Archived = i.Archived,
+                Discount = (float?)((i.SalePrice / i.Price) * 100),
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
 
-            }).Skip(pageSize * (page - 1))
+            }).OrderBy(a => a.Discount).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
@@ -291,6 +297,11 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                         {
                             categoryIds.Remove(item);
                         }
+                        if (categoryIds.Count() == 0)
+                        {
+                            categoryIds = new List<Guid>();
+                            break;
+                        }
                     }
                     // sau khi quá trình check kết thúc
                     // kết quả thu được là xóa tất cả cate1 mà có child nằm trong cateLevel2Ids
@@ -323,7 +334,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
-                SaleNumber = 0,
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
@@ -368,7 +379,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 UnitName = i.UnitName,
                 Image = i.Image,
                 Specification = i.Specification,
-                SaleNumber = 0,
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
@@ -400,7 +411,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     UnitName = i.UnitName,
                     Image = i.Image,
                     Specification = i.Specification,
-                    SaleNumber = 0,
+                    SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                     Archived = i.Archived,
                     LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
@@ -424,7 +435,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     UnitName = i.UnitName,
                     Image = i.Image,
                     Specification = i.Specification,
-                    SaleNumber = 0,
+                    SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                     Archived = i.Archived,
                     LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0"
@@ -449,7 +460,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if (keyword != null)
             {
                 keyword = keyword.ToLower();
-                query = query.Where(i => i.ProductName.ToLower().Contains(keyword) || i.SKU.ToLower().Contains(keyword));
+                query = query.Where(i => i.ProductName.ToLower().Contains(keyword));
             }
 
             var query2 = query.Select(i => new ProductSearchDTO
@@ -479,7 +490,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var CatePro = await _context.CategoryProducts.Where(i=>Pro.Contains(i.ProductId)).Select(i=>i.CategoryId).ToListAsync();
             var cate = await _context.CategoryProducts.Where(i => CatePro.Contains(i.CategoryId)).Select(i=>i.ProductId).ToListAsync();
             var Procate = await _context.Products.Where(i => CatePro.Contains(i.Id)).ToListAsync();
-            var result = _context.Categories.Where(i => CatePro.Contains(i.Id)).Select( i => new SearchProductBrandId { 
+            var result = _context.Categories.Where(i => CatePro.Contains(i.Id)).OrderBy(i=>i.CategoryName).Select( i => new SearchProductBrandId { 
             Id=i.Id,
             CategoryName=i.CategoryName,
             Descripton=i.Descripton,

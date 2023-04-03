@@ -14,6 +14,10 @@ using Module.Catalog.Application.Commands.CategoryCm;
 using Module.Catalog.Application.Commands.WarehouseCm;
 using Module.Catalog.Application.Commands.TagCm;
 using Module.Catalog.Application.Commands.LabelCm;
+using Microsoft.Extensions.Caching.Distributed;
+using Module.Catalog.Shared.DTOs;
+using Module.Redis.Configurations;
+using Module.Redis.Library.Helpers;
 
 namespace BFF.Web.ProductSvc
 {
@@ -24,11 +28,15 @@ namespace BFF.Web.ProductSvc
         private readonly IMediator _mediator;
         private readonly ILogger<ProductController> _logger;
         private readonly IMapper _mapper;
+        private readonly RedisConfig _redisConfiguration;
 
-        public ProductController(IMediator mediator, ILogger<ProductController> logger)
+        private readonly IDistributedCache _cache;
+        public ProductController(IMediator mediator, RedisConfig redisConfig,IDistributedCache cache,ILogger<ProductController> logger)
         {
             _mediator = mediator;
             _logger = logger;
+            _cache = cache;
+            _redisConfiguration=redisConfig;
         }
         private string GetUserIdFromContext()
         {
@@ -365,14 +373,23 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductBestSale  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                try
+                PagedList<ProductSearchDTO>? res;
+
+                string recordKey = $"{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
+                res = await _cache.GetRecordAsync<PagedList<ProductSearchDTO>>(recordKey);
+                if (res is null)
                 {
-                    request.userId = Guid.Parse(GetUserIdFromContext());
+                    try
+                    {
+                        request.userId = Guid.Parse(GetUserIdFromContext());
+                    }
+                    catch
+                    { }
+                    res = await _mediator.Send(request);
+                    await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromDays(7));
                 }
-                catch
-                { }
-                var result = await _mediator.Send(request);
-                return Ok(result);
+               
+                return Ok(res);
             }
             catch (Exception ex)
             {

@@ -234,11 +234,49 @@ namespace Jhipster.gRPC.Contracts.Shared.Identity
         //[DataMember(Order = 18, IsRequired = false)]
         //public string? NoteAddress { get; set; }
     }
+    public class RegisterEmployeeByUserDTO
+    {
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string? Id { get; set; }
+
+        public string? Login { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+
+        public string? Email { get; set; }
+
+        private string? _langKey;
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string? LangKey
+        {
+            get { return _langKey; }
+            set { _langKey = value; if (string.IsNullOrEmpty(_langKey)) _langKey = "en"; }
+        }
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string? CreatedBy { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        public DateTime? CreatedDate { get; set; }
+
+        public ISet<string>? Roles { get; set; }
+
+        public const int PasswordMinLength = 4;
+
+        public const int PasswordMaxLength = 100;
+
+        public string Password { get; set; }
+
+        public string? PhoneNumber { get; set; }
+
+
+
+    }
+
     #endregion
     public interface IAccountService
     {
         [Operation]
         Task<RegisterResponse> RegisterAccount(RegisterRequest request, CallContext context = default);
         Task<RegisterAdminResponse> RegisterAccountAdmin(RegisterAdminRequest request, CallContext context = default);
+        Task<RegisterAdminResponse> RegisterEmployee(RegisterEmployeeByUserDTO request, CallContext context = default);
     }
 }

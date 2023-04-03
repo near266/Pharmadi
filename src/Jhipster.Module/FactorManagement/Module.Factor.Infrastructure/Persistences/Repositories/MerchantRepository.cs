@@ -33,7 +33,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<Merchant>> GetAllAdmin(int page, int pageSize, string? name, DateTime? StartDate, DateTime? EndDate, int? Status,string? Email,string? PhoneNumber)
+        public async Task<PagedList<Merchant>> GetAllAdmin(int page, int pageSize, string? name, DateTime? StartDate, DateTime? EndDate, int? Status, string? Email, string? PhoneNumber)
         {
             var query = _context.Merchants.AsQueryable();
             if (name != null)
@@ -41,14 +41,14 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 name = name.ToLower();
                 query = query.Where(i => i.MerchantName.ToLower().Contains(name));
             }
-           
+
             query = Status != null ? query.Where(i => i.Status == Status) : query;
             query = Email != null ? query.Where(i => i.Email == Email) : query;
             query = PhoneNumber != null ? query.Where(i => i.PhoneNumber == PhoneNumber) : query;
             query = StartDate != null ? query.Where(i => i.CreatedDate > StartDate) : query;
-            query=EndDate!=null ?query.Where(i=>i.CreatedDate < EndDate) : query;   
+            query = EndDate != null ? query.Where(i => i.CreatedDate < EndDate) : query;
             var data = query
-                        .Skip(pageSize * (page-1))
+                        .Skip(pageSize * (page - 1))
                         .Take(pageSize);
             var res = new PagedList<Merchant>();
             res.Data = data;
@@ -82,7 +82,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<Merchant>> SearchToChoose(string? keyword)
         {
-            var query = _context.Merchants.AsQueryable();
+            var query = _context.Merchants.Where(i => i.Status == 2 && i.AddressStatus == 2).AsQueryable();
             if (keyword != null)
             {
                 keyword = keyword.ToLower();
@@ -93,7 +93,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return data;
         }
 
-        public async Task<int> UpdateAddressStatus (Guid userid)
+        public async Task<int> UpdateAddressStatus(Guid userid)
         {
             var old = await _context.Merchants.FirstOrDefaultAsync(i => i.Id.Equals(userid));
             if (old != null)
