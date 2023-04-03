@@ -94,7 +94,7 @@ namespace BFF.Web.ProductSvc
                     await _mediator.Send(up);
                 }
                 var result = await _mediator.Send(request);
-                return Ok(result);
+                return Ok(1);
             }
             catch (Exception ex)
             {
