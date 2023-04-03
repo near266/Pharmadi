@@ -82,6 +82,17 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request delete GroupBrand : {JsonConvert.SerializeObject(request)}");
             try
             {
+
+                var rq = new GetListBrandByGroupIdQuery { Id= request.Id };
+                var res= await _mediator.Send(rq);
+                foreach (var item in res)
+                {
+                    var up = new BrandUpdateCommand { Id = item,
+                        Archived = true,
+                    GroupBrandId = null,
+                    };
+                    await _mediator.Send(up);
+                }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
