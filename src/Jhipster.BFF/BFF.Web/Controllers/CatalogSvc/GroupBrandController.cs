@@ -222,6 +222,7 @@ namespace BFF.Web.ProductSvc
                                 LogoBrand = item.LogoBrand,
                                 Intro = item.Intro,
                                 Pin = item.Pin,
+                                Archived=false,
                                 CreatedBy = new Guid(GetUserIdFromContext()),
                                 CreatedDate = DateTime.Now,
                             };
@@ -249,7 +250,7 @@ namespace BFF.Web.ProductSvc
                                     LogoBrand = item.LogoBrand,
                                     Intro = item.Intro,
                                     Pin = item.Pin,
-                                    Archived=item.Arch
+                              
                                     LastModifiedBy = new Guid(GetUserIdFromContext()),
                                     LastModifiedDate = DateTime.Now,
 
