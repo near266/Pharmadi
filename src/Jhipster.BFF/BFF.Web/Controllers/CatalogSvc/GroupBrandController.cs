@@ -247,32 +247,15 @@ namespace BFF.Web.ProductSvc
                             //delete
                             if (check == false)
                             {
-
-                                var resdelete = new BrandUpdateCommand { 
-                                    Id = item.Id ,
-                                    GroupBrandId= null,
-                                    Archived= true,
+                                // lưu ý chỗ này gọi archive thì gr id = null
+                                var resdelete = new ArchiveBrandCommand{ 
+                                  
+                                Id= item.Id,
                                    
                                 };
                                 await _mediator.Send(resdelete);
                             }
-                            if (check == true)
-                            {
-                                var resupdate = new BrandUpdateCommand
-                                {
-
-                                    Id = (Guid)item.Id,
-                                    BrandName = item.BrandName,
-                                    LogoBrand = item.LogoBrand,
-                                    Intro = item.Intro,
-                                    Pin = item.Pin,
-                                    Archived=false,
-                                    LastModifiedBy = new Guid(GetUserIdFromContext()),
-                                    LastModifiedDate = DateTime.Now,
-
-                                };
-                                await _mediator.Send(resupdate);
-                            }
+                           
                         }
                     }
                 }

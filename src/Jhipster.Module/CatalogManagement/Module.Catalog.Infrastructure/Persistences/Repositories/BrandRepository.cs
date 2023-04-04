@@ -198,6 +198,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 if (obj != null)
                 {
                     obj.Archived = true;
+                    obj.GroupBrandId = null;
                     res =  _context.SaveChanges();
                 }
            
