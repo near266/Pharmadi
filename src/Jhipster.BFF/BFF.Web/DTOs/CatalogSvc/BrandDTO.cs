@@ -65,7 +65,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public string? GroupBrandName { get; set; }
         public string? LogoGroupBrand { get; set; }
         public bool? Pin { get; set; }
-     
+        public List<Guid?>? DeleteId { get; set; }
         public List<AddDeleteUpdateBrand>? Brands { get; set; }
     
     }
