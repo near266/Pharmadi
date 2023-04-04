@@ -192,13 +192,17 @@ namespace Jhipster.Controllers
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
-        [HttpDelete("{login}")]
+        [HttpDelete("login")]
         [Authorize(Roles = RolesConstants.ADMIN)]
-        public async Task<IActionResult> DeleteUser([FromRoute] string login)
+        public async Task<IActionResult> DeleteUser([FromBody] List<string> login)
         {
             _log.LogDebug($"REST request to delete User : {login}");
-            await _userService.DeleteUser(login);
-            return NoContent().WithHeaders(HeaderUtil.CreateEntityDeletionAlert("userManagement.deleted", login));
+            foreach (var item in login)
+            {
+                await _userService.DeleteUser(item);
+            }
+            //return NoContent().WithHeaders(HeaderUtil.CreateEntityDeletionAlert("userManagement.deleted", login));
+            return Ok(1);
         }
 
         /// <summary>
