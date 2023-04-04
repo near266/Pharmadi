@@ -248,7 +248,12 @@ namespace BFF.Web.ProductSvc
                             if (check == false)
                             {
 
-                                var resdelete = new ArchiveBrandCommand { Id = item.Id };
+                                var resdelete = new BrandUpdateCommand { 
+                                    Id = item.Id ,
+                                    GroupBrandId= null,
+                                    Archived= true,
+                                   
+                                };
                                 await _mediator.Send(resdelete);
                             }
                             if (check == true)
