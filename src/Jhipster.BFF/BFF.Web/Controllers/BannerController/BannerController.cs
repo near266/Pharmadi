@@ -17,8 +17,8 @@ namespace BFF.Web.Controllers.BannerController
         {
             var value = new List<string>()
             {
-                "https://image.pharmadi.vn/StorageProduct/photo_6109251637945152821_y_638151259858033496_ORIGIN.png",
-                "https://image.pharmadi.vn/StorageProduct/photo_6109251637945152821_y_638151259858033496_ORIGIN.png"
+                "https://image.pharmadi.vn/StorageProduct/photo_6149787805572773493_y_638162050740532203_ORIGIN.png",
+                "https://image.pharmadi.vn/StorageProduct/photo_6149787805572773505_y_638162050740555799_ORIGIN.png"
             };
             return Ok(value);
         }
@@ -27,12 +27,12 @@ namespace BFF.Web.Controllers.BannerController
         {
             var value = new List<string>()
             {
-                "https://image.pharmadi.vn/StorageProduct/photo_6113997950469387568_x_638151651529547317_ORIGIN.png",
-                "https://image.pharmadi.vn/StorageProduct/photo_6113997950469387568_x_638151651529547317_ORIGIN.png",
-                "https://image.pharmadi.vn/StorageProduct/photo_6113997950469387568_x_638151651529547317_ORIGIN.png",
-                "https://image.pharmadi.vn/StorageProduct/photo_6113997950469387568_x_638151651529547317_ORIGIN.png",
-                "https://image.pharmadi.vn/StorageProduct/photo_6113997950469387568_x_638151651529547317_ORIGIN.png",
-                "https://image.pharmadi.vn/StorageProduct/photo_6113997950469387568_x_638151651529547317_ORIGIN.png"
+                 "https://image.pharmadi.vn/StorageProduct/photo_6152080691043612522_x_638162056676434910_ORIGIN.png",
+                 "https://image.pharmadi.vn/StorageProduct/photo_6152080691043612522_x_638162056676434910_ORIGIN.png",
+                 "https://image.pharmadi.vn/StorageProduct/photo_6152080691043612522_x_638162056676434910_ORIGIN.png",
+                 "https://image.pharmadi.vn/StorageProduct/photo_6152080691043612522_x_638162056676434910_ORIGIN.png",
+                 "https://image.pharmadi.vn/StorageProduct/photo_6152080691043612522_x_638162056676434910_ORIGIN.png",
+                 "https://image.pharmadi.vn/StorageProduct/photo_6152080691043612522_x_638162056676434910_ORIGIN.png",
             };
             return Ok(value);
         }
