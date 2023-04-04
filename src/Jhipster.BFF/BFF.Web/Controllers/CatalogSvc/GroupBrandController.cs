@@ -239,25 +239,30 @@ namespace BFF.Web.ProductSvc
                             };
                             await _mediator.Send(br);
                         }
-                        else
-                        {
-                            //check del or up
-                            var res = new IsBrandEmtyGroupCommand { Id = item.Id };
-                            var check = await _mediator.Send(res);
-                            //delete
-                            if (check == false)
-                            {
-                                // lưu ý chỗ này gọi archive thì gr id = null
-                                var resdelete = new ArchiveBrandCommand{ 
-                                  
-                                Id= item.Id,
-                                   
-                                };
-                                await _mediator.Send(resdelete);
-                            }
-                           
-                        }
+                       
                     }
+
+                }
+                if(request.DeleteId!= null)
+                {
+                     
+                       foreach (var i in request.DeleteId)
+                      {
+
+                        //delete
+                       
+                            // lưu ý chỗ này gọi archive thì gr id = null
+                            var resdelete = new ArchiveBrandCommand
+                            {
+
+                                Id = i,
+
+                            };
+                            await _mediator.Send(resdelete);
+                       
+
+                       }
+                    
                 }
                 return Ok(1);
 
