@@ -31,12 +31,12 @@ namespace BFF.Web.ProductSvc
         private readonly RedisConfig _redisConfiguration;
 
         private readonly IDistributedCache _cache;
-        public ProductController(IMediator mediator, RedisConfig redisConfig,IDistributedCache cache,ILogger<ProductController> logger)
+        public ProductController(IMediator mediator, RedisConfig redisConfig, IDistributedCache cache, ILogger<ProductController> logger)
         {
             _mediator = mediator;
             _logger = logger;
             _cache = cache;
-            _redisConfiguration=redisConfig;
+            _redisConfiguration = redisConfig;
         }
         private string GetUserIdFromContext()
         {
@@ -85,14 +85,14 @@ namespace BFF.Web.ProductSvc
                     Number = request.Number,
                     CreatedBy = request.CreatedBy,
                     CreatedDate = request.CreatedDate,
-                    Archived=false,
-                    HideProduct=request.HideProduct,
-                    CanOrder=request.CanOrder
+                    Archived = false,
+                    HideProduct = request.HideProduct,
+                    CanOrder = request.CanOrder
                 };
                 await _mediator.Send(step1);
 
                 //add categoryProduct
-                if(request.categoryProductAdds!=null)
+                if (request.categoryProductAdds != null)
                 {
                     foreach (var item in request.categoryProductAdds)
                     {
@@ -106,10 +106,10 @@ namespace BFF.Web.ProductSvc
                         await _mediator.Send(step3);
                     }
                 }
-                
+
 
                 //add warehouse product
-                if(request.warehouseProductAdds!=null)
+                if (request.warehouseProductAdds != null)
                 {
                     foreach (var item in request.warehouseProductAdds)
                     {
@@ -128,7 +128,7 @@ namespace BFF.Web.ProductSvc
                 }
 
                 //add tag product
-                if(request.TagIds!=null)
+                if (request.TagIds != null)
                 {
                     foreach (var item in request.TagIds)
                     {
@@ -145,7 +145,7 @@ namespace BFF.Web.ProductSvc
 
 
                 //add tag product
-                if (request.LabelIds!=null)
+                if (request.LabelIds != null)
                 {
                     foreach (var item in request.LabelIds)
                     {
@@ -159,7 +159,7 @@ namespace BFF.Web.ProductSvc
                         await _mediator.Send(step6);
                     }
                 }
-                
+
                 return Ok(1);
             }
             catch (Exception ex)
@@ -209,9 +209,9 @@ namespace BFF.Web.ProductSvc
                     LastModifiedBy = request.LastModifiedBy,
                     LastModifiedDate = request.LastModifiedDate,
                     Archived = request.Archived,
-                    HideProduct=request.HideProduct,
-                    CanOrder=request.CanOrder
-                    
+                    HideProduct = request.HideProduct,
+                    CanOrder = request.CanOrder
+
                 };
 
                 result = await _mediator.Send(step1);
@@ -223,7 +223,7 @@ namespace BFF.Web.ProductSvc
                     {
                         productId = request.Id
                     };
-                     await _mediator.Send(step10);
+                    await _mediator.Send(step10);
 
                     foreach (var item in request.TagIds)
                     {
@@ -246,7 +246,7 @@ namespace BFF.Web.ProductSvc
                     {
                         productId = request.Id
                     };
-                   await _mediator.Send(step10);
+                    await _mediator.Send(step10);
                     foreach (var item in request.LabelIds)
                     {
                         var step6 = new LabelProductAddCommand
@@ -390,7 +390,7 @@ namespace BFF.Web.ProductSvc
                     res = await _mediator.Send(request);
                     await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromDays(7));
                 }
-               
+
                 return Ok(res);
             }
             catch (Exception ex)
@@ -407,15 +407,14 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductNew  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                //try
-                //{
-                //    request.userId = Guid.Parse(GetUserIdFromContext());
-                //}
-                //catch (Exception ex)
-                //{
-                //    _logger.LogError($"REST request to ViewProductNew fail: {ex.Message}");
-                //    return StatusCode(500, ex.Message);
-                //}
+                try
+                {
+                    request.userId = Guid.Parse(GetUserIdFromContext());
+                }
+                catch (Exception ex)
+                {
+
+                }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -438,7 +437,7 @@ namespace BFF.Web.ProductSvc
                     request.userId = Guid.Parse(GetUserIdFromContext());
                 }
                 catch
-                { 
+                {
 
                 }
                 var result = await _mediator.Send(request);
@@ -466,7 +465,7 @@ namespace BFF.Web.ProductSvc
             }
         }
         [HttpPost("ViewProductWithBrand")]
-        public async Task<IActionResult> ViewProductWithBrand ([FromBody] ViewProductWithBrandQuery request)
+        public async Task<IActionResult> ViewProductWithBrand([FromBody] ViewProductWithBrandQuery request)
         {
             _logger.LogInformation($"REST request ViewProductWithBrand : {JsonConvert.SerializeObject(request)}");
             try
