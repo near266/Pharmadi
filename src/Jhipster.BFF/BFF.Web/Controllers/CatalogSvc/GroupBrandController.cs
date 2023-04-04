@@ -245,13 +245,13 @@ namespace BFF.Web.ProductSvc
                             var res = new IsBrandEmtyGroupCommand { Id = item.Id };
                             var check = await _mediator.Send(res);
                             //delete
-                            if (check == true)
+                            if (check == false)
                             {
 
                                 var resdelete = new ArchiveBrandCommand { Id = item.Id };
                                 await _mediator.Send(resdelete);
                             }
-                            if (check == false)
+                            if (check == true)
                             {
                                 var resupdate = new BrandUpdateCommand
                                 {
