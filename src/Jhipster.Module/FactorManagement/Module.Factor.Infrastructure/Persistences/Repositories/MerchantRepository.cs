@@ -43,8 +43,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
 
             query = Status != null ? query.Where(i => i.Status == Status) : query;
-            query = Email != null ? query.Where(i => i.Email == Email) : query;
-            query = PhoneNumber != null ? query.Where(i => i.PhoneNumber == PhoneNumber) : query;
+            query = Email != null ? query.Where(i => i.Email.Contains(Email)) : query;
+            query = PhoneNumber != null ? query.Where(i => i.PhoneNumber.Contains(PhoneNumber)) : query;
             query = StartDate != null ? query.Where(i => i.CreatedDate > StartDate) : query;
             query = EndDate != null ? query.Where(i => i.CreatedDate < EndDate) : query;
             var data = query
