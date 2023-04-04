@@ -407,15 +407,15 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductNew  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                try
-                {
-                    request.userId = Guid.Parse(GetUserIdFromContext());
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"REST request to ViewProductNew fail: {ex.Message}");
-                    return StatusCode(500, ex.Message);
-                }
+                //try
+                //{
+                //    request.userId = Guid.Parse(GetUserIdFromContext());
+                //}
+                //catch (Exception ex)
+                //{
+                //    _logger.LogError($"REST request to ViewProductNew fail: {ex.Message}");
+                //    return StatusCode(500, ex.Message);
+                //}
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
