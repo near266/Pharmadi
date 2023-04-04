@@ -25,6 +25,8 @@ using Jhipster.Infrastructure.Data.Repositories;
 using Module.Redis;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Jhipster.Crosscutting.Constants;
 
 [assembly: ApiController]
 
@@ -66,7 +68,7 @@ namespace Jhipster
                 .AddWebModule()
                 .AddRepositoryModule()
                 .AddServiceModule();
-           
+
             services
                 .AddMailModule(Configuration);
             services.AddCors(options =>
@@ -78,6 +80,7 @@ namespace Jhipster
                         .AllowAnyHeader();
                 });
             });
+            
         }
 
 
@@ -120,9 +123,9 @@ namespace Jhipster
             //services.AddBasketModule(Configuration);
             //// Redis
             services.AddRedisModule(Configuration);
-           
+
         }
-       
+
 
 
         protected virtual void AddBffGateway(IServiceCollection services)

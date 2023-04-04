@@ -8,4 +8,9 @@ namespace Jhipster.Crosscutting.Constants
         public const string AnonymousUser = "anonymoususer";
         public const string DefaultLangKey = "en";
     }
+    public static class GoogleOpenIdConnectDefaults
+    {
+        public const string AuthenticationScheme = "GoogleOpenIdConnect";
+
+    }
 }

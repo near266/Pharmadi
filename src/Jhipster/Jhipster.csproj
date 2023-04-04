@@ -27,6 +27,7 @@
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'NhipsterSampleApplication' " />
 	<ItemGroup>
 		<PackageReference Include="AspNetCoreRateLimit.Redis" Version="1.0.1" />
+		<PackageReference Include="Google.Apis.Auth" Version="1.60.0" />
 		<PackageReference Include="JHipsterNet.Core" Version="1.0.9" />
 		<PackageReference Include="JHipsterNet.Web" Version="1.0.9" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
