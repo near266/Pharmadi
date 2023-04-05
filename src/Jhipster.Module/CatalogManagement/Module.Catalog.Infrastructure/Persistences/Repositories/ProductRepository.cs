@@ -500,7 +500,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             var res = new PagedList<SearchProductBrandId>();
             var Pro = await _context.Products.Where(i => i.BrandId == brandId).Select(i => i.Id).ToListAsync();
-            var CatePro = await _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId)).Select(i => i.CategoryId).ToListAsync();
+            var CatePro = await _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId) && i.Priority == true).Select(i => i.CategoryId).ToListAsync();
             var cate = await _context.CategoryProducts.Where(i => CatePro.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
             var Procate = await _context.Products.Where(i => CatePro.Contains(i.Id)).ToListAsync();
             var result = _context.Categories.Where(i => CatePro.Contains(i.Id)).OrderBy(i => i.CategoryName).Select(i => new SearchProductBrandId
