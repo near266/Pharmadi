@@ -27,12 +27,25 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<int> Delete(Guid id)
         {
             var obj = await _context.Categories.FirstOrDefaultAsync(i => i.Id.Equals(id));
-            if (obj != null)
+            var checkparent = await _context.Categories.Where(i => i.ParentId.Equals(id)).ToListAsync();
+            if (obj != null) { return -1; }
+            else
             {
-                _context.Categories.Remove(obj);
-                return await _context.SaveChangesAsync();
+                if (obj != null)
+                {
+                    _context.Categories.Remove(obj);
+                    await _context.SaveChangesAsync();
+                }
+                if (checkparent != null || checkparent.Count() != 0)
+                {
+                    foreach (var item in checkparent)
+                    {
+                        _context.Categories.Remove(item);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                return 1;
             }
-            return 0;
         }
 
         public async Task<int> Update(Category request)
