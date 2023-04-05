@@ -94,7 +94,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 query1 = query1.Where(i => i.Status == status);
             }
             var data = await query1
-                        .OrderByDescending(i=>i.LastModifiedDate)
+                        .OrderByDescending(i => i.LastModifiedDate)
                         .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
@@ -151,7 +151,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
-                CanOrder=i.CanOrder
+                CanOrder = i.CanOrder
 
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -180,9 +180,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
-                CanOrder=i.CanOrder
+                CanOrder = i.CanOrder
 
-            }).OrderByDescending(i=>i.SaleNumber).Skip(pageSize * (page - 1))
+            }).OrderByDescending(i => i.SaleNumber).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
@@ -210,9 +210,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Discount = (float?)((i.SalePrice / i.Price) * 100),
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                CanOrder=i.CanOrder
+                CanOrder = i.CanOrder
 
-            }).OrderBy(a=>a.Discount).Skip(pageSize * (page - 1))
+            }).OrderBy(a => a.Discount).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
@@ -240,12 +240,12 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Specification = i.Specification,
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 Archived = i.Archived,
-                Discount = (float?)((i.SalePrice / i.Price) * 100),
+                Discount = i.Price != 0 ? (float?)(((i.Price - i.SalePrice) / i.Price) * 100) : 100,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                CanOrder=i.CanOrder
+                CanOrder = i.CanOrder
 
-            }).OrderBy(a => a.Discount).Skip(pageSize * (page - 1))
+            }).OrderByDescending(a => a.Discount).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
@@ -254,7 +254,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return result;
         }
 
-        public async Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid> categoryIds,List<Guid> cateLevel2Ids, List<Guid?>? brandIds , List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
+        public async Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid> categoryIds, List<Guid> cateLevel2Ids, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
             var query = _context.Products.Include(i => i.Brand).Where(i => i.Archived == false).AsQueryable();
@@ -271,7 +271,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             //    var ListcatePro = await _context.CategoryProducts.Where(i=> listcate.Contains(i.CategoryId)).Select(i=>i.ProductId).ToListAsync();
             //    if(parentId != null)
             //    {
-                  
+
             //    query =   query.Where(i=>ListcatePro.Contains(i.Id));
 
             //    }
@@ -283,11 +283,11 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
 
             //}
-            if(categoryIds!=null && categoryIds.Count() > 0)
+            if (categoryIds != null && categoryIds.Count() > 0)
             {
 
                 //check cate2 có không nếu không có thì chỉ tìm kiếm theo cate1 
-                if(cateLevel2Ids!=null && cateLevel2Ids.Count()>0)
+                if (cateLevel2Ids != null && cateLevel2Ids.Count() > 0)
                 {
                     // lần lượt for với item là cate1
                     foreach (var item in categoryIds)
@@ -314,7 +314,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 }
 
                 query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => categoryIds.Contains(cp.CategoryId)));
-               
+
             }
 
 
@@ -342,7 +342,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(a => a.Label).Where(a => a.ProductId == i.Id).AsEnumerable(),
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                CanOrder=i.CanOrder
+                CanOrder = i.CanOrder
 
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -388,7 +388,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                CanOrder=i.CanOrder
+                CanOrder = i.CanOrder
 
             }).Take(10).AsEnumerable();
 
@@ -400,13 +400,13 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             var listProduct = new PagedList<ProductSearchDTO>();
             var listCatIds = await _context.CategoryProducts.Where(i => i.ProductId == Id).Select(i => i.CategoryId).ToListAsync();
-            var parentId =  await _context.Categories.Where(i => listCatIds.Contains(i.Id) && i.ParentId != null).Select(i => i.ParentId).ToListAsync();
+            var parentId = await _context.Categories.Where(i => listCatIds.Contains(i.Id) && i.ParentId != null).Select(i => i.ParentId).ToListAsync();
             var listId2 = await _context.Categories.Where(i => listCatIds.Contains(i.Id) && parentId.Contains(i.ParentId)).Select(i => i.Id).ToListAsync();
             var listId1 = await _context.Categories.Where(i => listCatIds.Contains(i.Id) && i.ParentId == null).Select(i => i.Id).ToListAsync();
             //var listProd = await _context.Products.ToListAsync();
             if (listId2 != null)
             {
-                var prodIds = await _context.CategoryProducts.Where(i => listId2.Contains(i.CategoryId)&& i.ProductId ==Id).Select(i => i.ProductId).ToListAsync();
+                var prodIds = await _context.CategoryProducts.Where(i => listId2.Contains(i.CategoryId) && i.ProductId == Id).Select(i => i.ProductId).ToListAsync();
                 var listProd = _context.Products.Where(i => prodIds.Contains(i.Id)).Select(i => new ProductSearchDTO
                 {
                     Id = i.Id,
@@ -421,7 +421,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Archived = i.Archived,
                     LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                    CanOrder=i.CanOrder
+                    CanOrder = i.CanOrder
 
                 }).AsEnumerable();
 
@@ -446,7 +446,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Archived = i.Archived,
                     LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                    CanOrder=i.CanOrder
+                    CanOrder = i.CanOrder
 
                 }).AsEnumerable();
 
@@ -470,10 +470,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 keyword = keyword.ToLower();
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword));
             }
-            if(keyword==null || keyword.Length==0|| keyword=="")
+            if (keyword == null || keyword.Length == 0 || keyword == "")
             {
-                query = query.Where(i => i.ProductName=="@#$");
-            }    
+                query = query.Where(i => i.ProductName == "@#$");
+            }
 
             var query2 = query.Select(i => new ProductSearchDTO
             {
@@ -489,26 +489,27 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 Brand = i.Brand,
                 Archived = i.Archived,
-                CanOrder=i.CanOrder
+                CanOrder = i.CanOrder
 
             }).AsEnumerable();
 
             return query2;
         }
 
-        public async Task<PagedList<SearchProductBrandId>> GetListProductSimilarCategoryByBrandId(int page,int pageSize ,Guid brandId, Guid? userId)
+        public async Task<PagedList<SearchProductBrandId>> GetListProductSimilarCategoryByBrandId(int page, int pageSize, Guid brandId, Guid? userId)
         {
             var res = new PagedList<SearchProductBrandId>();
-            var Pro = await _context.Products.Where(i=>i.BrandId == brandId).Select(i=>i.Id).ToListAsync();
-            var CatePro = await _context.CategoryProducts.Where(i=>Pro.Contains(i.ProductId)).Select(i=>i.CategoryId).ToListAsync();
-            var cate = await _context.CategoryProducts.Where(i => CatePro.Contains(i.CategoryId)).Select(i=>i.ProductId).ToListAsync();
+            var Pro = await _context.Products.Where(i => i.BrandId == brandId).Select(i => i.Id).ToListAsync();
+            var CatePro = await _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId) && i.Priority == true).Select(i => i.CategoryId).ToListAsync();
+            var cate = await _context.CategoryProducts.Where(i => CatePro.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
             var Procate = await _context.Products.Where(i => CatePro.Contains(i.Id)).ToListAsync();
-            var result = _context.Categories.Where(i => CatePro.Contains(i.Id)).OrderBy(i=>i.CategoryName).Select( i => new SearchProductBrandId { 
-            Id=i.Id,
-            CategoryName=i.CategoryName,
-            Descripton=i.Descripton,
-            Products = _context.Products.Where(i => i.BrandId == brandId).ToList(),
-            
+            var result = _context.Categories.Where(i => CatePro.Contains(i.Id)).OrderBy(i => i.CategoryName).Select(i => new SearchProductBrandId
+            {
+                Id = i.Id,
+                CategoryName = i.CategoryName,
+                Descripton = i.Descripton,
+                Products = _context.Products.Where(i => i.BrandId == brandId).ToList(),
+
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToList();
