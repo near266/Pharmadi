@@ -240,7 +240,7 @@ namespace Jhipster.Domain.Services
 
         public virtual async Task DeleteUser(string login)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(i=>i.Id==login);
+            var user = await _userManager.FindByNameAsync(login);
             if (user != null)
             {
                 await DeleteUserRoles(user);
