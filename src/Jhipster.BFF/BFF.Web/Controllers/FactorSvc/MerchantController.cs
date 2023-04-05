@@ -19,6 +19,7 @@ using Module.Redis.Library.Helpers;
 using Microsoft.Extensions.Caching.Distributed;
 using Module.Redis.Configurations;
 using Jhipster.Domain;
+using LanguageExt.Pretty;
 
 namespace BFF.Web.Controllers.FactorSvc
 {
@@ -94,12 +95,15 @@ namespace BFF.Web.Controllers.FactorSvc
                 //add merchant
                 if(reponse.Content!=null)
                 {
+                    string[] parts = request.Email.Split('@');
+                    string result = parts[0];
                     var rqMerchant = new MerchantAddCommand()
                     {
                         Id=Guid.Parse(step1.Id),  
                         PhoneNumber=request.PhoneNumber,
-                        MerchantName = request.Email,
+                        MerchantName = result,
                         CreatedDate=DateTime.Now,
+                        Email=request.Email
 
                     };
                     await _mediator.Send(rqMerchant);
