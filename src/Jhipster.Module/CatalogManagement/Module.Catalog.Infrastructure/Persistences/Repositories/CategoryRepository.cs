@@ -28,7 +28,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             var obj = await _context.Categories.FirstOrDefaultAsync(i => i.Id.Equals(id));
             var checkparent = await _context.Categories.Where(i => i.ParentId.Equals(id)).ToListAsync();
-            if (obj != null) { return -1; }
+            if (obj == null) { return -1; }
             else
             {
                 if (obj != null)
