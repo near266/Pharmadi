@@ -51,6 +51,7 @@ namespace Module.Catalog.Shared.DTOs
         public Guid Id { get; set; }
         public string CategoryName { get; set; }
         public string? Descripton { get; set; }
+
         public IEnumerable<Product> Products { get; set; }
 
     }

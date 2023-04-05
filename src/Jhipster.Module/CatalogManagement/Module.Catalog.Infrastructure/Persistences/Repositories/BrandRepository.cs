@@ -5,6 +5,8 @@ using Module.Catalog.Domain.Entities;
 using Jhipster.Service.Utilities;
 using Module.Catalog.Shared.DTOs;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Digests;
+using System.Linq;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -92,8 +94,11 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<BrandDTO>();
             if (type == 1)
             {
+                var brId = _context.Brands.Where(i => i.GroupBrandId == GroupBrandId && i.Archived == false).Select(i => i.Id).ToList();
+
                 var data = await query.Where(i => i.GroupBrandId != null&& i.GroupBrandId==GroupBrandId && i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
                 {
+
                     Id = i.Id,
                     GroupBrandId = i.GroupBrandId,
                     Intro = i.Intro,
@@ -101,7 +106,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     LogoBrand = i.LogoBrand,
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(i => i.BrandId == i.Id).Count()
+                    SumProduct = _context.Products.Where(i => brId.Contains((Guid) i.BrandId) && i.Archived == false).Count()
 
                 }).Skip(pageSize * (page - 1))
                   .Take(pageSize).ToListAsync();
@@ -111,7 +116,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             if (type == 2)
             {
-
+                var brId = _context.Brands.Where(i => i.GroupBrandId == null && i.Archived == false).Select(i => i.Id).ToList();
                 var data = await query.Where(i => i.GroupBrandId == null && i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
                 {
                     Id = i.Id,
@@ -121,7 +126,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     LogoBrand = i.LogoBrand,
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(i => i.BrandId == i.Id).Count()
+                    SumProduct = _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived ==false).Count()
 
                 })
                     .Skip(pageSize * (page - 1))
@@ -132,7 +137,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             if (type == 3)
             {
-
+                var brId = _context.Brands.Where(i => i.Pin == true && i.Archived == false).Select(i => i.Id).ToList();
                 var data = await query.Where(i => i.Pin == true && i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
                 {
                     Id = i.Id,
@@ -142,7 +147,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     LogoBrand = i.LogoBrand,
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(i => i.BrandId == i.Id).Count()
+                    SumProduct = _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).Count()
 
                 })
                     .Skip(pageSize * (page - 1))
