@@ -509,7 +509,6 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CategoryName = i.CategoryName,
                 Descripton = i.Descripton,
                 Products = _context.Products.Where(i => i.BrandId == brandId).ToList(),
-
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToList();
