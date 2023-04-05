@@ -4,6 +4,8 @@ using Module.Factor.Application.Persistences;
 using Module.Factor.Domain.Entities;
 using Module.Factor.Infrastructure.Persistences;
 using Jhipster.Service.Utilities;
+using Module.Factor.Application.DTO;
+using Jhipster.Infrastructure.Data;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -11,10 +13,12 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
     {
         private readonly FactorDbContext _context;
         private readonly IMapper _mapper;
-        public MerchantRepository(FactorDbContext context, IMapper mapper)
+        private readonly ApplicationDatabaseContext _dbContext;
+        public MerchantRepository(FactorDbContext context, IMapper mapper,ApplicationDatabaseContext applicationDatabaseContext)
         {
             _context = context;
             _mapper = mapper;
+            _dbContext = applicationDatabaseContext;
         }
         public async Task<int> Add(Merchant request)
         {
@@ -33,7 +37,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<Merchant>> GetAllAdmin(int page, int pageSize, string? name, DateTime? StartDate, DateTime? EndDate, int? Status, string? Email, string? PhoneNumber)
+        public async Task<PagedList<MerchantAdminDTO>> GetAllAdmin(int page, int pageSize, string? name, DateTime? StartDate, DateTime? EndDate, int? Status, string? Email, string? PhoneNumber)
         {
             var query = _context.Merchants.AsQueryable();
             if (name != null)
@@ -47,10 +51,51 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             query = PhoneNumber != null ? query.Where(i => i.PhoneNumber.Contains(PhoneNumber)) : query;
             query = StartDate != null ? query.Where(i => i.CreatedDate > StartDate) : query;
             query = EndDate != null ? query.Where(i => i.CreatedDate < EndDate) : query;
-            var data = query
-                        .Skip(pageSize * (page - 1))
-                        .Take(pageSize);
-            var res = new PagedList<Merchant>();
+            var dataUser = _dbContext.Users.AsQueryable();
+            var dataMerchant = new List<MerchantAdminDTO>();
+            foreach (var item1 in query)
+                foreach (var item2 in dataUser)
+                {
+                    if (item1.Id.ToString() == item2.Id)
+                    {
+                        dataMerchant.Add(new MerchantAdminDTO()
+                        {
+                            Id = item1.Id,
+                            TaxCode = item1.TaxCode,
+                            MerchantName = item1.MerchantName,
+                            PhoneNumber = item1.PhoneNumber,
+                            Address = item1.Address,
+                            Location = item1.Location,
+                            ContactName = item1.ContactName,
+                            GPPNumber = item1.GPPNumber,
+                            ContractNumber = item1.ContractNumber,
+                            Channel = item1.Channel,
+                            Rank = item1.Rank,
+                            Branch = item1.Branch,
+                            TypeCustomer = item1.TypeCustomer,
+                            Status = item1.Status,
+                            Email = item1.Email,
+                            City = item1.City,
+                            District = item1.District,
+                            SubDistrict = item1.SubDistrict,
+                            LicenseDate = item1.LicenseDate,
+                            LicensePlace = item1.LicensePlace,
+                            GPPImage = item1.GPPImage,
+                            Avatar = item1.Avatar,
+                            AddressStatus = item1.AddressStatus,
+                            CreatedBy = item1.CreatedBy,
+                            CreatedDate = item1.CreatedDate,
+                            Login = item2.Login,
+                            LastModifiedBy = item1.LastModifiedBy,
+                            LastModifiedDate = item1.LastModifiedDate,
+                        });
+                    }
+                }
+
+            var data = dataMerchant
+                    .Skip(pageSize * (page - 1))
+                    .Take(pageSize);
+            var res = new PagedList<MerchantAdminDTO>();
             res.Data = data;
             res.TotalCount = query.Count();
             return res;
