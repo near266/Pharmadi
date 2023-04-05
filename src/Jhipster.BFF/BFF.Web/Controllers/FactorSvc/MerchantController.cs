@@ -95,7 +95,7 @@ namespace BFF.Web.Controllers.FactorSvc
                 //add merchant
                 if(reponse.Content!=null)
                 {
-                    string[] parts = request.Email.Split('@');
+                    string[] parts = request.Email.Contains("@")?request.Email.Split('@'):(request.Email+"@").Split('@');
                     string result = parts[0];
                     var rqMerchant = new MerchantAddCommand()
                     {
