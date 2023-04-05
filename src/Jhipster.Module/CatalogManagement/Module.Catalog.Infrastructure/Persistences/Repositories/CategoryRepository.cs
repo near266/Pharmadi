@@ -35,15 +35,16 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 {
                     _context.Categories.Remove(obj);
                     await _context.SaveChangesAsync();
-                }
-                if (checkparent != null || checkparent.Count() != 0)
-                {
-                    foreach (var item in checkparent)
+                    if (checkparent != null || checkparent.Count() != 0)
                     {
-                        _context.Categories.Remove(item);
+                        foreach (var item in checkparent)
+                        {
+                            _context.Categories.Remove(item);
+                        }
+                        await _context.SaveChangesAsync();
                     }
-                    await _context.SaveChangesAsync();
                 }
+                
                 return 1;
             }
         }
