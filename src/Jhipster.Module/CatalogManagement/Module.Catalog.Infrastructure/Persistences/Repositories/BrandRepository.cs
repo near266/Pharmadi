@@ -106,7 +106,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     LogoBrand = i.LogoBrand,
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(i => brId.Contains((Guid) i.BrandId)).Count()
+                    SumProduct = _context.Products.Where(i => brId.Contains((Guid) i.BrandId) && i.Archived == false).Count()
 
                 }).Skip(pageSize * (page - 1))
                   .Take(pageSize).ToListAsync();
@@ -126,7 +126,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     LogoBrand = i.LogoBrand,
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(i => brId.Contains((Guid)i.BrandId)).Count()
+                    SumProduct = _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived ==false).Count()
 
                 })
                     .Skip(pageSize * (page - 1))
@@ -147,7 +147,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     LogoBrand = i.LogoBrand,
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(i => brId.Contains((Guid)i.BrandId)).Count()
+                    SumProduct = _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).Count()
 
                 })
                     .Skip(pageSize * (page - 1))
