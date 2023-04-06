@@ -13,6 +13,6 @@ namespace Module.Ordering.Application.Persistences
         Task<ViewCartDTO> GetAllByUser(int page, int pageSize, Guid userId);
         Task<List<Cart>> GetCartChoice(Guid userId);
         Task<CartResultDTO> CartResultSum(Guid userId);
-        Task<List<ViewQuickOrder>> ViewQuick(Guid userId);
+        Task<List<ViewQuickOrder>> ViewQuick(Guid userId, int Type, string keyword);
     }
 }

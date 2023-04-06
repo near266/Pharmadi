@@ -8,6 +8,7 @@ using Module.Catalog.Domain.Entities;
 using Module.Ordering.Shared.DTOs;
 using static System.Net.Mime.MediaTypeNames;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -134,23 +135,91 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             var data = await _context.Carts.Where(i => i.UserId == userId && i.IsChoice == true).ToListAsync();
             return data;
         }
-        public async Task<List<ViewQuickOrder>> ViewQuick(Guid userId)
+        public async Task<List<ViewQuickOrder>> ViewQuick(Guid userId , int Type, string keyword)
         {
-            var data = from s in _context.Products
-                       join sst in _context.Brands on s.BrandId equals sst.Id
-                       join st in _context.Carts.Where(a => a.UserId == userId) on s.Id equals st.ProductId into cart
-                       from st in cart.DefaultIfEmpty()
-                       select new ViewQuickOrder()
-                       {
-                           ProductId = s.Id,
-                           ProductName = s.ProductName,
-                           Image = s.Image,
-                           Price = s.Price,
-                           DiscountPrice = s.SalePrice,
-                           BrandName = sst.BrandName,
-                           Quantity = st.Quantity ?? 0
-                       };
-            return data.ToList();
+            if (Type == 1)
+            {
+                var data = from s in _context.Products
+                           join sst in _context.Brands on s.BrandId equals sst.Id
+                           join st in _context.Carts.Where(a => a.UserId == userId) on s.Id equals st.ProductId into cart
+                           from st in cart.DefaultIfEmpty()
+                           select new ViewQuickOrder()
+                           {
+                               ProductId = s.Id,
+                               ProductName = s.ProductName,
+                               Image = s.Image,
+                               Price = s.Price,
+                               DiscountPrice = s.SalePrice,
+                               BrandName = sst.BrandName,
+                               Quantity = st.Quantity ?? 0
+                           };
+                var check = data.AsQueryable();
+                check = keyword != null ? check.Where(i => i.ProductName.Contains(keyword)) : check;
+                return check.ToList();
+            }
+            if(Type == 2) // sản phẩm đã mua
+            {
+                var data = from s in _context.PurchaseOrders.Where(a => a.MerchantId == userId)
+                           join st in _context.OrderItems on s.Id equals st.PurchaseOrderId
+                           join sst in _context.Products on st.ProductId equals sst.Id
+                           join brand in _context.Brands on sst.BrandId equals brand.Id
+                           join carts in _context.Carts.Where(a => a.UserId == userId) on sst.Id equals carts.ProductId into cart
+                           from carts in cart.DefaultIfEmpty()
+                           select new ViewQuickOrder()
+                           {
+                               ProductId = st.ProductId,
+                               ProductName = sst.ProductName,
+                               Image = sst.Image,
+                               Price = sst.Price,
+                               DiscountPrice = sst.SalePrice,
+                               BrandName = brand.BrandName,
+                               Quantity = carts.Quantity ?? 0
+                           };
+                var check = data.AsQueryable();
+                check = keyword != null ? check.Where(i => i.ProductName.Contains(keyword)) : check;
+                return check.ToList();
+            }
+            if(Type == 3) // sản phẩm trong nước
+            {
+                var data = from s in _context.Products.Where(a => a.Country.ToLower().Equals("vietnam"))
+                           join st in _context.Brands on s.BrandId equals st.Id
+                           join carts in _context.Carts.Where(a => a.UserId == userId) on s.Id equals carts.ProductId into cart
+                           from carts in cart.DefaultIfEmpty()
+                           select new ViewQuickOrder()
+                           {
+                               ProductId = s.Id,
+                               ProductName = s.ProductName,
+                               Image = s.Image,
+                               Price = s.Price,
+                               DiscountPrice = s.SalePrice,
+                               BrandName = st.BrandName,
+                               Quantity = carts.Quantity ?? 0
+                           };
+                var check = data.AsQueryable();
+                check = keyword != null ? check.Where(i => i.ProductName.Contains(keyword)) : check;
+                return check.ToList();
+            }
+            else // sản phẩm nước ngoài
+            {
+               
+                var data = from s in _context.Products.Where(a => a.Country.ToLower()!="vietnam")
+                           join st in _context.Brands on s.BrandId equals st.Id
+                           join carts in _context.Carts.Where(a => a.UserId == userId) on s.Id equals carts.ProductId into cart
+                           from carts in cart.DefaultIfEmpty()
+                           select new ViewQuickOrder()
+                           {
+                               ProductId = s.Id,
+                               ProductName = s.ProductName,
+                               Image = s.Image,
+                               Price = s.Price,
+                               DiscountPrice = s.SalePrice,
+                               BrandName = st.BrandName,
+                               Quantity = carts.Quantity ?? 0
+                           };
+                var check = data.AsQueryable();
+                check = keyword != null ? check.Where(i => i.ProductName.Contains(keyword)) : check;
+                return check.ToList();
+            }    
 
         }
         public async Task<CartResultDTO> CartResultSum(Guid userId)
