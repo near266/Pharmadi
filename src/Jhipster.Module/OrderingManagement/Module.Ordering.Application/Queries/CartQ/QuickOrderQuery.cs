@@ -12,6 +12,8 @@ namespace Module.Ordering.Application.Queries.CartQ
     public class QuickOrderQuery:IRequest<List<ViewQuickOrder>>
     {
         public Guid userId { get; set; }
+        public int Type { get;set; }
+        public string Keyword { get;set; }
     }
     public class QuickOrderQueryHandler : IRequestHandler<QuickOrderQuery, List<ViewQuickOrder>>
     {
@@ -23,7 +25,7 @@ namespace Module.Ordering.Application.Queries.CartQ
 
         public async Task<List<ViewQuickOrder>> Handle(QuickOrderQuery request, CancellationToken cancellationToken)
         {
-            return await _cartRepostitory.ViewQuick(request.userId);
+            return await _cartRepostitory.ViewQuick(request.userId,request.Type,request.Keyword);
         }
     }
 }
