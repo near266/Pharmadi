@@ -71,16 +71,23 @@ namespace Jhipster
 
             services
                 .AddMailModule(Configuration);
+            //services.AddCors(options =>
+            //{
+            //    options.AddDefaultPolicy(builder =>
+            //    {
+            //        builder.AllowAnyOrigin()
+            //            .AllowAnyMethod()
+            //            .AllowAnyHeader();
+            //    });
+            //});
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
-                });
+                options.AddPolicy("AllowSpecificUrl",
+                    builder => builder.WithOrigins("https://pharmadi.com.vn")
+                    .WithOrigins("https://api.pharmadi.com.vn")
+                    .WithOrigins("https://adm.pharmadi.com.vn"));
             });
-            
+
         }
 
 
