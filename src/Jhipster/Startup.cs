@@ -10,15 +10,23 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Jhipster.Infrastructure.Shared;
 using Serilog;
-using Module.Catalog.Services;
-using ProtoBuf.Grpc.Server;
 using Module.Catalog;
 using MediatR;
 using System.Reflection;
-using BFF.Web;
-using Module.Factor;
-using Module.Factor.Services;
 using Module.Permission;
+using Module.Ordering;
+using Module.Factor;
+using Jhipster.gRPC.Contracts.Shared.Identity;
+using Jhipster.gRPC.Contracts.Shared.Services;
+using Module.Factor.Application.Persistences;
+using Module.Factor.Infrastructure.Persistence.Repositories;
+using Jhipster.Domain.Repositories.Interfaces;
+using Jhipster.Infrastructure.Data.Repositories;
+using Module.Redis;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Jhipster.Crosscutting.Constants;
 
 [assembly: ApiController]
 
@@ -41,7 +49,7 @@ namespace Jhipster
             services
                 .AddAppSettingsModule(Configuration);
 
-            
+
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
 
             AddDatabase(services);
@@ -63,6 +71,23 @@ namespace Jhipster
 
             services
                 .AddMailModule(Configuration);
+            //services.AddCors(options =>
+            //{
+            //    options.AddDefaultPolicy(builder =>
+            //    {
+            //        builder.AllowAnyOrigin()
+            //            .AllowAnyMethod()
+            //            .AllowAnyHeader();
+            //    });
+            //});
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificUrl",
+                    builder => builder.WithOrigins("https://pharmadi.com.vn")
+                    .WithOrigins("https://api.pharmadi.com.vn")
+                    .WithOrigins("https://adm.pharmadi.com.vn"));
+            });
+
         }
 
 
@@ -79,8 +104,10 @@ namespace Jhipster
                 .UseApplicationWeb(env)
                 .UseApplicationDatabase(serviceProvider, env)
                 .UseApplicationIdentity(serviceProvider);
+            app
+                .UseCors();
 
-            AddAppModule(app);
+
         }
 
         protected virtual void AddDatabase(IServiceCollection services)
@@ -92,43 +119,26 @@ namespace Jhipster
         {
             // General Infras
             services.AddSharedInfrastructure(Configuration);
-
+            services.AddScoped(typeof(IJwtRepository), typeof(JwtRepository));
             // Module
             services.AddCatalogModule(Configuration);
             services.AddFactorModule(Configuration);
             services.AddPermissionModule(Configuration);
-            //services.AddOrderingModule(Configuration);
+            services.AddOrderingModule(Configuration);
+            services.AddScoped(typeof(IAccountService), typeof(AccountServices));
+
             //services.AddBasketModule(Configuration);
             //// Redis
-            //services.AddRedisModule(Configuration);
+            services.AddRedisModule(Configuration);
+
         }
 
-        protected virtual void AddAppModule(IApplicationBuilder app)
-        {
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGrpcService<CategoryService>();
-                endpoints.MapGrpcService<MerchantService>();
-                endpoints.MapGrpcService<BrandService>();
-                endpoints.MapGrpcService<ProductService>();
-                endpoints.MapGrpcService<GroupBrandService>();
-                endpoints.MapGrpcService<LabelService>();
-                endpoints.MapGrpcService<TagService>();
 
-                //endpoints.MapGrpcService<BasketService>();
-                //endpoints.MapGrpcService<CatalogService>();
-
-                //endpoints.MapGrpcService<OrderingService>();
-                //endpoints.MapGrpcService<OrderItemService>();
-                ////endpoints.MapGrpcReflectionService();
-                endpoints.MapCodeFirstGrpcReflectionService();
-            });
-        }
 
         protected virtual void AddBffGateway(IServiceCollection services)
         {
-            services.AddBFFWebModule(Configuration);
-            services.AddCodeFirstGrpcReflection();
+            //services.AddBFFWebModule(Configuration);
+            //services.AddCodeFirstGrpcReflection();
         }
     }
 }

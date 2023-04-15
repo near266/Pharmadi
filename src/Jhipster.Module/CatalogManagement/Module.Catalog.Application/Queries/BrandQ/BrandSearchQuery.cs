@@ -2,7 +2,8 @@
 using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
-using Module.Catalog.Shared.Utilities;
+
+
 
 namespace Module.Catalog.Application.Queries.BrandQ
 {

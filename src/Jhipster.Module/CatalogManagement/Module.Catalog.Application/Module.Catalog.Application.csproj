@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Jhipster.Crosscutting\Jhipster.Crosscutting.csproj" />
     <ProjectReference Include="..\Module.Catalog.Domain\Module.Catalog.Domain.csproj" />
     <ProjectReference Include="..\Module.Catalog.Shared\Module.Catalog.Shared.csproj" />
   </ItemGroup>

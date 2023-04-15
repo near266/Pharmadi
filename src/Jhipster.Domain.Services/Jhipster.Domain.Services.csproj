@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>Jhipster.Domain.Services</RootNamespace>
         <OutputType>Library</OutputType>
     </PropertyGroup>
@@ -14,10 +14,14 @@
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
 		<PackageReference Include="RestSharp" Version="108.0.2" />
 		<PackageReference Include="RestClient" Version="3.1024.23771" />
+		<PackageReference Include="Microsoft.NETCore.Targets" Version="4.3.0" PrivateAssets="all" />
+
 	</ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Jhipster.gRPC.Contracts.Shared\Jhipster.gRPC.Contracts.Shared.csproj" />
         <ProjectReference Include="..\Jhipster.Infrastructure\Jhipster.Infrastructure.csproj" />
+		<PackageReference Include="Microsoft.NETCore.Targets" Version="4.3.0" PrivateAssets="all" />
         <ProjectReference Include="..\Jhipster.Domain\Jhipster.Domain.csproj" />
         <ProjectReference Include="..\Jhipster.Crosscutting\Jhipster.Crosscutting.csproj" />
     </ItemGroup>

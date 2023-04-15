@@ -6,16 +6,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Commands.LabelCm
 {
     public class LabelAddCommand : IRequest<int>
     {
+        [JsonIgnore]
         public Guid Id { get; set; }
         public string LabelName { get; set; }
+        [JsonIgnore]
         public Guid? CreatedBy { get; set; }
+        [JsonIgnore]
         public DateTime CreatedDate { get; set; }
+        public bool? Archived { get; set; }
     }
     public class LabelAddCommandHandler : IRequestHandler<LabelAddCommand, int>
     {

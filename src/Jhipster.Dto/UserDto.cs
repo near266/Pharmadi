@@ -63,5 +63,6 @@ namespace Jhipster.Dto
         public DateTime? DOB { get; set; }
         public string? ZipCode { get; set; }
         public string? Decription { get; set; }
+        public string Password { get; set; }
     }
 }

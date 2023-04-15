@@ -21,6 +21,9 @@ using Jhipster.Dto.Authentication;
 using Newtonsoft.Json;
 using System;
 using Module.Factor.Infrastructure.Persistences;
+using Jhipster.DTO;
+using System.Drawing.Printing;
+using Jhipster.Service.Utilities;
 
 namespace Jhipster.Controllers
 {
@@ -69,7 +72,7 @@ namespace Jhipster.Controllers
             if (await _userManager.FindByEmailAsync(userDto.Email.ToLowerInvariant()) != null)
                 throw new EmailAlreadyUsedException();
 
-            var newUser = await _userService.CreateUser(_mapper.Map<User>(userDto));
+            var newUser = await _userService.CreateUser(_mapper.Map<User>(userDto), userDto.Password);
             if (!string.IsNullOrEmpty(userDto.Email))
             {
                 await _mailService.SendCreationEmail(newUser);
@@ -126,17 +129,32 @@ namespace Jhipster.Controllers
         /// </summary>
         /// <param name="pageable"></param>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers(IPageable pageable)
+        [HttpPost("GetAllUsers")]
+        public async Task<IActionResult> GetAllUsers([FromBody] ViewEmployeeDTO rq)
         {
             _log.LogDebug("REST request to get a page of Users");
-            var page = await _userManager.Users
+            //var page = await _userManager.Users
+            //    .Include(it => it.UserRoles)
+            //    .ThenInclude(r => r.Role)
+            //    .UsePageableAsync(pageable);
+            //var userDtos = page.Content.Select(user => _mapper.Map<UserDto>(user));
+            //var headers = page.GeneratePaginationHttpHeaders();
+            //return Ok(userDtos).WithHeaders(headers);
+            var page = _userManager.Users
                 .Include(it => it.UserRoles)
-                .ThenInclude(r => r.Role)
-                .UsePageableAsync(pageable);
-            var userDtos = page.Content.Select(user => _mapper.Map<UserDto>(user));
-            var headers = page.GeneratePaginationHttpHeaders();
-            return Ok(userDtos).WithHeaders(headers);
+                .ThenInclude(r => r.Role).AsQueryable();
+            page = rq.Name != null ? page.Where(i => i.UserName.Contains(rq.Name)) : page;
+            //page = rq.FromDate != null ? page.Where(i => i.CreatedDate > rq.FromDate) : page;
+            //page = rq.ToDate != null ? page.Where(i => i.CreatedDate < rq.ToDate) : page;
+            page = rq.PhoneNumber != null ? page.Where(i => i.PhoneNumber.Contains( rq.PhoneNumber)) : page;
+            page = rq.Email != null ? page.Where(i => i.Email.Contains( rq.Email) ): page;
+
+            var value = _mapper.Map<List<UserDto>>(page).Skip(rq.PageSize * (rq.Page - 1))
+                        .Take(rq.PageSize); ;
+            var key = new PagedList<UserDto>();
+            key.Data = value;
+            key.TotalCount = page.Count();
+            return Ok(key);
         }
 
         /// <summary>
@@ -174,13 +192,17 @@ namespace Jhipster.Controllers
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
-        [HttpDelete("{login}")]
+        [HttpDelete("login")]
         [Authorize(Roles = RolesConstants.ADMIN)]
-        public async Task<IActionResult> DeleteUser([FromRoute] string login)
+        public async Task<IActionResult> DeleteUser([FromBody] List<string> login)
         {
             _log.LogDebug($"REST request to delete User : {login}");
-            await _userService.DeleteUser(login);
-            return NoContent().WithHeaders(HeaderUtil.CreateEntityDeletionAlert("userManagement.deleted", login));
+            foreach (var item in login)
+            {
+                await _userService.DeleteUser(item);
+            }
+            //return NoContent().WithHeaders(HeaderUtil.CreateEntityDeletionAlert("userManagement.deleted", login));
+            return Ok(1);
         }
 
         /// <summary>
@@ -218,19 +240,46 @@ namespace Jhipster.Controllers
         {
             _log.LogDebug($"REST request to get list staff");
 
-            var result = await _userManager.GetUsersInRoleAsync("ROlE_STAFF")
+            var result = await _userManager.GetUsersInRoleAsync(RolesConstants.ADMIN);
+            var resultausersup = await _userManager.GetUsersInRoleAsync(RolesConstants.SUPERVIOR);
             //.Include(it => it.UserRoles)
             //.ThenInclude(r => r.Role)
             //.ToListAsync()
             ;
             var userDto = _mapper.Map<List<UserDto>>(result);
+            var supDto = _mapper.Map<List<UserDto>>(resultausersup);
+
             foreach (var user in userDto)
             {
-                user.Roles.Add("ROLE_STAFF");
+                user.Roles.Add(RolesConstants.ADMIN);
             }
+            foreach (var user in supDto)
+            {
+                user.Roles.Add(RolesConstants.SUPERVIOR);
+            }
+            var value = userDto.Union(supDto).ToList();
             //.ThenInclude(r => r.Role)
             //.ToListAsync()
-            return Ok(userDto);
+            return Ok(value);
+        }
+        /// <summary>
+        /// thêm role cho user
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("UpdateRole")]
+        [Authorize]
+        [Authorize(Roles = RolesConstants.ADMIN)]
+        public async Task<IActionResult> UpdateRole([FromBody] UpdateRoleDTORq rq)
+        {
+            _log.LogDebug($"REST request to update role");
+            foreach (var item in rq.listusers)
+
+            {
+                var user = await _userManager.Users.Where(i => i.Id == item.user).FirstOrDefaultAsync();
+                await _userService.UpdateRoles(user, item.roles);
+            }
+            return Ok(1);
         }
     }
 }

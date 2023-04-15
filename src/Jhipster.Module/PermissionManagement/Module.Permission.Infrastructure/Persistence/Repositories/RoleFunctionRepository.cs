@@ -84,7 +84,7 @@ namespace Module.Permission.Infrastructure.Persistence.Repositories
             }
 
             var roleFunction = await roleFunctionQuery
-                .Skip(pagesize * page)
+                .Skip(pagesize * (page-1))
                 .Take(pagesize)
                 .OrderByDescending(i => i.CreatedDate)
                 .ToListAsync();

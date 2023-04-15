@@ -1,10 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
 using Module.Catalog.Domain.Extensions;
-using Module.Catalog.Services;
 using Module.Catalog.Infrastructure.Extensions;
-using Module.Catalog.gRPC;
 
 namespace Module.Catalog
 {
@@ -16,19 +13,7 @@ namespace Module.Catalog
                 .AddBaseCore()
                 .AddBaseInfrastructure(configuration);
 
-            services.AddCataloggRPCModule(configuration);
-
             return services;
-        }
-
-        public static IApplicationBuilder AddCatgaloggRPCModule(this IApplicationBuilder app)
-        {
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGrpcService<CategoryService>();
-            });
-
-            return app;
         }
     }
 }

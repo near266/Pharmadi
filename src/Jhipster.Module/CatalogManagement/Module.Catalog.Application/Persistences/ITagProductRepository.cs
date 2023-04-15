@@ -5,7 +5,6 @@ namespace Module.Catalog.Application.Persistences
     public interface ITagProductRepository
     {
         Task<int> Add(TagProduct request);
-        Task<int> Update(TagProduct request);
-        Task<int> Delete(Guid id);
+        Task<int> Delete(Guid productId);
     }
 }

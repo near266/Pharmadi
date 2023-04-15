@@ -13,6 +13,7 @@
         <ProjectReference Include="..\Jhipster.Module\CatalogManagement\Module.Catalog.Domain\Module.Catalog.Domain.csproj" />
         <ProjectReference Include="..\Jhipster.Module\FactorManagement\Module.Factor.Domain\Module.Factor.Domain.csproj" />
         <ProjectReference Include="..\Jhipster.Module\OrderingManagement\Module.Ordering.Domain\Module.Ordering.Domain.csproj" />
+        <ProjectReference Include="..\Jhipster.Module\PermissionManagement\Module.Permission.Core\Module.Permission.Core.csproj" />
     </ItemGroup>
 
 	<ItemGroup>

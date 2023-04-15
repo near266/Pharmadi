@@ -9,7 +9,11 @@ namespace Module.Catalog.Domain.Entities
         [MaxLength(100)]
         //[Column("Ten thuong hieu")]
         public string BrandName { get; set; }
-        public Guid GroupBrandId { get; set; }
+        public Guid? GroupBrandId { get; set; }
+        public string LogoBrand { get; set; }
+        public string Intro { get; set; }
+        public bool? Pin { get; set; }
+        public bool? Archived { get; set; }
         public GroupBrand? GroupBrand { get; set; }
     }
 }

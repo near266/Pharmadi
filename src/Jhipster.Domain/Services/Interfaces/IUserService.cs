@@ -11,7 +11,7 @@ namespace Jhipster.Domain.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<User> CreateUser(User userToCreate);
+        Task<User> CreateUser(User userToCreate,string Password);
         IEnumerable<string> GetAuthorities();
         Task DeleteUser(string login);
         Task<User> UpdateUser(User userToUpdate);
@@ -26,5 +26,7 @@ namespace Jhipster.Domain.Services.Interfaces
         Task<List<ForgotPasswordMethodRsDTO>> ForgotPasswordMethod(string login);
         Task<User> RequestOTPFWPass(string login, string type, string value);
         Task<ForgotPasswordCompleteRpDTO> CompleteFwPass(string login, string key, string type);
+        Task deleteUserByMerchantId(Guid id);
+        Task UpdateRoles(User user, IEnumerable<string> roles);
     }
 }

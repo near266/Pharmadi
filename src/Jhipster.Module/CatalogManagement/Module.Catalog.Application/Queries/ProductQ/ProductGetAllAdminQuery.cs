@@ -4,13 +4,15 @@ using AutoMapper;
 using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
-using Module.Catalog.Shared.Utilities;
+using Jhipster.Service.Utilities;
 
 namespace Module.Catalog.Application.Queries.ProductQ
 {
     public class ProductGetAllAdminQuery : IRequest<PagedList<Product>>
     {
-        public string? keyword { get; set; }    
+        public string? SKU { get; set; }    
+        public string? ProductName { get; set; }
+        public int? status { get; set; }
         public int page { get; set; }
         public int pageSize { get; set; }
     }
@@ -25,7 +27,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
         }
         public async Task<PagedList<Product>> Handle(ProductGetAllAdminQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.GetAllAdmin(request.page, request.pageSize,request.keyword);
+            return await _repo.GetAllAdmin(request.page, request.pageSize,request.SKU,request.ProductName,request.status);
         }
     }
 

@@ -10,11 +10,12 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Module.Ordering.Domain.Entities;
 using Module.Catalog.Domain.Entities;
+using Module.Permission.Core.Entities;
 
 namespace Jhipster.Infrastructure.Data
 {
     public class ApplicationDatabaseContext : IdentityDbContext<
-        User, Role, string,
+        User, Domain.Role, string,
         IdentityUserClaim<string>,
         UserRole,
         IdentityUserLogin<string>,
@@ -50,12 +51,23 @@ namespace Jhipster.Infrastructure.Data
 
         public DbSet<Cart> Carts { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Ordering> Orderings { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        public DbSet<HistoryOrder> HistoryOrders { get; set; }
+        public DbSet<OrderStatus> OrderStatuses { get; set; }
+        public DbSet<ProductSale> ProductSales { get; set; }
         #endregion
+
 
         #region 3. Factor module
         public DbSet<Module.Factor.Domain.Entities.Merchant> Merchants { get; set; }
         #endregion
+
+        #region 4. Permission module
+        public DbSet<Function> Functions { get; set; }
+        public DbSet<FunctionType> FunctionTypes { get; set; }
+        public DbSet<RoleFunction> RoleFunctions { get; set; }
+        #endregion
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -63,7 +75,7 @@ namespace Jhipster.Infrastructure.Data
             builder.Entity<UserRole>().Ignore(c => c.User);
             // Rename AspNet default tables
             builder.Entity<User>().ToTable("Users");
-            builder.Entity<Role>().ToTable("Roles");
+            builder.Entity<Domain.Role>().ToTable("Roles");
             builder.Entity<UserRole>().ToTable("UserRoles");
             builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
             builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
@@ -92,68 +104,13 @@ namespace Jhipster.Infrastructure.Data
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Ordering>()
-               .HasMany(e => e.OrderItems)
-               .WithOne()
-               .HasForeignKey(e => e.OrderingId)
-               .IsRequired()
-               .OnDelete(DeleteBehavior.Cascade);
+            //builder.Entity<PurchaseOrder>()
+            //   .HasMany(e => e.OrderItems)
+            //   .WithOne()
+            //   .HasForeignKey(e => e.PurchaseOrderId)
+            //   .IsRequired()
+            //   .OnDelete(DeleteBehavior.Cascade);
 
-            #region 1.Config Product
-
-            builder.Entity<Module.Catalog.Domain.Entities.Product>(u =>
-            {
-                u.ToTable("Products");
-                u.Property(c => c.ProductName).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.ProductName));
-                u.Property(c => c.SKU).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.SKU));
-                u.Property(c => c.Function).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.Function));
-                u.Property(c => c.ListPrice).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.ListPrice));
-                u.Property(c => c.SalePrice).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.SalePrice));
-                u.Property(c => c.UnitName).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.UnitName));
-                u.Property(c => c.Description).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.Description));
-                
-            });
-            builder.Entity<Module.Ordering.Domain.Entities.Product>(u =>
-            {
-                u.ToTable("Products");
-                u.Property(c => c.ProductName).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.ProductName));
-                u.Property(c => c.SKU).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.SKU));
-                u.Property(c => c.Function).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.Function));
-                u.Property(c => c.ListPrice).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.ListPrice));
-                u.Property(c => c.SalePrice).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.SalePrice));
-                u.Property(c => c.UnitName).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.UnitName));
-                u.Property(c => c.Description).HasColumnName(nameof(Module.Catalog.Domain.Entities.Product.Description));
-                u.HasOne<Module.Catalog.Domain.Entities.Product>().WithOne().HasForeignKey<Module.Catalog.Domain.Entities.Product>(e => e.Id);
-            });
-
-            #endregion
-
-            #region 2. Config Merchant
-            builder.Entity<Module.Factor.Domain.Entities.Merchant>(u =>
-            {
-                u.ToTable("Merchants");
-                u.Property(c => c.TaxCode).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.TaxCode));
-                u.Property(c => c.MerchantName).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.MerchantName));
-                u.Property(c => c.PhoneNumber).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.PhoneNumber));
-                u.Property(c => c.Address).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.Address));
-                u.Property(c => c.Location).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.Location));
-                u.Property(c => c.ContactName).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.ContactName));
-                u.Property(c => c.GPPNumber).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.GPPNumber));
-            });
-            builder.Entity<Module.Ordering.Domain.Entities.Merchant>(u =>
-            {
-                u.ToTable("Merchants");
-                u.Property(c => c.TaxCode).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.TaxCode));
-                u.Property(c => c.MerchantName).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.MerchantName));
-                u.Property(c => c.PhoneNumber).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.PhoneNumber));
-                u.Property(c => c.Address).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.Address));
-                u.Property(c => c.Location).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.Location));
-                u.Property(c => c.ContactName).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.ContactName));
-                u.Property(c => c.GPPNumber).HasColumnName(nameof(Module.Factor.Domain.Entities.Merchant.GPPNumber));
-                u.HasOne<Module.Factor.Domain.Entities.Merchant>().WithOne().HasForeignKey<Module.Factor.Domain.Entities.Merchant>(e => e.Id);
-            });
-
-            #endregion
         }
 
         /// <summary>

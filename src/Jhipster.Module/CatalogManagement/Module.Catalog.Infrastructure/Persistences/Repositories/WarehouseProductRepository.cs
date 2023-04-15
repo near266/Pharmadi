@@ -30,7 +30,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             return 0;
         }
-            public async Task<int> Update(WarehouseProduct request)
+        public async Task<int> Update(WarehouseProduct request)
         {
             var old = await _context.WarehouseProducts.FirstOrDefaultAsync(i => i.Id.Equals(request.Id));
             if (old != null)
@@ -41,6 +41,17 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 return await _context.SaveChangesAsync(default);
             }
             return 0;
+        }
+        public async Task<int> CountProduct(Guid productId)
+        {
+            var quantity = _context.WarehouseProducts.Where(i=>i.ProductId==productId).Count();
+            return quantity;
+        }
+        public async Task<IEnumerable<WarehouseProduct>> ListLotDateByProduct(Guid id)
+        {
+            var query = _context.WarehouseProducts.Where(i => i.ProductId.Equals(id)).OrderBy(i=>i.DateExpire).AsEnumerable();
+        
+            return query;
         }
     }
 }

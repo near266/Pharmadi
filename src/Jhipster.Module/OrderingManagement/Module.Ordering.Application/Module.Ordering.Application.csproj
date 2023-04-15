@@ -12,7 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Jhipster.Crosscutting\Jhipster.Crosscutting.csproj" />
     <ProjectReference Include="..\Module.Ordering.Domain\Module.Ordering.Domain.csproj" />
+    <ProjectReference Include="..\Module.Ordering.Shared\Module.Ordering.Shared.csproj" />
   </ItemGroup>
 
 </Project>

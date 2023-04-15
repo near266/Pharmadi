@@ -6,6 +6,6 @@ namespace Module.Catalog.Application.Persistences
     {
         Task<int> Add(CategoryProduct request);
         Task<int> Update(CategoryProduct request);
-        Task<int> Delete(Guid Id);
+        Task<int> Delete(Guid productid, Guid categoryId);
     }
 }

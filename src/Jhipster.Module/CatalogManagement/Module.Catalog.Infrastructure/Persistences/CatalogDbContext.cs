@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Module.Catalog.Domain.Abstractions;
 using Module.Catalog.Domain.Entities;
+using Module.Ordering.Domain.Entities;
 
 namespace Module.Catalog.Infrastructure.Persistence
 {
@@ -19,6 +20,8 @@ namespace Module.Catalog.Infrastructure.Persistence
         public DbSet<CategoryProduct> CategoryProducts { get; set; }
         public DbSet<WarehouseProduct> WarehouseProducts { get; set; }
         public DbSet<PostContent> PostContents { get; set; }
+        public DbSet<ProductSale> ProductSales { get; set; }
+        public DbSet<Cart> Carts { get; set; }
 
         public CatalogDbContext(DbContextOptions<CatalogDbContext> options) : base(options)
         {

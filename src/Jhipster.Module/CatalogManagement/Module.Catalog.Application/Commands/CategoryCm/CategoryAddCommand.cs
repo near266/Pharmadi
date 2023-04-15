@@ -2,17 +2,14 @@
 using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Module.Catalog.Application.Commands.CategoryCm
 {
     public class CategoryAddCommand: IRequest<int>
     {
+        [JsonIgnore]
         [Required(ErrorMessage = "{0} is required.")]
         public Guid Id { get; set; }
         [Required(ErrorMessage = "{0} is required.")]
@@ -20,7 +17,11 @@ namespace Module.Catalog.Application.Commands.CategoryCm
         public string? Descripton { get; set; }
         public Guid? ParentId { get; set; }
         public bool IsLeaf { get; set; }
+        [JsonIgnore]
+
         public Guid? CreatedBy { get; set; }
+        [JsonIgnore]
+
         public DateTime CreatedDate { get; set; }
     }
     public class CategoryAddCommandHandler: IRequestHandler<CategoryAddCommand, int>

@@ -2,7 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
-using Module.Catalog.Shared.Utilities;
+using Jhipster.Service.Utilities;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -50,7 +51,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<GroupBrand>();
             var query1 = _context.GroupBrands.AsQueryable();
             var data = await query1
-                        .Skip(pageSize * page)
+                        .Skip(pageSize *( page-1))
                         .Take(pageSize)
                         .ToListAsync();
             result.Data = data;
@@ -60,11 +61,30 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<GroupBrand>> Search(string? keyword)
         {
+            var query = _context.GroupBrands.AsQueryable();
+            if(keyword != null)
+            {
+
             keyword = keyword.ToLower();
-            var query = await _context.GroupBrands.Where(i => i.GroupBrandName.ToLower().Contains(keyword))
-                        .ToListAsync();
-            return query;
+             query = query.Where(i => i.GroupBrandName.ToLower().Contains(keyword));
+            }
+            var result = query.AsEnumerable();
+            return result;
         }
 
+        public async Task<int> PinGroup(Guid Id, bool? Pin)
+        {
+            var check = await _context.GroupBrands.FirstOrDefaultAsync(i=>i.Id.Equals(Id));
+            if (check != null)
+            {
+                if (check.Pin == null) { check.Pin=false; }
+                check.Pin = Pin;
+                await _context.SaveChangesAsync();
+                return 1;
+            }
+            return 0;
+        }
+        
+        
     }
 }

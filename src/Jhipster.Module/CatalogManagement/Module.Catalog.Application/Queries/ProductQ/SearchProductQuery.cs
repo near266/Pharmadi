@@ -4,20 +4,23 @@ using AutoMapper;
 using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
-using Module.Catalog.Shared.Utilities;
+using Jhipster.Service.Utilities;
+using Module.Catalog.Shared.DTOs;
 
 namespace Module.Catalog.Application.Queries.ProductQ
 {
-    public class SearchProductQuery : IRequest<PagedList<Product>>
+    public class SearchProductQuery : IRequest<PagedList<ProductSearchDTO>>
     {
         public string? keyword { get; set; }
-        public List<Guid?>? categoryIds { get; set; }
+        public List<Guid> categoryIds { get; set; }
+        public List<Guid> cateLevel2Ids { get; set; }
         public List<Guid?>? brandIds { get; set; }
         public List<Guid?>? tagIds { get; set; }
         public int page { get; set; }
         public int pageSize { get; set; }
+        public Guid? userId { get; set; }
     }
-    public class SearchProductQueryHandler : IRequestHandler<SearchProductQuery, PagedList<Product>>
+    public class SearchProductQueryHandler : IRequestHandler<SearchProductQuery, PagedList<ProductSearchDTO>>
     {
         private readonly IProductRepository _repo;
         private readonly IMapper _mapper;
@@ -26,9 +29,9 @@ namespace Module.Catalog.Application.Queries.ProductQ
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<PagedList<Product>> Handle(SearchProductQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<ProductSearchDTO>> Handle(SearchProductQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.SearchProduct(request.keyword, request.categoryIds, request.brandIds, request.tagIds,request.page, request.pageSize);
+            return await _repo.SearchProduct(request.keyword, request.categoryIds,request.cateLevel2Ids, request.brandIds, request.tagIds,request.page, request.pageSize, request.userId);
         }
     }
 

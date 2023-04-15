@@ -282,6 +282,9 @@ namespace Jhipster.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<bool?>("Archived")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("BrandName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -293,8 +296,12 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("GroupBrandId")
+                    b.Property<Guid?>("GroupBrandId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Intro")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(100)
@@ -302,6 +309,13 @@ namespace Jhipster.Infrastructure.Migrations
 
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LogoBrand")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("Pin")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -343,8 +357,8 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ParentId")
-                        .HasColumnType("text");
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -401,6 +415,12 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("LogoGroupBrand")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("Pin")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.ToTable("GroupBrands");
@@ -411,6 +431,9 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<bool?>("Archived")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
@@ -505,8 +528,17 @@ namespace Jhipster.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<bool?>("Archived")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid?>("BrandId")
                         .HasColumnType("uuid");
+
+                    b.Property<bool?>("CanOrder")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("text");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
@@ -515,16 +547,33 @@ namespace Jhipster.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
-                        .HasColumnName("Description");
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Dosage")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DosageForms")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Effect")
+                        .HasColumnType("text");
 
                     b.Property<string>("Function")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("Function");
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<bool?>("HideProduct")
+                        .HasColumnType("boolean");
+
+                    b.Property<List<string>>("Image")
+                        .HasColumnType("text[]");
+
+                    b.Property<string>("Industry")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Ingredient")
+                        .HasColumnType("text");
 
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(100)
@@ -533,42 +582,43 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<decimal?>("ListPrice")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("numeric")
-                        .HasColumnName("ListPrice");
+                    b.Property<int?>("Number")
+                        .HasColumnType("integer");
 
                     b.Property<Guid?>("PostContentId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Preserve")
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("numeric");
+
                     b.Property<string>("ProductName")
                         .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("ProductName");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("SKU")
                         .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
-                        .HasColumnName("SKU");
+                        .HasColumnType("character varying(10)");
 
                     b.Property<decimal?>("SalePrice")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("numeric")
-                        .HasColumnName("SalePrice");
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Specification")
+                        .HasColumnType("text");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer")
-                        .HasColumnName("Product_Status");
+                        .HasColumnType("integer");
 
                     b.Property<string>("UnitName")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("UnitName");
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Usage")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -576,7 +626,7 @@ namespace Jhipster.Infrastructure.Migrations
 
                     b.HasIndex("PostContentId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Module.Catalog.Domain.Entities.Tag", b =>
@@ -584,6 +634,9 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<bool?>("Archived")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
@@ -669,20 +722,21 @@ namespace Jhipster.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<int>("AvailabelQuantity")
-                        .HasColumnType("integer")
-                        .HasColumnName("Ton kho");
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DateExpire")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Lot")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("WarehouseId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("WarehouseId");
 
                     b.ToTable("WarehouseProducts");
                 });
@@ -694,18 +748,30 @@ namespace Jhipster.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
-                        .HasColumnName("Address");
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<int?>("AddressStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Branch")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Channel")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("City")
+                        .HasColumnType("text");
 
                     b.Property<string>("ContactName")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("ContactName");
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ContractNumber")
+                        .HasColumnType("text");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
@@ -713,11 +779,18 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("District")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<List<string>>("GPPImage")
+                        .HasColumnType("text[]");
+
                     b.Property<string>("GPPNumber")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("GPPNumber");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(100)
@@ -726,35 +799,44 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("LicenseDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LicensePlace")
+                        .HasColumnType("text");
+
                     b.Property<string>("Location")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
-                        .HasColumnName("Location");
+                        .HasColumnType("character varying(2000)");
 
                     b.Property<string>("MerchantName")
                         .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("MerchantName");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("text")
-                        .HasColumnName("PhoneNumber");
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Rank")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SubDistrict")
+                        .HasColumnType("text");
 
                     b.Property<string>("TaxCode")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
-                        .HasColumnName("TaxCode");
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("TypeCustomer")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Merchants", (string)null);
+                    b.ToTable("Merchants");
                 });
 
             modelBuilder.Entity("Module.Ordering.Domain.Entities.Cart", b =>
@@ -763,13 +845,19 @@ namespace Jhipster.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ProductId")
+                    b.Property<bool?>("IsChoice")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("ProductId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int?>("Quantity")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -779,64 +867,126 @@ namespace Jhipster.Infrastructure.Migrations
                     b.ToTable("Carts");
                 });
 
-            modelBuilder.Entity("Module.Ordering.Domain.Entities.Merchant", b =>
+            modelBuilder.Entity("Module.Ordering.Domain.Entities.HistoryOrder", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
-                        .HasColumnName("Address");
+                        .HasColumnType("text");
 
                     b.Property<string>("ContactName")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContractNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastModifiedBy")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("ContactName");
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<string>("GPPNumber")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("GPPNumber");
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
-                        .HasColumnName("Location");
+                    b.Property<Guid>("MerchantId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("MerchantName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OrderCode")
                         .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("MerchantName");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("text")
-                        .HasColumnName("PhoneNumber");
+                        .HasColumnType("text");
 
-                    b.Property<string>("TaxCode")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
-                        .HasColumnName("TaxCode");
+                    b.Property<decimal>("ShippingFee")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("TotalPayment")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Merchants", (string)null);
+                    b.ToTable("HistoryOrders");
                 });
 
-            modelBuilder.Entity("Module.Ordering.Domain.Entities.Ordering", b =>
+            modelBuilder.Entity("Module.Ordering.Domain.Entities.OrderItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PurchaseOrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("PurchaseOrderId");
+
+                    b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("Module.Ordering.Domain.Entities.OrderStatus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PurchaseOrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("dateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderStatuses");
+                });
+
+            modelBuilder.Entity("Module.Ordering.Domain.Entities.ProductSale", b =>
+                {
+                    b.Property<Guid>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("dateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("ProductId");
+
+                    b.ToTable("ProductSales");
+                });
+
+            modelBuilder.Entity("Module.Ordering.Domain.Entities.PurchaseOrder", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -858,6 +1008,10 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<Guid>("MerchantId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("OrderCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<decimal>("ShippingFee")
                         .HasColumnType("numeric");
 
@@ -874,92 +1028,119 @@ namespace Jhipster.Infrastructure.Migrations
 
                     b.HasIndex("MerchantId");
 
-                    b.ToTable("Orderings");
+                    b.ToTable("PurchaseOrders");
                 });
 
-            modelBuilder.Entity("Module.Ordering.Domain.Entities.OrderItem", b =>
+            modelBuilder.Entity("Module.Permission.Core.Entities.Function", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("OrderingId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<Guid>("OrderingId1")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderingId");
-
-                    b.HasIndex("OrderingId1");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrderItems");
-                });
-
-            modelBuilder.Entity("Module.Ordering.Domain.Entities.Product", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
-                        .HasColumnName("Description");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
-                    b.Property<string>("Function")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("Function");
+                    b.Property<Guid?>("FunctionTypeId")
+                        .HasColumnType("uuid");
 
-                    b.Property<decimal?>("ListPrice")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("numeric")
-                        .HasColumnName("ListPrice");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
+                    b.Property<string>("LastModifiedBy")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("ProductName");
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<string>("SKU")
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
-                        .HasColumnName("SKU");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<decimal?>("SalePrice")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("numeric")
-                        .HasColumnName("SalePrice");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UnitName")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("UnitName");
+                    b.Property<bool?>("Status")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.HasIndex("FunctionTypeId");
+
+                    b.ToTable("Functions");
+                });
+
+            modelBuilder.Entity("Module.Permission.Core.Entities.FunctionType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FunctionTypes");
+                });
+
+            modelBuilder.Entity("Module.Permission.Core.Entities.RoleFunction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("FunctionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("Status")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FunctionId");
+
+                    b.ToTable("RoleFunctions");
                 });
 
             modelBuilder.Entity("Jhipster.Domain.UserRole", b =>
@@ -1025,9 +1206,7 @@ namespace Jhipster.Infrastructure.Migrations
                 {
                     b.HasOne("Module.Catalog.Domain.Entities.GroupBrand", "GroupBrand")
                         .WithMany()
-                        .HasForeignKey("GroupBrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GroupBrandId");
 
                     b.Navigation("GroupBrand");
                 });
@@ -1092,12 +1271,6 @@ namespace Jhipster.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("BrandId");
 
-                    b.HasOne("Module.Ordering.Domain.Entities.Product", null)
-                        .WithOne()
-                        .HasForeignKey("Module.Catalog.Domain.Entities.Product", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Module.Catalog.Domain.Entities.PostContent", "PostContent")
                         .WithMany()
                         .HasForeignKey("PostContentId");
@@ -1129,45 +1302,43 @@ namespace Jhipster.Infrastructure.Migrations
             modelBuilder.Entity("Module.Catalog.Domain.Entities.WarehouseProduct", b =>
                 {
                     b.HasOne("Module.Catalog.Domain.Entities.Product", "Product")
-                        .WithMany()
+                        .WithMany("WarehouseProducts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Module.Catalog.Domain.Entities.Warehouse", "Warehouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Product");
-
-                    b.Navigation("Warehouse");
-                });
-
-            modelBuilder.Entity("Module.Factor.Domain.Entities.Merchant", b =>
-                {
-                    b.HasOne("Module.Ordering.Domain.Entities.Merchant", null)
-                        .WithOne()
-                        .HasForeignKey("Module.Factor.Domain.Entities.Merchant", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Module.Ordering.Domain.Entities.Cart", b =>
                 {
-                    b.HasOne("Module.Ordering.Domain.Entities.Product", "Product")
+                    b.HasOne("Module.Catalog.Domain.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Module.Ordering.Domain.Entities.OrderItem", b =>
+                {
+                    b.HasOne("Module.Catalog.Domain.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Module.Ordering.Domain.Entities.PurchaseOrder", null)
+                        .WithMany("OrderItems")
+                        .HasForeignKey("PurchaseOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Module.Ordering.Domain.Entities.Ordering", b =>
+            modelBuilder.Entity("Module.Ordering.Domain.Entities.PurchaseOrder", b =>
                 {
-                    b.HasOne("Module.Ordering.Domain.Entities.Merchant", "Merchant")
+                    b.HasOne("Module.Factor.Domain.Entities.Merchant", "Merchant")
                         .WithMany()
                         .HasForeignKey("MerchantId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1176,29 +1347,22 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Navigation("Merchant");
                 });
 
-            modelBuilder.Entity("Module.Ordering.Domain.Entities.OrderItem", b =>
+            modelBuilder.Entity("Module.Permission.Core.Entities.Function", b =>
                 {
-                    b.HasOne("Module.Ordering.Domain.Entities.Ordering", null)
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Module.Permission.Core.Entities.FunctionType", "FunctionType")
+                        .WithMany("Function")
+                        .HasForeignKey("FunctionTypeId");
 
-                    b.HasOne("Module.Ordering.Domain.Entities.Ordering", "Ordering")
+                    b.Navigation("FunctionType");
+                });
+
+            modelBuilder.Entity("Module.Permission.Core.Entities.RoleFunction", b =>
+                {
+                    b.HasOne("Module.Permission.Core.Entities.Function", "Function")
                         .WithMany()
-                        .HasForeignKey("OrderingId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FunctionId");
 
-                    b.HasOne("Module.Ordering.Domain.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Ordering");
-
-                    b.Navigation("Product");
+                    b.Navigation("Function");
                 });
 
             modelBuilder.Entity("Jhipster.Domain.Role", b =>
@@ -1225,11 +1389,18 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Navigation("LabelProducts");
 
                     b.Navigation("TagProducts");
+
+                    b.Navigation("WarehouseProducts");
                 });
 
-            modelBuilder.Entity("Module.Ordering.Domain.Entities.Ordering", b =>
+            modelBuilder.Entity("Module.Ordering.Domain.Entities.PurchaseOrder", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("Module.Permission.Core.Entities.FunctionType", b =>
+                {
+                    b.Navigation("Function");
                 });
 #pragma warning restore 612, 618
         }

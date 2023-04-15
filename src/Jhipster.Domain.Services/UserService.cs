@@ -9,6 +9,7 @@ using Jhipster.Domain.Services.Interfaces;
 using Jhipster.Dto;
 using Jhipster.Dto.Authentication;
 using Jhipster.Service.Utilities;
+using LanguageExt.Pipes;
 using LanguageExt.UnitsOfMeasure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -36,9 +37,9 @@ namespace Jhipster.Domain.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public virtual async Task<User> CreateUser(User userToCreate)
+        public virtual async Task<User> CreateUser(User userToCreate,string Password)
         {
-            var password = RandomUtil.GeneratePassword();
+            var password = Password;
             var user = new User
             {
                 Id = userToCreate.Id,
@@ -55,7 +56,7 @@ namespace Jhipster.Domain.Services
                 Activated = true
             };
             await _userManager.CreateAsync(user);
-            //await CreateUserRoles(user, userToCreate.UserRoles.Select(iur => iur.Role.Name).ToHashSet());
+            await CreateUserRoles(user, userToCreate.UserRoles.Select(iur => iur.Role.Name).ToHashSet());
             _log.LogDebug($"Created Information for User: {user}");
             return user;
         }
@@ -142,13 +143,19 @@ namespace Jhipster.Domain.Services
             List<UserRole> userRoles = new List<UserRole>();
             userRoles.Add(new UserRole
             {
+                UserId = user.Id,
+                User=user,
+                
                 Role = new Role
                 {
-                    Name = RolesConstants.USER,
-                    NormalizedName = RolesConstants.USER
+                    Id= "role_merchant",
+                    Name = "ROLE_MERCHANT",
+                    NormalizedName = RolesConstants.USER,
+                    
                 },
                 RoleId = RolesConstants.USER.ToLower()
             });
+
             await CreateUserRoles(user, userRoles.Select(iur => iur.Role.Name).ToHashSet());
             _log.LogDebug($"Activated user: {user}");
             return user;
@@ -198,6 +205,7 @@ namespace Jhipster.Domain.Services
                 //TODO manage authorities
             };
             await _userManager.CreateAsync(newUser);
+            //await CreateUserRoles(newUser, userToRegister.UserRoles.Select(iur => iur.Role.Name).ToHashSet());
             _log.LogDebug($"Created Information for User: {newUser}");
             return newUser;
         }
@@ -240,7 +248,18 @@ namespace Jhipster.Domain.Services
                 _log.LogDebug($"Deleted User: {user}");
             }
         }
-
+        // deleteUser By MerchantId
+        public virtual async Task deleteUserByMerchantId(Guid id)
+        {
+            var login =await _userManager.Users.Where(i=>i.Id==id.ToString()).Select(i=>i.Login).FirstOrDefaultAsync();
+            var user = await _userManager.FindByNameAsync(login);
+            if (user != null)
+            {
+                await DeleteUserRoles(user);
+                await _userManager.DeleteAsync(user);
+                _log.LogDebug($"Deleted User: {user}");
+            }
+        }
         public virtual async Task<List<ForgotPasswordMethodRsDTO>> ForgotPasswordMethod(string login)
         {
             var user = await _userManager.FindByNameAsync(login);
@@ -350,7 +369,14 @@ namespace Jhipster.Domain.Services
             var roles = await _userManager.GetRolesAsync(user);
             await _userManager.RemoveFromRolesAsync(user, roles);
         }
+        public async Task UpdateRoles(User user, IEnumerable<string> roles)
+        {
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var rolesToRemove = userRoles.Except(roles).ToArray();
+            var rolesToAdd = roles.Except(userRoles).Distinct().ToArray();
+            await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+            await _userManager.AddToRolesAsync(user, rolesToAdd);
+        }
 
-     
     }
 }

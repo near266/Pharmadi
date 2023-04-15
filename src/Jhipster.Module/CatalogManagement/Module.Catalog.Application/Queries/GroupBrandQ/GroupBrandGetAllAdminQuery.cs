@@ -2,7 +2,7 @@
 using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
-using Module.Catalog.Shared.Utilities;
+using Jhipster.Service.Utilities;
 
 namespace Module.Catalog.Application.Queries.GroupBrandQ
 {
@@ -10,6 +10,7 @@ namespace Module.Catalog.Application.Queries.GroupBrandQ
     {
         public int page { get; set; }
         public int pageSize { get; set; }
+
     }
     public class GroupBrandGetAllQueryHandler : IRequestHandler<GroupBrandGetAllAdminQuery, PagedList<GroupBrand>>
     {

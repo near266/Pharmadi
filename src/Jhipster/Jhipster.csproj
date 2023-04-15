@@ -27,6 +27,7 @@
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'NhipsterSampleApplication' " />
 	<ItemGroup>
 		<PackageReference Include="AspNetCoreRateLimit.Redis" Version="1.0.1" />
+		<PackageReference Include="Google.Apis.Auth" Version="1.60.0" />
 		<PackageReference Include="JHipsterNet.Core" Version="1.0.9" />
 		<PackageReference Include="JHipsterNet.Web" Version="1.0.9" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
@@ -50,16 +51,15 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Jhipster.BFF\BFF.Web\BFF.Web.csproj" />
-		<ProjectReference Include="..\Jhipster.gRPC\Jhipster.gRPC.csproj" />
 		<ProjectReference Include="..\Jhipster.Infrastructure\Jhipster.Infrastructure.csproj" />
 		<ProjectReference Include="..\Jhipster.Domain.Services\Jhipster.Domain.Services.csproj" />
 		<ProjectReference Include="..\Jhipster.Crosscutting\Jhipster.Crosscutting.csproj" />
 		<ProjectReference Include="..\Jhipster.Dto\Jhipster.Dto.csproj" />
 		<ProjectReference Include="..\Jhipster.Domain\Jhipster.Domain.csproj" />
-		<ProjectReference Include="..\Jhipster.Module\CatalogManagement\Module.Catalog.gRPC\Module.Catalog.gRPC.csproj" />
 		<ProjectReference Include="..\Jhipster.Module\CatalogManagement\Module.Catalog\Module.Catalog.csproj" />
 		<ProjectReference Include="..\Jhipster.Module\PermissionManagement\Module.Permission.Application\Module.Permission.Application.csproj" />
 		<ProjectReference Include="..\Jhipster.Module\PermissionManagement\Module.Permission\Module.Permission.csproj" />
+		<ProjectReference Include="..\Jhipster.Module\Redis\Module.Redis\Module.Redis.csproj" />
 	</ItemGroup>
 
 </Project>
