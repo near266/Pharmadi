@@ -11,7 +11,7 @@ namespace Module.Catalog.Domain.Entities
         public string BrandName { get; set; }
         public Guid? GroupBrandId { get; set; }
         public string LogoBrand { get; set; }
-        public string Intro { get; set; }
+        public string? Intro { get; set; }
         public bool? Pin { get; set; }
         public bool? Archived { get; set; }
         public GroupBrand? GroupBrand { get; set; }
