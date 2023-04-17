@@ -6,7 +6,7 @@ namespace Module.Catalog.Domain.Entities
 {
     public class Product : BaseEntity<Guid>
     {
-        [MaxLength(10)]
+        [MaxLength(100)]
         public string SKU { get; set; }
         [MaxLength(100)]
         public string ProductName { get; set; }
