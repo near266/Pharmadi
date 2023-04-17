@@ -388,7 +388,7 @@ namespace BFF.Web.ProductSvc
                     catch
                     { }
                     res = await _mediator.Send(request);
-                    await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromDays(7));
+                    await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromDays(3));
                 }
 
                 return Ok(res);
