@@ -8,7 +8,7 @@ namespace Module.Catalog.Domain.Entities
     {
         [MaxLength(100)]
         public string SKU { get; set; }
-        [MaxLength(100)]
+        [MaxLength(1000)]
         public string ProductName { get; set; }
         [MaxLength(1000)]
         public string? Function { get; set; }
