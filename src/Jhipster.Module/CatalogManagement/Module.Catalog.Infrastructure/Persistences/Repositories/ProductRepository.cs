@@ -207,7 +207,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Image = i.Image,
                 Specification = i.Specification,
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
-                Discount = (float?)((i.SalePrice / i.Price) * 100),
+                Discount = i.Price != 0 ? (float?)(((i.Price - i.SalePrice) / i.Price) * 100) : 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder
@@ -240,7 +240,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Specification = i.Specification,
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 Archived = i.Archived,
-                Discount = i.Price != 0 ? (float?)(((i.Price - i.SalePrice) / i.Price) * 100) : 100,
+                Discount = i.Price != 0 ? (float?)(((i.Price - i.SalePrice) / i.Price) * 100) : 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder
@@ -508,7 +508,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Id = i.Id,
                 CategoryName = i.CategoryName,
                 Descripton = i.Descripton,
-                Products = _context.Products.Where(i => i.BrandId == brandId).ToList(),
+                Products = _context.CategoryProducts.Where(x => x.CategoryId == i.Id).Select(a=>a.Product).ToList(),
+                //Products = _context.Products.Where(i => i.BrandId == brandId).ToList(),
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToList();

@@ -21,7 +21,7 @@ namespace Module.Catalog.Application.Commands.BrandCm
         public string? BrandName { get; set; }
         public Guid? GroupBrandId { get; set; }
         public string LogoBrand { get; set; }
-        public string Intro { get; set; }
+        public string? Intro { get; set; }
         public bool? Pin { get; set; }
         public bool? Archived { get; set; }
         [JsonIgnore]
