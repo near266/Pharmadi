@@ -470,10 +470,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 keyword = keyword.ToLower();
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword));
             }
-            if (keyword == null || keyword.Length == 0 || keyword == "")
-            {
-                query = query.Where(i => i.ProductName == "@#$");
-            }
+            //if (keyword == null || keyword.Length == 0 || keyword == "")
+            //{
+            //    query = query.Where(i => i.ProductName == "@#$");
+            //}
 
             var query2 = query.Select(i => new ProductSearchDTO
             {
