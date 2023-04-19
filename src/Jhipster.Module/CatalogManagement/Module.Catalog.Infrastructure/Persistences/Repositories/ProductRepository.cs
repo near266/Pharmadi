@@ -508,7 +508,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Id = i.Id,
                 CategoryName = i.CategoryName,
                 Descripton = i.Descripton,
-                Products = _context.Products.Where(i => i.BrandId == brandId).ToList(),
+                Products = _context.CategoryProducts.Where(x => x.CategoryId == i.Id).Select(a=>a.Product).ToList(),
+                //Products = _context.Products.Where(i => i.BrandId == brandId).ToList(),
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToList();
