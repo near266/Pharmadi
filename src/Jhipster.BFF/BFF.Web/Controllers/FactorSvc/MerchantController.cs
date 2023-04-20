@@ -270,7 +270,7 @@ namespace BFF.Web.Controllers.FactorSvc
             }
 
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
+        [Authorize]
 
         [HttpPost("MerchantViewDetail")]
         public async Task<IActionResult> MerchantViewDetail([FromQuery] MerchantViewDetailQuery request)
