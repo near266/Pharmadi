@@ -283,7 +283,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
 
             //}
-            if (categoryIds != null && categoryIds.Count() > 0)
+            
+            if (categoryIds != null && categoryIds.Count() > 0) 
             {
 
                 //check cate2 có không nếu không có thì chỉ tìm kiếm theo cate1 
