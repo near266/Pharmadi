@@ -55,10 +55,10 @@ namespace Jhipster.gRPC.Contracts.Shared.Services
                 throw new EmailAlreadyUsedException();
 
             var newUser = await _userService.CreateUser(_mapper.Map<User>(request),request.Password);
-            if (!string.IsNullOrEmpty(request.Email))
-            {
-                await _mailService.SendCreationEmail(newUser);
-            }
+            //if (!string.IsNullOrEmpty(request.Email))
+            //{
+            //    await _mailService.SendCreationEmail(newUser);
+            //}
 
             var res = _mapper.Map<RegisterAdminResponse>(newUser);
             return res;
