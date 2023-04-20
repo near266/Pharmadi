@@ -143,11 +143,12 @@ namespace Jhipster.Controllers
             var page = _userManager.Users
                 .Include(it => it.UserRoles)
                 .ThenInclude(r => r.Role).AsQueryable();
+            page = page.Where(a => a.UserRoles.All(ur => ur.Role.Name != RolesConstants.USER)).AsQueryable();
             page = rq.Name != null ? page.Where(i => i.UserName.Contains(rq.Name)) : page;
             //page = rq.FromDate != null ? page.Where(i => i.CreatedDate > rq.FromDate) : page;
             //page = rq.ToDate != null ? page.Where(i => i.CreatedDate < rq.ToDate) : page;
-            page = rq.PhoneNumber != null ? page.Where(i => i.PhoneNumber.Contains( rq.PhoneNumber)) : page;
-            page = rq.Email != null ? page.Where(i => i.Email.Contains( rq.Email) ): page;
+            page = rq.PhoneNumber != null ? page.Where(i => i.PhoneNumber.Contains(rq.PhoneNumber)) : page;
+            page = rq.Email != null ? page.Where(i => i.Email.Contains(rq.Email)) : page;
 
             var value = _mapper.Map<List<UserDto>>(page).Skip(rq.PageSize * (rq.Page - 1))
                         .Take(rq.PageSize); ;
