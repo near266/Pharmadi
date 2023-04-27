@@ -39,7 +39,7 @@ namespace Jhipster.Domain.Services
             _mailService = mailService;
         }
 
-        public virtual async Task<User> CreateUser(User userToCreate,string Password)
+        public virtual async Task<User> CreateUser(User userToCreate, string Password)
         {
             var password = Password;
             var user = new User
@@ -96,13 +96,13 @@ namespace Jhipster.Domain.Services
         public virtual async Task<User> AdminPasswordReset(string login, string newPassword)
         {
             var user = await _userManager.FindByNameAsync(login);
-            if(user == null) throw new InternalServerErrorException("User could not be found");
+            if (user == null) throw new InternalServerErrorException("User could not be found");
             user.PasswordHash = _passwordHasher.HashPassword(user, newPassword);
             user.ResetKey = null;
             user.ResetDate = null;
             await _userManager.UpdateAsync(user);
-            user.Email = "ops@pharmadi.vn";
-            await _mailService.SendCreationEmail(user);
+            string email = "ops@pharmadi.vn";
+            await _mailService.SendPasswordForgotResetMail(newPassword, email);
 
             return user;
         }
@@ -149,14 +149,14 @@ namespace Jhipster.Domain.Services
             userRoles.Add(new UserRole
             {
                 UserId = user.Id,
-                User=user,
-                
+                User = user,
+
                 Role = new Role
                 {
-                    Id= "role_merchant",
+                    Id = "role_merchant",
                     Name = "ROLE_MERCHANT",
                     NormalizedName = RolesConstants.USER,
-                    
+
                 },
                 RoleId = RolesConstants.USER.ToLower()
             });
@@ -184,7 +184,7 @@ namespace Jhipster.Domain.Services
             }
 
             existingUser = _userManager.Users.FirstOrDefault(ip => ip.PhoneNumber == userToRegister.PhoneNumber);
-            if(existingUser != null)
+            if (existingUser != null)
             {
                 var removed = await RemoveNonActivatedUser(existingUser);
                 if (!removed) throw new PhoneNumberAlreadyUsedException();
@@ -256,7 +256,7 @@ namespace Jhipster.Domain.Services
         // deleteUser By MerchantId
         public virtual async Task deleteUserByMerchantId(Guid id)
         {
-            var login =await _userManager.Users.Where(i=>i.Id==id.ToString()).Select(i=>i.Login).FirstOrDefaultAsync();
+            var login = await _userManager.Users.Where(i => i.Id == id.ToString()).Select(i => i.Login).FirstOrDefaultAsync();
             var user = await _userManager.FindByNameAsync(login);
             if (user != null)
             {
@@ -294,7 +294,8 @@ namespace Jhipster.Domain.Services
         public virtual async Task<User> RequestOTPFWPass(string login, string type, string value)
         {
             User user = null;
-            if (type.Equals(MethodConstants.EMAIL)){
+            if (type.Equals(MethodConstants.EMAIL))
+            {
                 user = await _userManager.FindByEmailAsync(value);
                 if (user == null) throw new InternalServerErrorException("Method could not be found"); ;
                 user.ResetKey = RandomUtil.GenarateOTP();
@@ -303,7 +304,8 @@ namespace Jhipster.Domain.Services
             }
 
             // Chưa làm
-            if (type.Equals(MethodConstants.MOB)){
+            if (type.Equals(MethodConstants.MOB))
+            {
 
             }
 
@@ -322,7 +324,8 @@ namespace Jhipster.Domain.Services
             await _userManager.UpdateAsync(user);
 
             var value = string.Empty;
-            if (type.Equals(MethodConstants.EMAIL)) {
+            if (type.Equals(MethodConstants.EMAIL))
+            {
                 value = user.Email;
             }
 
