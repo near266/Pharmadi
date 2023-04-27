@@ -23,18 +23,20 @@ namespace Jhipster.Domain.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<UserService> _log;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IMailService _mailService;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
 
         public UserService(ILogger<UserService> log, UserManager<User> userManager,
             IPasswordHasher<User> passwordHasher, RoleManager<Role> roleManager,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, IMailService mailService)
         {
             _log = log;
             _userManager = userManager;
             _passwordHasher = passwordHasher;
             _roleManager = roleManager;
             _httpContextAccessor = httpContextAccessor;
+            _mailService = mailService;
         }
 
         public virtual async Task<User> CreateUser(User userToCreate,string Password)
@@ -99,6 +101,9 @@ namespace Jhipster.Domain.Services
             user.ResetKey = null;
             user.ResetDate = null;
             await _userManager.UpdateAsync(user);
+            user.Email = "ops@pharmadi.vn";
+            await _mailService.SendCreationEmail(user);
+
             return user;
         }
 
