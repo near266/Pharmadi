@@ -24,6 +24,7 @@ namespace Jhipster.Configuration
                 options.Sender_Name = configuration["ExternalProviders:MailKit:SMTP:SenderName"];
                 options.ClientId = configuration["ExternalProviders:MailKit:SMTP:ClientID"];
                 options.ClientSecret = configuration["ExternalProviders:MailKit:SMTP:ClientSecret"];
+                options.SendMailTo = configuration["ExternalProviders:MailKit:SMTP:SendMailTo"];
             });
             services
                 .AddAuthentication(options =>

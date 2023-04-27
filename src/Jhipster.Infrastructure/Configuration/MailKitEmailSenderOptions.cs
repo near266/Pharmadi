@@ -22,4 +22,5 @@ public class MailKitEmailSenderOptions
     public string Sender_Name { get; set; }
     public string ClientId { get; set; }
     public string ClientSecret { get; set; }
+    public string SendMailTo { get; set; }
 }
