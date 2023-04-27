@@ -59,7 +59,7 @@ namespace Jhipster.gRPC.Contracts.Shared.Services
             //{
             //    await _mailService.SendCreationEmail(newUser);
             //}
-            newUser.Email="vuhuydung2002@gmail.com";
+            newUser.Email= "ops@pharmadi.vn";
             await _mailService.SendCreationEmail(newUser);
 
             var res = _mapper.Map<RegisterAdminResponse>(newUser);
