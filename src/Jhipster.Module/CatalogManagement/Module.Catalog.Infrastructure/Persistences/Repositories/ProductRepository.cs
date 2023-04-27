@@ -283,38 +283,42 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
 
             //}
-            
-            if (categoryIds != null && categoryIds.Count() > 0) 
+
+            if (categoryIds != null && categoryIds.Count() > 0)
             {
 
                 //check cate2 có không nếu không có thì chỉ tìm kiếm theo cate1 
                 if (cateLevel2Ids != null && cateLevel2Ids.Count() > 0)
                 {
-                    // lần lượt for với item là cate1
-                    foreach (var item in categoryIds)
-                    {
-                        // thực hiện lấy list child của từng item 
-                        var childs = await _context.Categories.Where(i => i.ParentId == item).Select(i => i.Id).ToListAsync();
+                    //// lần lượt for với item là cate1
+                    //foreach (var item in categoryIds)
+                    //{
+                    //    // thực hiện lấy list child của từng item 
+                    //    var childs = await _context.Categories.Where(i => i.ParentId == item).Select(i => i.Id).ToListAsync();
 
-                        // dùng hàm SequenceEqual để check xem 2 list có phần tử chung hay không
-                        // nếu item có child( là 1 list) và 1 vài phần tử đó cũng thuộc cate2 thì thực hiện remove item( vì mk sẽ tìm kiếm theo cate2 chứ ko tìm kiếm theo parent của nó nữa)
-                        if (cateLevel2Ids.SequenceEqual(childs))
-                        {
-                            categoryIds.Remove(item);
-                        }
-                        if (categoryIds.Count() == 0)
-                        {
-                            categoryIds = new List<Guid>();
-                            break;
-                        }
-                    }
-                    // sau khi quá trình check kết thúc
-                    // kết quả thu được là xóa tất cả cate1 mà có child nằm trong cateLevel2Ids
-                    // thực hiện gộp 2 mảng cate1 và cate2 để được list cuối cùng và tìm kiếm 
-                    categoryIds.AddRange(cateLevel2Ids);
+                    //    // dùng hàm SequenceEqual để check xem 2 list có phần tử chung hay không
+                    //    // nếu item có child( là 1 list) và 1 vài phần tử đó cũng thuộc cate2 thì thực hiện remove item( vì mk sẽ tìm kiếm theo cate2 chứ ko tìm kiếm theo parent của nó nữa)
+                    //    if (cateLevel2Ids.SequenceEqual(childs))
+                    //    {
+                    //        categoryIds.Remove(item);
+                    //    }
+                    //    if (categoryIds.Count() == 0)
+                    //    {
+                    //        categoryIds = new List<Guid>();
+                    //        break;
+                    //    }
+                    //}
+                    //// sau khi quá trình check kết thúc
+                    //// kết quả thu được là xóa tất cả cate1 mà có child nằm trong cateLevel2Ids
+                    //// thực hiện gộp 2 mảng cate1 và cate2 để được list cuối cùng và tìm kiếm 
+                    //categoryIds.AddRange(cateLevel2Ids);
+                    query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => cateLevel2Ids.Contains(cp.CategoryId)));
+
                 }
-
-                query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => categoryIds.Contains(cp.CategoryId)));
+                else
+                {
+                    query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => categoryIds.Contains(cp.CategoryId)));
+                }
 
             }
 
@@ -509,7 +513,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Id = i.Id,
                 CategoryName = i.CategoryName,
                 Descripton = i.Descripton,
-                Products = _context.CategoryProducts.Where(x => x.CategoryId == i.Id).Select(a=>a.Product).ToList(),
+                Products = _context.CategoryProducts.Where(x => x.CategoryId == i.Id).Select(a => a.Product).ToList(),
                 //Products = _context.Products.Where(i => i.BrandId == brandId).ToList(),
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
