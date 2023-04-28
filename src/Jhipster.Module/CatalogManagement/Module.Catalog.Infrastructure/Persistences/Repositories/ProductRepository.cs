@@ -40,22 +40,22 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
         public async Task<int> Add(Product request)
         {
-            string currentSKUCode;
-            var checkSKU = await _context.Products.Select(i => i.SKU).ToListAsync();
-            if (checkSKU == null || checkSKU.Count() == 0) { currentSKUCode = "P00000"; }
-            else
-            {
-                var Number = new List<int>();
-                foreach (var item in checkSKU)
-                {
-                    var s = int.Parse(item.Substring(1));
-                    Number.Add(s);
-                };
-                var maxNumber = Number.Max();
-                currentSKUCode = $"P{maxNumber}";
-            }
+            //string currentSKUCode;
+            //var checkSKU = await _context.Products.Select(i => i.SKU).ToListAsync();
+            //if (checkSKU == null || checkSKU.Count() == 0) { currentSKUCode = "P00000"; }
+            //else
+            //{
+            //    var Number = new List<int>();
+            //    foreach (var item in checkSKU)
+            //    {
+            //        var s = int.Parse(item.Substring(1));
+            //        Number.Add(s);
+            //    };
+            //    var maxNumber = Number.Max();
+            //    currentSKUCode = $"P{maxNumber}";
+            //}
 
-            request.SKU = GenerateNextProductCode(currentSKUCode);
+            //request.SKU = GenerateNextProductCode(currentSKUCode);
 
             // gán để khi view all sắp xếp theo thời gian update mới nhất
             request.LastModifiedDate = request.CreatedDate;
