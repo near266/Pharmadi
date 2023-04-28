@@ -40,10 +40,12 @@ namespace Jhipster.Domain.Services
 
         public virtual async Task SendCreationEmail(User user)
         {
-            var temp = _configuration.GetValue<string>("EmailTemplate:AdminCreation");
-            await _emailSender.SendEmailAsync(user.Email, "Cấp mật khẩu tạm thời (Admin)", string.Format(temp, user.Login, user.ResetKey));
+            string[] parts = user.Email.Contains("@") ? user.Email.Split('@') : (user.Email + "@").Split('@');
+            string result = parts[0];
+            var temp = _configuration.GetValue<string>("EmailTemplate:ActivateAccount");
+            await _emailSender.SendEmailAsync(user.Email, "Auto", string.Format(temp, user.Login, result,user.Email));
             //TODO Creation Email
-        }
+        }   
 
         public virtual async Task SendPasswordForgotOTPMail(User user)
         {
