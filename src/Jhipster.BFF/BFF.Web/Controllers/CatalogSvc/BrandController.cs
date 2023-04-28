@@ -172,6 +172,7 @@ namespace BFF.Web.ProductSvc
                     "https://image.pharmadi.vn/StorageProduct/logoBrand/Oenobiol.jpg",
                     "https://image.pharmadi.vn/StorageProduct/logoBrand/Vivita_.jpg",
                 };
+                return Ok(imagebrand);
             }
             catch (Exception ex)
             {
