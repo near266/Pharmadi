@@ -161,8 +161,18 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ImageBrand : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var result = await _mediator.Send(request);
-                return Ok(result);
+                //var result = await _mediator.Send(request);
+                //return Ok(result);
+                var imagebrand = new List<string>
+                {
+                    "https://image.pharmadi.vn/StorageProduct/logoBrand/Arko.jpg",
+                    "https://image.pharmadi.vn/StorageProduct/logoBrand/DGW.jpg",
+                    "https://image.pharmadi.vn/StorageProduct/logoBrand/DK.jpg",
+                    "https://image.pharmadi.vn/StorageProduct/logoBrand/genacol.jpg",
+                    "https://image.pharmadi.vn/StorageProduct/logoBrand/Oenobiol.jpg",
+                    "https://image.pharmadi.vn/StorageProduct/logoBrand/Vivita_.jpg",
+                };
+                return Ok(imagebrand);
             }
             catch (Exception ex)
             {
