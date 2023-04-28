@@ -15,14 +15,19 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             _mapper = mapper;
         }
         public async Task<int> Add(CategoryProduct request)
+
         {
-            await _context.CategoryProducts.AddAsync(request);
+            var check = await _context.CategoryProducts.FirstOrDefaultAsync(i=>i.ProductId==request.ProductId&& i.CategoryId==request.CategoryId);
+            if (check == null)
+            {
+                await _context.CategoryProducts.AddAsync(request);
+            }
             return await _context.SaveChangesAsync();
         }
 
         public async Task<int> Delete(Guid productId, Guid categoryid)
         {
-            var obj = await _context.CategoryProducts.FirstOrDefaultAsync(i => i.ProductId.Equals(productId)&&i.CategoryId==categoryid);
+            var obj = await _context.CategoryProducts.FirstOrDefaultAsync(i => i.ProductId.Equals(productId) && i.CategoryId == categoryid);
             if (obj != null)
             {
                 _context.CategoryProducts.Remove(obj);
