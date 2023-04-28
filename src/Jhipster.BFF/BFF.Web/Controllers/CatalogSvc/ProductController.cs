@@ -210,8 +210,10 @@ namespace BFF.Web.ProductSvc
                     LastModifiedDate = request.LastModifiedDate,
                     Archived = request.Archived,
                     HideProduct = request.HideProduct,
-                    CanOrder = request.CanOrder
-
+                    CanOrder = request.CanOrder,
+                    NewProduct = request.NewProduct,
+                    ImportedProducts = request.ImportedProducts,
+                    sellingProducts = request.sellingProducts
                 };
 
                 result = await _mediator.Send(step1);

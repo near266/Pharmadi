@@ -164,7 +164,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ProductSearchDTO>> ViewProductBestSale(int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable().OrderBy(i => i.sellingProducts==null).ThenBy(i=>i.sellingProducts);
 
             var query2 = await query.Select(i => new ProductSearchDTO
             {
@@ -182,7 +182,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 CanOrder = i.CanOrder
 
-            }).OrderByDescending(i => i.SaleNumber).Skip(pageSize * (page - 1))
+            }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
@@ -194,7 +194,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ProductSearchDTO>> ViewProductNew(int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable().OrderBy(i=>i.NewProduct==null).ThenBy(i=>i.NewProduct);
 
             var query2 = await query.Select(i => new ProductSearchDTO
             {
@@ -212,7 +212,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder
 
-            }).OrderBy(a => a.Discount).Skip(pageSize * (page - 1))
+            }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
