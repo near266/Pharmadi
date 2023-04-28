@@ -38,6 +38,9 @@ namespace Module.Catalog.Application.Commands.ProductCm
         [JsonIgnore]
         public DateTime? LastModifiedDate { get; set; }
         public bool? CanOrder { get; set; }
+        public int? NewProduct { get; set; }
+        public int? ImportedProducts { get; set; }
+        public int? sellingProducts { get; set; }
     }
     public class ProductUpdateCommandHandler : IRequestHandler<ProductUpdateCommand, int>
     {
