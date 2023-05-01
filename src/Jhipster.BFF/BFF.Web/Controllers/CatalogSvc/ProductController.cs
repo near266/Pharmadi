@@ -18,6 +18,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Module.Catalog.Shared.DTOs;
 using Module.Redis.Configurations;
 using Module.Redis.Library.Helpers;
+using Google.Apis.Logging;
 
 namespace BFF.Web.ProductSvc
 {
@@ -545,6 +546,30 @@ namespace BFF.Web.ProductSvc
             }
         }
 
+        [HttpPost("PinProductInBrand")]
+        public async Task<ActionResult<int>> PinProductInBrand([FromBody] SearchProductQuery request)
+        {
+            _logger.LogInformation($"REST request Pin Product : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                request.userId= Guid.Parse(GetUserIdFromContext());
+
+                var result = await _mediator.Send(request);
+                foreach(var item in result.Data)
+                {
+                    var update = new UpdateStatusProductCommand { Id = item.Id, Status = 10};
+                     _mediator.Send(update);
+
+                }
+
+                return Ok(1);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to Pin Product fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
         [HttpPost("Archived")]
         public async Task<IActionResult> ArchivedProduct([FromBody] ProductArchivedCommand request)
         {

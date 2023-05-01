@@ -34,6 +34,9 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public bool? Archived { get; set; }
         public string? Specification { get; set; }
         public int? Number { get; set; }
+        public int? NewProduct { get; set; }
+        public int? ImportedProducts { get; set; }
+        public int? sellingProducts { get; set; }
         [JsonIgnore]
         public Guid? CreatedBy { get; set; }
         [JsonIgnore]
