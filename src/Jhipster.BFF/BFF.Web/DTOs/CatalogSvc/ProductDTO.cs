@@ -147,6 +147,7 @@ namespace BFF.Web.DTOs.CatalogSvc
 
 
     }
+   
 
 
 }

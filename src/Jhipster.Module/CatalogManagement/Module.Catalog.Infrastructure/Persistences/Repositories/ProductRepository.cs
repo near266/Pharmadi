@@ -164,7 +164,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ProductSearchDTO>> ViewProductBestSale(int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable().OrderBy(i => i.sellingProducts==null).ThenBy(i=>i.sellingProducts);
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable().OrderByDescending(i => i.sellingProducts==null).ThenBy(i=>i.sellingProducts);
 
             var query2 = await query.Select(i => new ProductSearchDTO
             {
@@ -194,7 +194,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ProductSearchDTO>> ViewProductNew(int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable().OrderBy(i=>i.NewProduct==null).ThenBy(i=>i.NewProduct);
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable().OrderByDescending(i=>i.NewProduct==null).ThenBy(i=>i.NewProduct);
 
             var query2 = await query.Select(i => new ProductSearchDTO
             {
@@ -290,6 +290,12 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 //check cate2 có không nếu không có thì chỉ tìm kiếm theo cate1 
                 if (cateLevel2Ids != null && cateLevel2Ids.Count() > 0)
                 {
+                    //lau product theo cate cap 1
+
+
+
+
+
                     //// lần lượt for với item là cate1
                     //foreach (var item in categoryIds)
                     //{
