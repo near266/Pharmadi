@@ -224,15 +224,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             result.TotalCount = query.Count();
             return result;
         }
-        public async Task<PagedList<ProductSearchDTO>> ViewProductPromotion(string? keyword, int page, int pageSize, Guid? userId)
+        public async Task<PagedList<ViewProductPromotionDTO>> ViewProductPromotion(string? keyword, int page, int pageSize, Guid? userId)
         {
-            var result = new PagedList<ProductSearchDTO>();
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
+            var result = new PagedList<ViewProductPromotionDTO>();
+            var query = _context.Products.Where(i => i.Archived == false&& i.Country.ToLower() != "việt nam").AsQueryable();
             if (keyword != null)
             {
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
             }
-            var query2 = await query.Select(i => new ProductSearchDTO
+            var query2 = await query.Select(i => new ViewProductPromotionDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
@@ -248,9 +248,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                Country=i.Country
 
-            }).OrderByDescending(a => a.Discount).Skip(pageSize * (page - 1))
+            }).Where(a=>a.Country.ToLower()!="việt nam").Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
