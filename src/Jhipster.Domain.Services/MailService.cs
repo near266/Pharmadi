@@ -44,7 +44,7 @@ namespace Jhipster.Domain.Services
             string result = parts[0];
             string Email = "ops@pharmadi.vn";
             var temp = _configuration.GetValue<string>("EmailTemplate:ActivateAccount");
-            await _emailSender.SendEmailAsync(Email, "Auto", string.Format(temp, user.Login, result,user.Email));
+            await _emailSender.SendEmailAsync(Email, "PharmaDI", string.Format(temp, user.Login, result,user.Email));
             //TODO Creation Email
         }   
 
