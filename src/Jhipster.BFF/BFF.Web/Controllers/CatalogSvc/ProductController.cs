@@ -570,6 +570,21 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpGet("ShortName")]
+        public async Task<ActionResult<string>> GetShortName([FromQuery] ProductViewDetailQuery request)
+        {
+            _logger.LogInformation($"REST request ShortName : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result.ShortName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to ShortName fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
         [HttpPost("Archived")]
         public async Task<IActionResult> ArchivedProduct([FromBody] ProductArchivedCommand request)
         {

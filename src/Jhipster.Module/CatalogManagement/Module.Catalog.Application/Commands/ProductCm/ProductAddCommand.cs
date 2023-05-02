@@ -37,6 +37,7 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public int? NewProduct { get; set; }
         public int? ImportedProducts { get; set; }
         public int? sellingProducts { get; set; }
+        public string? ShortName { get; set; }
         [JsonIgnore]
         public Guid? CreatedBy { get; set; }
         [JsonIgnore]
