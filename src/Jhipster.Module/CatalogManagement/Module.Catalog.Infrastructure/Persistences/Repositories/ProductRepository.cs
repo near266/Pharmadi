@@ -151,7 +151,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
-                CanOrder = i.CanOrder
+                CanOrder = i.CanOrder,
+                ShortName=i.ShortName != null ? i.ShortName :i.ProductName.Substring(0,25)
+                
 
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -180,7 +182,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
-                CanOrder = i.CanOrder
+                CanOrder = i.CanOrder,
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
 
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -210,7 +213,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Discount = i.Price != 0 ? (float?)(((i.Price - i.SalePrice) / i.Price) * 100) : 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                CanOrder = i.CanOrder
+                CanOrder = i.CanOrder,
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
 
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -243,7 +247,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Discount = i.Price != 0 ? (float?)(((i.Price - i.SalePrice) / i.Price) * 100) : 0,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                CanOrder = i.CanOrder
+                CanOrder = i.CanOrder,
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
 
             }).OrderByDescending(a => a.Discount).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -353,7 +358,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(a => a.Label).Where(a => a.ProductId == i.Id).AsEnumerable(),
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                CanOrder = i.CanOrder
+                CanOrder = i.CanOrder,
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
 
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -399,7 +405,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                CanOrder = i.CanOrder
+                CanOrder = i.CanOrder,
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
 
             }).Take(10).AsEnumerable();
 
@@ -432,7 +439,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Archived = i.Archived,
                     LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                    CanOrder = i.CanOrder
+
+                    CanOrder = i.CanOrder,
+                    ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
 
                 }).AsEnumerable();
 
@@ -500,7 +509,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 Brand = i.Brand,
                 Archived = i.Archived,
-                CanOrder = i.CanOrder
+                CanOrder = i.CanOrder,
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
 
             }).AsEnumerable();
 
