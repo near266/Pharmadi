@@ -39,6 +39,7 @@ namespace Module.Catalog.Domain.Entities
         public int? NewProduct { get; set; }
         public int? ImportedProducts { get; set; }
         public int? sellingProducts{get;set;}
+        public string? ShortName { get; set; }
         public PostContent? PostContent { get; set; }
         public IEnumerable<LabelProduct> LabelProducts { get; set; }
         public IEnumerable<TagProduct> TagProducts { get; set; }
