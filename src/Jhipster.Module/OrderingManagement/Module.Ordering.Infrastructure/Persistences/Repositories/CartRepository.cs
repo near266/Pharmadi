@@ -66,9 +66,9 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         }
 
 
-        public async Task<ViewCartDTO> GetAllByUser(int page, int pageSize, Guid userId)
+        public async Task<ViewCartDTO> GetAllByUser(int page, int pageSize, Guid userId , int ? check)
         {
-
+             
             var view = new ViewCartDTO();
             var query = _context.Carts.Where(c => c.UserId == userId).Select(c => new Cart
             {
@@ -85,25 +85,48 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
 
             var res = new List<ViewCartByBrandDTO>();
             var q1 = new List<Guid>();
-            foreach (var item in query)
+            if (check == null || check == 0)
             {
-                var id = (Guid)item.Product.BrandId;
-                if (!q1.Contains(id))
+                foreach (var item in query)
                 {
-                    q1.Add(id);
+                    var id = (Guid)item.Product.BrandId;
+                    if (!q1.Contains(id))
+                    {
+                        q1.Add(id);
+                    }
+                }
+
+                foreach (var item in q1)
+                {
+                    var temp = new ViewCartByBrandDTO
+                    {
+                        Brand = _context.Brands.Where(i => i.Id == item).FirstOrDefault(),
+                        Carts = query.Where(q => q.Product.BrandId == item).OrderByDescending(i => i.LastModifiedDate).ToList()
+                    };
+                    res.Add(temp);
                 }
             }
-
-            foreach (var item in q1)
+            else
             {
-                var temp = new ViewCartByBrandDTO
+                foreach (var item in query)
                 {
-                    Brand = _context.Brands.Where(i => i.Id == item).FirstOrDefault(),
-                    Carts = query.Where(q => q.Product.BrandId == item).OrderByDescending(i => i.LastModifiedDate).ToList()
-                };
-                res.Add(temp);
-            }
+                    var id = (Guid)item.Product.BrandId;
+                    if (!q1.Contains(id))
+                    {
+                        q1.Add(id);
+                    }
+                }
 
+                foreach (var item in q1)
+                {
+                    var temp = new ViewCartByBrandDTO
+                    {
+                        Brand = _context.Brands.Where(i => i.Id == item).FirstOrDefault(),
+                        Carts = query.Where(q => q.Product.BrandId == item).ToList()
+                    };
+                    res.Add(temp);
+                }
+            }
             var data = res.Skip(pageSize * (page - 1)).Take(pageSize).ToList();
             var totalPrice = _context.Carts.Where(i => i.UserId == userId).Sum(i => i.Product.Price);
             var totalDiscount = _context.Carts.Where(i => i.UserId == userId).Sum(i => i.Product.SalePrice);
