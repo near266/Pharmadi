@@ -29,6 +29,7 @@ namespace Module.Catalog.Shared.DTOs
         [JsonIgnore]
         public float? Discount { get; set; }
         public bool? CanOrder { get; set; }
+        public string? ShortName { get; set; }
 
     }
     public class SearchProductDTO

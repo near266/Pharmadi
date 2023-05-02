@@ -188,7 +188,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                                Price = s.Price,
                                DiscountPrice = s.SalePrice,
                                BrandName = sst.BrandName,
-                               Quantity = st.Quantity ?? 0
+                               Quantity = st.Quantity ?? 0,
+                               ShortName = s.ShortName != null ? s.ShortName : s.ProductName.Substring(0, 25)
                            };
                 var check = data.AsQueryable();
                 check = keyword != null ? check.Where(i => i.ProductName.Contains(keyword)) : check;
@@ -210,7 +211,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                                Price = sst.Price,
                                DiscountPrice = sst.SalePrice,
                                BrandName = brand.BrandName,
-                               Quantity = carts.Quantity ?? 0
+                               Quantity = carts.Quantity ?? 0,
+                               ShortName = sst.ShortName != null ? sst.ShortName : sst.ProductName.Substring(0, 25)
                            };
                 var check = data.AsQueryable();
                 check = keyword != null ? check.Where(i => i.ProductName.Contains(keyword)) : check;
@@ -230,7 +232,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                                Price = s.Price,
                                DiscountPrice = s.SalePrice,
                                BrandName = st.BrandName,
-                               Quantity = carts.Quantity ?? 0
+                               Quantity = carts.Quantity ?? 0,
+                               ShortName = s.ShortName != null ? s.ShortName : s.ProductName.Substring(0, 25)
                            };
                 var check = data.AsQueryable();
                 check = keyword != null ? check.Where(i => i.ProductName.Contains(keyword)) : check;
@@ -251,7 +254,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                                Price = s.Price,
                                DiscountPrice = s.SalePrice,
                                BrandName = st.BrandName,
-                               Quantity = carts.Quantity ?? 0
+                               Quantity = carts.Quantity ?? 0,
+                               ShortName = s.ShortName != null ? s.ShortName : s.ProductName.Substring(0, 25)
                            };
                 var check = data.AsQueryable();
                 check = keyword != null ? check.Where(i => i.ProductName.Contains(keyword)) : check;

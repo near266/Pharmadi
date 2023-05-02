@@ -63,6 +63,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public int? NewProduct { get; set; }
         public int? ImportedProducts { get; set; }
         public int? sellingProducts { get; set; }
+        public string? ShortName { get; set; }
 
 
     }
@@ -147,6 +148,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public int? NewProduct { get; set; }
         public int? ImportedProducts { get; set; }
         public int? sellingProducts { get; set; }
+        public string? ShortName { get; set; }
 
 
     }
