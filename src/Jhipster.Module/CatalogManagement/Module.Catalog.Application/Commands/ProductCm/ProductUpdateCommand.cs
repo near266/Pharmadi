@@ -41,6 +41,7 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public int? NewProduct { get; set; }
         public int? ImportedProducts { get; set; }
         public int? sellingProducts { get; set; }
+        public string? ShortName { get; set; }
     }
     public class ProductUpdateCommandHandler : IRequestHandler<ProductUpdateCommand, int>
     {
