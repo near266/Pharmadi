@@ -88,7 +88,10 @@ namespace BFF.Web.ProductSvc
                     CreatedDate = request.CreatedDate,
                     Archived = false,
                     HideProduct = request.HideProduct,
-                    CanOrder = request.CanOrder
+                    CanOrder = request.CanOrder,
+                    NewProduct = request.NewProduct,
+                    ImportedProducts = request.ImportedProducts,
+                    sellingProducts = request.sellingProducts
                 };
                 await _mediator.Send(step1);
 
