@@ -70,23 +70,24 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         {
              
             var view = new ViewCartDTO();
-            var query = _context.Carts.Where(c => c.UserId == userId).Select(c => new Cart
-            {
-                Id = c.Id,
-                UserId = c.UserId,
-                Product = _context.Products.Where(i => i.Id == c.ProductId)
-                                //.Include(i => i.TagProducts).ThenInclude(i => i.Tag)
-                                .Include(i => i.LabelProducts).ThenInclude(i => i.Label)
-                                .FirstOrDefault(),
-                LastModifiedDate = c.LastModifiedDate,
-                Quantity = c.Quantity,
-                IsChoice = c.IsChoice
-            }).OrderByDescending(i => i.LastModifiedDate).AsQueryable();
-
+          
             var res = new List<ViewCartByBrandDTO>();
             var q1 = new List<Guid>();
             if (check == null || check == 0)
             {
+                var query = _context.Carts.Where(c => c.UserId == userId).Select(c => new Cart
+                {
+                    Id = c.Id,
+                    UserId = c.UserId,
+                    Product = _context.Products.Where(i => i.Id == c.ProductId)
+                              //.Include(i => i.TagProducts).ThenInclude(i => i.Tag)
+                              .Include(i => i.LabelProducts).ThenInclude(i => i.Label)
+                              .FirstOrDefault(),
+                    LastModifiedDate = c.LastModifiedDate,
+                    Quantity = c.Quantity,
+                    IsChoice = c.IsChoice
+                }).OrderByDescending(i => i.LastModifiedDate).AsQueryable();
+
                 foreach (var item in query)
                 {
                     var id = (Guid)item.Product.BrandId;
@@ -108,7 +109,20 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             }
             else
             {
-                foreach (var item in query)
+                var query1 = _context.Carts.Where(c => c.UserId == userId).Select(c => new Cart
+                {
+                    Id = c.Id,
+                    UserId = c.UserId,
+                    Product = _context.Products.Where(i => i.Id == c.ProductId)
+                              //.Include(i => i.TagProducts).ThenInclude(i => i.Tag)
+                              .Include(i => i.LabelProducts).ThenInclude(i => i.Label)
+                              .FirstOrDefault(),
+                    LastModifiedDate = c.LastModifiedDate,
+                    Quantity = c.Quantity,
+                    IsChoice = c.IsChoice
+                }).AsQueryable();
+
+                foreach (var item in query1)
                 {
                     var id = (Guid)item.Product.BrandId;
                     if (!q1.Contains(id))
@@ -122,7 +136,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                     var temp = new ViewCartByBrandDTO
                     {
                         Brand = _context.Brands.Where(i => i.Id == item).FirstOrDefault(),
-                        Carts = query.Where(q => q.Product.BrandId == item).ToList()
+                        Carts = query1.Where(q => q.Product.BrandId == item).ToList()
                     };
                     res.Add(temp);
                 }
