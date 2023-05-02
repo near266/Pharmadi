@@ -11,8 +11,8 @@ namespace Module.Catalog.Application.Persistences
         Task<int> AddListBrand( List<Brand> brands );   
         Task<int> Update(Brand request);
         Task<int> Delete(Guid id);
-        Task<IEnumerable<Brand>> Search(string? keyword);
-        Task<PagedList<Brand>> GetAllAdmin(int page, int pageSize);
+        Task<IEnumerable<BrandDTO>> Search(string? keyword);
+        Task<PagedList<BrandDTO>> GetAllAdmin(int page, int pageSize);
         Task<int> PinBrand(Brand brand);
         Task<PagedList<BrandDTO>> IsHaveGroup(int page , int pageSize,int type ,Guid? GroupBrandId);
         Task<List<string>> ImageBrand();
