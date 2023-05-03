@@ -228,7 +228,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ViewProductPromotionDTO>> ViewProductPromotion(string? keyword, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ViewProductPromotionDTO>();
-            var query = _context.Products.Where(i => i.Archived == false&& i.Country.ToLower() != "việt nam").AsQueryable();
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
             if (keyword != null)
             {
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
@@ -252,7 +252,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
                 Country=i.Country
 
-            }).Where(a=>a.Country.ToLower()!="việt nam").Skip(pageSize * (page - 1))
+            }).OrderByDescending(i=>i.Discount).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
@@ -260,7 +260,41 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             result.TotalCount = query.Count();
             return result;
         }
+        public async Task<PagedList<ViewProductPromotionDTO>> ViewProductForeign(string? keyword, int page, int pageSize, Guid? userId)
+        {
+            var result = new PagedList<ViewProductPromotionDTO>();
+            var query = _context.Products.Where(i => i.Archived == false && i.Country.ToLower() != "việt nam").AsQueryable();
+            if (keyword != null)
+            {
+                query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
+            }
+            var query2 = await query.Select(i => new ViewProductPromotionDTO
+            {
+                Id = i.Id,
+                SKU = i.SKU,
+                Price = i.Price,
+                SalePrice = i.SalePrice,
+                ProductName = i.ProductName,
+                UnitName = i.UnitName,
+                Image = i.Image,
+                Specification = i.Specification,
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
+                Archived = i.Archived,
+                Discount = i.Price != 0 ? (float?)(((i.Price - i.SalePrice) / i.Price) * 100) : 0,
+                LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
+                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
+                CanOrder = i.CanOrder,
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                Country = i.Country
 
+            }).Where(a => a.Country.ToLower() != "việt nam").Skip(pageSize * (page - 1))
+                        .Take(pageSize)
+                        .ToListAsync();
+
+            result.Data = query2.AsEnumerable();
+            result.TotalCount = query.Count();
+            return result;
+        }
         public async Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid> categoryIds, List<Guid> cateLevel2Ids, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
@@ -330,7 +364,18 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 }
                 else
                 {
-                    query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => categoryIds.Contains(cp.CategoryId)));
+                    var cateId = new List<Guid>();
+                    cateId.AddRange(categoryIds);
+                    foreach (var item in categoryIds)
+                    {
+                        var childs = await _context.Categories.Where(i => i.ParentId == item).Select(i => i.Id).ToListAsync();
+                        if(childs!=null|| childs.Count!=0)
+                        {
+                            cateId.AddRange(childs);
+                        }
+                        query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => cateId.Contains(cp.CategoryId)));
+                    }
+                    
                 }
 
             }
