@@ -59,7 +59,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         public async Task<PagedList<PurchaseOrder>> GetAllAdmin(int page, int pageSize, int? status, DateTime? fromDate, DateTime? toDate, string? codekey, string? customerkey)
         {
 
-            var query = _context.PurchaseOrders.Include(i => i.Merchant).AsQueryable();
+            var query = _context.PurchaseOrders.Include(i => i.Merchant)
+                .Include(i=>i.OrderItems).ThenInclude(a=>a.Product).AsQueryable();
             if (fromDate != null)
             {
                 query = query.Where(i => i.CreatedDate >= fromDate);

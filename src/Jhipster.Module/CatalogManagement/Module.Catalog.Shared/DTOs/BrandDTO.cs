@@ -19,6 +19,7 @@ namespace Module.Catalog.Shared.DTOs
         public bool? Pin { get; set; }
         public GroupBrand? GroupBrand { get; set; }
         public int SumProduct { get; set; }
+        public IEnumerable<Product>? products { get; set; }
     }
     public class AddBrandDTO
     {

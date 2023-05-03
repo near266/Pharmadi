@@ -60,7 +60,11 @@ namespace BFF.Web.DTOs.CatalogSvc
         public List<WarehouseProductAddRequest>? warehouseProductAdds { get; set; }
         public List<Guid>? TagIds { get; set; }
         public List<Guid>? LabelIds { get; set; }
- 
+        public int? NewProduct { get; set; }
+        public int? ImportedProducts { get; set; }
+        public int? sellingProducts { get; set; }
+        public string? ShortName { get; set; }
+
 
     }
 
@@ -141,9 +145,14 @@ namespace BFF.Web.DTOs.CatalogSvc
         public List<Guid>? TagIds { get; set; }
         public List<Guid>? LabelIds { get; set; }
         public bool? CanOrder { get; set; }
+        public int? NewProduct { get; set; }
+        public int? ImportedProducts { get; set; }
+        public int? sellingProducts { get; set; }
+        public string? ShortName { get; set; }
 
 
     }
+   
 
 
 }

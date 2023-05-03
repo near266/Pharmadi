@@ -38,5 +38,6 @@ namespace Module.Ordering.Shared.DTOs
         public decimal? DiscountPrice { get; set; }
         public int? Quantity { get; set; } = 0;
         public string BrandName { get;set;}
+        public string? ShortName { get; set; }
     }
 }
