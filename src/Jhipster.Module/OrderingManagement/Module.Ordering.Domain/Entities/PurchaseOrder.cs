@@ -20,6 +20,7 @@ namespace Module.Ordering.Domain.Entities
         public Decimal TotalPrice { get; set; }
         public Decimal TotalPayment { get; set; }
         public int Status { get; set; }
+        public string? Description { get; set; }
         public Merchant Merchant { get; set; }
         public IEnumerable<OrderItem> OrderItems { get; set; }
     }

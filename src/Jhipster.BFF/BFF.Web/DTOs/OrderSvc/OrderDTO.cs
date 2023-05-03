@@ -40,6 +40,8 @@ namespace BFF.Web.DTOs.OrderSvc
         public string? Avatar { get; set; }
 
         public int? AddressStatus { get; set; }
+        public string? Description { get; set; }
+
     }
 
     public class OrderItemRequest
@@ -69,6 +71,8 @@ namespace BFF.Web.DTOs.OrderSvc
         public Guid? CreatedBy { get; set; }
         [JsonIgnore]
         public DateTime CreatedDate { get; set; }
+        public string? Description { get; set; }
+
     }
 
 }

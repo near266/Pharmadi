@@ -20,6 +20,9 @@ namespace Module.Ordering.Application.Commands.PurchaseOrderCm
         public int Status { get; set; }
         public Guid? CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string? Description { get; set; }
+
+
 
     }
     public class PurchaseOrderAddCommandHandler : IRequestHandler<PurchaseOrderAddCommand, int>

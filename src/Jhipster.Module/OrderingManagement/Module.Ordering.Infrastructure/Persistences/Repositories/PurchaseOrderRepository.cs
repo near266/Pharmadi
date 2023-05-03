@@ -114,7 +114,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 CreatedBy = i.CreatedBy,
                 CreatedDate = i.CreatedDate,
                 TotalPayment = i.TotalPayment,
-                TotalPrice = i.TotalPrice
+                TotalPrice = i.TotalPrice,
+                Description=i.Description
                 
 
             }).FirstOrDefaultAsync();
