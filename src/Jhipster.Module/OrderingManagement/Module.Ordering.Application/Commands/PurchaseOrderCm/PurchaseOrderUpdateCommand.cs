@@ -27,6 +27,8 @@ namespace Module.Ordering.Application.Commands.PurchaseOrderCm
         public int? Status { get; set; }
         public Guid? LastModifiedBy { get; set; }
         public DateTime LastModifiedDate { get; set; }
+        public string? Description { get; set; }
+
     }
     public class PurchaseOrderUpdateCommandHandler : IRequestHandler<PurchaseOrderUpdateCommand, int>
     {

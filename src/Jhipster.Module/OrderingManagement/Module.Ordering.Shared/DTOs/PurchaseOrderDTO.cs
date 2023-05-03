@@ -24,5 +24,7 @@ namespace Module.Ordering.Shared.DTOs
         public string? Email { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string? Description { get; set; }
+
     }
 }
