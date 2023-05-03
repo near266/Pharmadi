@@ -364,7 +364,18 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 }
                 else
                 {
-                    query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => categoryIds.Contains(cp.CategoryId)));
+                    var cateId = new List<Guid>();
+                    cateId.AddRange(categoryIds);
+                    foreach (var item in categoryIds)
+                    {
+                        var childs = await _context.Categories.Where(i => i.ParentId == item).Select(i => i.Id).ToListAsync();
+                        if(childs!=null|| childs.Count!=0)
+                        {
+                            cateId.AddRange(childs);
+                        }
+                        query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => cateId.Contains(cp.CategoryId)));
+                    }
+                    
                 }
 
             }
