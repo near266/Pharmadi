@@ -78,7 +78,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU, string? ProductName, int? status)
         {
             var result = new PagedList<Product>();
-            var query1 = _context.Products.Where(i => i.Archived == false).AsQueryable();
+            var query1 = _context.Products.Where(i => i.Archived == false).Include(i=>i.CategoryProducts).ThenInclude(a=>a.Category).AsQueryable();
             if (SKU != null)
             {
                 SKU = SKU.ToLower();
