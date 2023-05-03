@@ -457,6 +457,31 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [AllowAnonymous]
+
+        [HttpPost("ViewProductForeign")]
+        public async Task<IActionResult> ViewProductForeign([FromBody] ViewProductForeignQuery request)
+        {
+            _logger.LogInformation($"REST request ViewProductForeign  : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                try
+                {
+                    request.userId = Guid.Parse(GetUserIdFromContext());
+                }
+                catch
+                {
+
+                }
+                var result = await _mediator.Send(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to ViewProductForeign fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
         [HttpPost("UpdateStatusProduct")]
         public async Task<IActionResult> UpdateStatusProduct([FromBody] UpdateStatusProductCommand request)
         {
