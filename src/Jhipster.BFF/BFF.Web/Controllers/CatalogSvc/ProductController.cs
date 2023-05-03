@@ -577,20 +577,38 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("PinProductInBrand")]
-        public async Task<ActionResult<int>> PinProductInBrand([FromBody] SearchProductQuery request)
+        public async Task<ActionResult<int>> PinProductInBrand([FromBody] PinProductRequest request)
         {
             _logger.LogInformation($"REST request Pin Product : {JsonConvert.SerializeObject(request)}");
             try
             {
-                request.userId= Guid.Parse(GetUserIdFromContext());
-
-                var result = await _mediator.Send(request);
-                foreach(var item in result.Data)
+                var pro = new GetListProductSimilarCategoryByBrandIdQuery
                 {
-                    var update = new UpdateStatusProductCommand { Id = item.Id, Status = 10};
+                   
+                    brandId=request.brandId,
+                    page=request.page,
+                    pageSize=request.pageSize,
+                    UserId = Guid.Parse(GetUserIdFromContext())
+            };
+
+  
+
+                var result = await _mediator.Send(pro);
+                var temp =result.Data.Select(i=>i.Products.Select(q=>i.Id)).ToList();
+                foreach(var p in request.ProIds)
+                {
+
+                    if (request.ProIds.Contains(p))
+                    {
+
+                    var update = new UpdateStatusProductCommand { Id = p, Status = 10};
                      _mediator.Send(update);
+                    }
+
+                        
 
                 }
+                
 
                 return Ok(1);
             }

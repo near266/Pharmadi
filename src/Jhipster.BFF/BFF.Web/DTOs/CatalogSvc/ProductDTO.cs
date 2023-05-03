@@ -152,7 +152,15 @@ namespace BFF.Web.DTOs.CatalogSvc
 
 
     }
-   
+    public class PinProductRequest {
+        public int page { get; set; }
+        public int pageSize { get; set; }
+        public Guid brandId { get; set; }
+        public Guid UserId { get; set; }
+        public List<Guid> ProIds { get; set; } 
+    
+    }
+
 
 
 }
