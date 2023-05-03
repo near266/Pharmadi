@@ -586,8 +586,8 @@ namespace BFF.Web.ProductSvc
                 {
                    
                     brandId=request.brandId,
-                    page=request.page,
-                    pageSize=request.pageSize,
+                    page=1,
+                    pageSize=10000,
                     UserId = Guid.Parse(GetUserIdFromContext())
             };
 
