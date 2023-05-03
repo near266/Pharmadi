@@ -2,16 +2,15 @@
 using MediatR;
 using Module.Catalog.Application.Persistences;
 using Module.Catalog.Domain.Entities;
-
-
+using Module.Catalog.Shared.DTOs;
 
 namespace Module.Catalog.Application.Queries.BrandQ
 {
-    public class BrandSearchQuery : IRequest<IEnumerable<Brand>>
+    public class BrandSearchQuery : IRequest<IEnumerable<BrandDTO>>
     {
         public string? keyword { get; set;}
     }
-    public class BrandSearchQueryHandler : IRequestHandler<BrandSearchQuery, IEnumerable<Brand>>
+    public class BrandSearchQueryHandler : IRequestHandler<BrandSearchQuery, IEnumerable<BrandDTO>>
     {
         private readonly IBrandRepository _repo;
         private readonly IMapper _mapper;
@@ -20,7 +19,7 @@ namespace Module.Catalog.Application.Queries.BrandQ
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<IEnumerable<Brand>> Handle(BrandSearchQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<BrandDTO>> Handle(BrandSearchQuery request, CancellationToken cancellationToken)
         {
             return await _repo.Search(request.keyword);
         }

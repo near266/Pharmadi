@@ -18,6 +18,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Module.Catalog.Shared.DTOs;
 using Module.Redis.Configurations;
 using Module.Redis.Library.Helpers;
+using Google.Apis.Logging;
 
 namespace BFF.Web.ProductSvc
 {
@@ -87,7 +88,11 @@ namespace BFF.Web.ProductSvc
                     CreatedDate = request.CreatedDate,
                     Archived = false,
                     HideProduct = request.HideProduct,
-                    CanOrder = request.CanOrder
+                    CanOrder = request.CanOrder,
+                    NewProduct = request.NewProduct,
+                    ImportedProducts = request.ImportedProducts,
+                    sellingProducts = request.sellingProducts,
+                    ShortName=request.ShortName,
                 };
                 await _mediator.Send(step1);
 
@@ -210,8 +215,11 @@ namespace BFF.Web.ProductSvc
                     LastModifiedDate = request.LastModifiedDate,
                     Archived = request.Archived,
                     HideProduct = request.HideProduct,
-                    CanOrder = request.CanOrder
-
+                    CanOrder = request.CanOrder,
+                    NewProduct = request.NewProduct,
+                    ImportedProducts = request.ImportedProducts,
+                    sellingProducts = request.sellingProducts,
+                    ShortName=request.ShortName
                 };
 
                 result = await _mediator.Send(step1);
@@ -543,6 +551,45 @@ namespace BFF.Web.ProductSvc
             }
         }
 
+        [HttpPost("PinProductInBrand")]
+        public async Task<ActionResult<int>> PinProductInBrand([FromBody] SearchProductQuery request)
+        {
+            _logger.LogInformation($"REST request Pin Product : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                request.userId= Guid.Parse(GetUserIdFromContext());
+
+                var result = await _mediator.Send(request);
+                foreach(var item in result.Data)
+                {
+                    var update = new UpdateStatusProductCommand { Id = item.Id, Status = 10};
+                     _mediator.Send(update);
+
+                }
+
+                return Ok(1);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to Pin Product fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpGet("ShortName")]
+        public async Task<ActionResult<string>> GetShortName([FromQuery] ProductViewDetailQuery request)
+        {
+            _logger.LogInformation($"REST request ShortName : {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var result = await _mediator.Send(request);
+                return Ok(result.ShortName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request to ShortName fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
         [HttpPost("Archived")]
         public async Task<IActionResult> ArchivedProduct([FromBody] ProductArchivedCommand request)
         {

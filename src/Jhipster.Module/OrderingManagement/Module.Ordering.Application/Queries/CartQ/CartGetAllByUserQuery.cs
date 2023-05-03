@@ -13,6 +13,7 @@ namespace Module.Ordering.Application.Queries.CartQ
         public int page { get; set; }
         public int pageSize { get; set; }
         public Guid userId { get; set; }
+        public int? check { get;set; }
     }
     public class CartGetAllByUserQueryHandler : IRequestHandler<CartGetAllByUserQuery, ViewCartDTO>
     {
@@ -25,7 +26,7 @@ namespace Module.Ordering.Application.Queries.CartQ
         }
         public async Task<ViewCartDTO> Handle(CartGetAllByUserQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.GetAllByUser(request.page, request.pageSize, request.userId);
+            return await _repo.GetAllByUser(request.page, request.pageSize, request.userId,request.check);
         }
     }
 
