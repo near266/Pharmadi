@@ -95,7 +95,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 query1 = query1.Where(i => i.Status == status);
             }
             var data = await query1
-                        .OrderByDescending(i => i.LastModifiedDate)
+                        .OrderByDescending(i => i.SKU)
                         .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
