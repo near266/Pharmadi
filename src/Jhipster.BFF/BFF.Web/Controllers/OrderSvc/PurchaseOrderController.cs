@@ -62,7 +62,7 @@ namespace BFF.Web.ProductSvc
                 request.Status = 1;
                 request.MerchantId = new Guid(GetUserIdFromContext());
                 request.CreatedDate = DateTime.Now;
-
+                
 
 
                 if (request.TotalPrice <= 1000000) request.ShippingFee = 50000;
