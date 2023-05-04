@@ -277,7 +277,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 GroupBrand = i.GroupBrand,
                 
 
-            }).FirstOrDefaultAsync();
+            }).OrderBy(i=>i.CateName).FirstOrDefaultAsync();
               
                 return data;
             
