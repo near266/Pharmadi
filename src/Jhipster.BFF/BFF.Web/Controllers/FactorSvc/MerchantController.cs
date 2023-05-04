@@ -93,22 +93,24 @@ namespace BFF.Web.Controllers.FactorSvc
                 requestAddTranaction.AddJsonBody(body);
                 var reponse = await client.ExecuteAsync(requestAddTranaction);
                 //add merchant
-                if(reponse.Content!=null)
+                if (reponse.Content != null)
                 {
-                    string[] parts = request.Email.Contains("@")?request.Email.Split('@'):(request.Email+"@").Split('@');
+                    string[] parts = request.Email.Contains("@") ? request.Email.Split('@') : (request.Email + "@").Split('@');
                     string result = parts[0];
                     var rqMerchant = new MerchantAddCommand()
                     {
-                        Id=Guid.Parse(step1.Id),  
-                        PhoneNumber=request.PhoneNumber,
+                        Id = Guid.Parse(step1.Id),
+                        PhoneNumber = request.PhoneNumber,
                         MerchantName = result,
-                        CreatedDate=DateTime.Now,
-                        Email=request.Email
+                        CreatedDate = DateTime.Now,
+                        Email = request.Email,
+                        Status = 1,
+                        AddressStatus = 1
 
                     };
                     await _mediator.Send(rqMerchant);
 
-                }    
+                }
                 return Ok(reponse.Content);
 
             }
@@ -151,6 +153,7 @@ namespace BFF.Web.Controllers.FactorSvc
                 request.CreatedDate = DateTime.Now;
                 request.LangKey = "en";
                 request.Status = 1;
+                request.AddressStatus = 1;
                 var tem1 = _mapper.Map<RegisterAdminRequest>(request);
                 tem1.Id = request.Id.ToString();
                 //adduser
@@ -188,7 +191,7 @@ namespace BFF.Web.Controllers.FactorSvc
                 request.Id = Guid.NewGuid().ToString();
                 request.CreatedDate = DateTime.Now;
                 request.LangKey = "en";
-               
+
                 //adduser
                 var step1 = await _accountService.RegisterEmployee(request);
 

@@ -54,5 +54,7 @@ namespace BFF.Web.DTOs.OrderSvc
         [JsonIgnore]
         public DateTime LastModifiedDate { get; set; }
         public OrderItemUpdateRequest OrderItem { get; set; }
+        public string? Description { get; set; }
+
     }
 }
