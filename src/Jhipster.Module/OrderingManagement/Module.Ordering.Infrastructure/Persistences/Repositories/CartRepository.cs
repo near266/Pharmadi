@@ -9,6 +9,7 @@ using Module.Ordering.Shared.DTOs;
 using static System.Net.Mime.MediaTypeNames;
 using System.Linq;
 using System.Runtime.Intrinsics.X86;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -96,6 +97,13 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                         q1.Add(id);
                     }
                 }
+                foreach (var item in query)
+                {
+                   if( item.Product.ShortName == null)
+                    {
+                        item.Product.ShortName = item.Product.ProductName.Substring(0, 25);
+                    }    
+                }
 
                 foreach (var item in q1)
                 {
@@ -130,7 +138,13 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                         q1.Add(id);
                     }
                 }
-
+                foreach (var item in query1)
+                {
+                    if (item.Product.ShortName == null)
+                    {
+                        item.Product.ShortName = item.Product.ProductName.Substring(0, 25);
+                    }
+                }
                 foreach (var item in q1)
                 {
                     var temp = new ViewCartByBrandDTO
