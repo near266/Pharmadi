@@ -572,13 +572,13 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var CatePro = await _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId) && i.Priority == true).Select(i => i.CategoryId).Distinct().ToListAsync();
             //var cate = await _context.CategoryProducts.Where(i => CatePro.Contains(i.CategoryId)).Select(i => i.ProductId).ToListAsync();
             //var Procate = await _context.Products.Where(i => CatePro.Contains(i.Id)).ToListAsync();
-            var result = cate.OrderBy(i => i.CategoryName).Select(i => new SearchProductBrandId
+            var result = cate.Select(i => new SearchProductBrandId
             {
                 Id = i.Id,
                 CategoryName = i.CategoryName,
                 Descripton = i.Descripton,
                 Products =_context.CategoryProducts.Where(q=>q.CategoryId==i.Id&& Pro.Contains(q.ProductId)).Select(i=>i.Product).ToList(),
-            })
+            }).OrderBy(i => i.CategoryName)
                 .Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToList();
