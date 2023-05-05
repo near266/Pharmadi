@@ -262,7 +262,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             var query = _context.Brands.AsQueryable();
             var Pr = await _context.Products.Where(i=>i.BrandId==Id).Select(i=>i.Id).ToListAsync();
-            var cate  = await _context.CategoryProducts.Where(i=>Pr.Contains(i.ProductId)&&i.Priority==true).Select(i=>i.CategoryId).ToListAsync();
+            var cate  = await _context.CategoryProducts.Where(i=>Pr.Contains(i.ProductId)&&i.Priority==true).Select(i=>i.Category)
+                .Where(a => a.ParentId == null).Select(a=>a.Id).ToListAsync();
             var catename = await _context.Categories.Where(i=>cate.Contains(i.Id)).OrderBy(a => a.CategoryName).Select(i=>i.CategoryName).ToListAsync();
 
             var data = await query.Where(i => i.Id == Id).Select(i => new DetailBrand
@@ -277,7 +278,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 GroupBrand = i.GroupBrand,
                 
 
-            }).FirstOrDefaultAsync();
+            }).OrderBy(i=>i.CateName).FirstOrDefaultAsync();
               
                 return data;
             
