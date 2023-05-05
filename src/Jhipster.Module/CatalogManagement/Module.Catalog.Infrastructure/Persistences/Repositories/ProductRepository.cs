@@ -288,7 +288,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Country = i.Country,
                 ImportedProducts= i.ImportedProducts
 
-            }).Where(a => a.Country.ToLower() != "việt nam").OrderByDescending(i => i.ImportedProducts == null).ThenBy(i => i.ImportedProducts).Skip(pageSize * (page - 1))
+            }).Where(a => a.Country.ToLower() != "việt nam").OrderByDescending(i => i.ImportedProducts != null).ThenBy(i => i.ImportedProducts).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
