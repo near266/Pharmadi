@@ -85,7 +85,10 @@ namespace Jhipster
                 options.AddPolicy("AllowSpecificUrl",
                     builder => builder.WithOrigins("https://pharmadi.com.vn")
                     .WithOrigins("https://api.pharmadi.com.vn")
-                    .WithOrigins("https://adm.pharmadi.com.vn"));
+                    .WithOrigins("https://adm.pharmadi.com.vn")
+                    .WithOrigins("https://pharmadi.vn")
+                    .WithOrigins("https://api.pharmadi.vn")
+                    .WithOrigins("https://adm.pharmadi.vn"));
             });
 
         }
