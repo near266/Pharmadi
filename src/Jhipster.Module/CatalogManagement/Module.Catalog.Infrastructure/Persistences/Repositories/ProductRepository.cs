@@ -572,8 +572,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 .Select(i => i.Category).Distinct().Where(a => a.ParentId == null);
             //var CatePro = await _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId) && i.Priority == true)
             //    .Select(i => i.CategoryId).ToListAsync();
-            var CatePro = cate.Select(i => i.Id).ToList();
-            foreach(var item in CatePro)
+            var CateProId = cate.Select(i => i.Id).ToList();
+            var CatePro = new List<Guid>();
+            CatePro.AddRange(CateProId);
+            foreach(var item in CateProId)
             {
                 var checkcate = await _context.Categories.Where(i => i.ParentId == item).ToListAsync();
                 CatePro.AddRange(checkcate.Select(i => i.Id));
