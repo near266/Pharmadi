@@ -568,10 +568,16 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             var res = new PagedList<SearchProductBrandId>();
             var Pro = await _context.Products.Where(i => i.BrandId == brandId).Select(i => i.Id).ToListAsync();
-            var cate = _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId) && i.Priority == true).Select(i => i.Category).Distinct().AsQueryable();
-            var CatePro = await _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId) && i.Priority == true).Select(i => i.CategoryId).ToListAsync();
-            //  var cate = await _context.CategoryProducts.Where(i => CatePro.Contains(i.CategoryId)).Distinct().AsQueryable().ToListAsync();
-            // var Procate = await _context.Products.Where(i => CatePro.Contains(i.Id)).ToListAsync();
+            var cate = _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId) && i.Priority == true)
+                .Select(i => i.Category).Distinct().Where(a => a.ParentId == null);
+            //var CatePro = await _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId) && i.Priority == true)
+            //    .Select(i => i.CategoryId).ToListAsync();
+            var CatePro = cate.Select(i => i.Id).ToList();
+            foreach(var item in CatePro)
+            {
+                var checkcate = await _context.Categories.Where(i => i.ParentId == item).ToListAsync();
+                CatePro.AddRange(checkcate.Select(i => i.Id));
+            }    
             var result = cate.Select(i => new SearchProductBrandId
             {
                 Id = i.Id,
