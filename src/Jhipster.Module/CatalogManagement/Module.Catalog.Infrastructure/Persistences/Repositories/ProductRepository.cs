@@ -285,9 +285,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder,
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
-                Country = i.Country
+                Country = i.Country,
+                ImportedProducts= i.ImportedProducts
 
-            }).Where(a => a.Country.ToLower() != "việt nam").Skip(pageSize * (page - 1))
+            }).Where(a => a.Country.ToLower() != "việt nam").OrderByDescending(i => i.ImportedProducts == null).ThenBy(i => i.ImportedProducts).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
