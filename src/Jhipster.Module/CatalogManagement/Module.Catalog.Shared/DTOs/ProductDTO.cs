@@ -57,6 +57,8 @@ namespace Module.Catalog.Shared.DTOs
         public string? ShortName { get; set; }
         public string? Country { get; set; }
 
+        public int? ImportedProducts { get; set; }
+
 
     }
     public class SearchProductDTO

@@ -285,9 +285,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder,
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
-                Country = i.Country
+                Country = i.Country,
+                ImportedProducts= i.ImportedProducts
 
-            }).Where(a => a.Country.ToLower() != "việt nam").Skip(pageSize * (page - 1))
+            }).Where(a => a.Country.ToLower() != "việt nam").OrderByDescending(i => i.ImportedProducts != null).ThenBy(i => i.ImportedProducts).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
@@ -568,10 +569,18 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             var res = new PagedList<SearchProductBrandId>();
             var Pro = await _context.Products.Where(i => i.BrandId == brandId).Select(i => i.Id).ToListAsync();
-            var cate = _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId) && i.Priority == true).Select(i => i.Category).Distinct().AsQueryable();
-            var CatePro = await _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId) && i.Priority == true).Select(i => i.CategoryId).ToListAsync();
-            //  var cate = await _context.CategoryProducts.Where(i => CatePro.Contains(i.CategoryId)).Distinct().AsQueryable().ToListAsync();
-            // var Procate = await _context.Products.Where(i => CatePro.Contains(i.Id)).ToListAsync();
+            var cate = _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId) && i.Priority == true)
+                .Select(i => i.Category).Distinct().Where(a => a.ParentId == null);
+            //var CatePro = await _context.CategoryProducts.Where(i => Pro.Contains(i.ProductId) && i.Priority == true)
+            //    .Select(i => i.CategoryId).ToListAsync();
+            var CateProId = cate.Select(i => i.Id).ToList();
+            var CatePro = new List<Guid>();
+            CatePro.AddRange(CateProId);
+            foreach(var item in CateProId)
+            {
+                var checkcate = await _context.Categories.Where(i => i.ParentId == item).ToListAsync();
+                CatePro.AddRange(checkcate.Select(i => i.Id));
+            }    
             var result = cate.Select(i => new SearchProductBrandId
             {
                 Id = i.Id,
