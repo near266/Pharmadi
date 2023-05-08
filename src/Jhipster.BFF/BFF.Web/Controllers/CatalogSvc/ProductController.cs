@@ -383,10 +383,10 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductBestSale  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                PagedList<ProductSearchDTO>? res;
+                PagedList<SaleProductDTO>? res;
 
                 string recordKey = $"{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
-                res = await _cache.GetRecordAsync<PagedList<ProductSearchDTO>>(recordKey);
+                res = await _cache.GetRecordAsync<PagedList<SaleProductDTO>>(recordKey);
                 if (res is null)
                 {
                     try
