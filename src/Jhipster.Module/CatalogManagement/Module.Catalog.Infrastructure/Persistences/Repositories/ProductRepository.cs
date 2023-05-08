@@ -195,12 +195,12 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return result;
         }
 
-        public async Task<PagedList<ProductSearchDTO>> ViewProductNew(int page, int pageSize, Guid? userId)
+        public async Task<PagedList<NewProductDTO>> ViewProductNew(int page, int pageSize, Guid? userId)
         {
-            var result = new PagedList<ProductSearchDTO>();
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable().OrderByDescending(i => i.NewProduct == null).ThenBy(i => i.NewProduct);
+            var result = new PagedList<NewProductDTO>();
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
 
-            var query2 = await query.Select(i => new ProductSearchDTO
+            var query2 = await query.Select(i => new NewProductDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
@@ -215,9 +215,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                NewProduct=i.NewProduct!=null ?i.NewProduct:0
 
-            }).Skip(pageSize * (page - 1))
+            }).OrderByDescending(i => i.NewProduct).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
@@ -286,9 +287,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CanOrder = i.CanOrder,
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
                 Country = i.Country,
-                ImportedProducts= i.ImportedProducts
+                ImportedProducts= i.ImportedProducts !=null ? i.ImportedProducts:0
 
-            }).Where(a => a.Country.ToLower() != "việt nam").OrderByDescending(i => i.ImportedProducts != null).ThenBy(i => i.ImportedProducts).Skip(pageSize * (page - 1))
+            }).Where(a => a.Country.ToLower() != "việt nam").OrderByDescending(i => i.ImportedProducts != null).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
