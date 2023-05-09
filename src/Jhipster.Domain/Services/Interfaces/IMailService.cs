@@ -10,5 +10,6 @@ namespace Jhipster.Domain.Services.Interfaces
         Task SendCreationEmail(User user);
         Task SendPasswordForgotOTPMail(User user);
         Task SendPasswordForgotResetMail(string newPassword, string mail);
+        Task SendOrder(string MerchantName  , string OrderCode , decimal TotalPayment);
     }
 }
