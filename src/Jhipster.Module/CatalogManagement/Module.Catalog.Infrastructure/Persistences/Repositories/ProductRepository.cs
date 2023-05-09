@@ -185,7 +185,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 CanOrder = i.CanOrder,
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
-                sellingProducts=i.sellingProducts
+                sellingProducts=i.sellingProducts!=null ? i.sellingProducts:0
 
             }).OrderByDescending(i => i.sellingProducts).Skip(pageSize * (page - 1))
                         .Take(pageSize)
