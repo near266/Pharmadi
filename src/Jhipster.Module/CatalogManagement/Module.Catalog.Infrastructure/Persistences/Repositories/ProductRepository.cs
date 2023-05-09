@@ -164,12 +164,12 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             result.TotalCount = query.Count();
             return result;
         }
-        public async Task<PagedList<ProductSearchDTO>> ViewProductBestSale(int page, int pageSize, Guid? userId)
+        public async Task<PagedList<SaleProductDTO>> ViewProductBestSale(int page, int pageSize, Guid? userId)
         {
-            var result = new PagedList<ProductSearchDTO>();
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable().OrderByDescending(i => i.sellingProducts == null).ThenBy(i => i.sellingProducts);
+            var result = new PagedList<SaleProductDTO>();
+            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
 
-            var query2 = await query.Select(i => new ProductSearchDTO
+            var query2 = await query.Select(i => new SaleProductDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
@@ -184,9 +184,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                sellingProducts=i.sellingProducts!=null ? i.sellingProducts:0
 
-            }).Skip(pageSize * (page - 1))
+            }).OrderByDescending(i => i.sellingProducts).Skip(pageSize * (page - 1))
                         .Take(pageSize)
                         .ToListAsync();
 
