@@ -68,11 +68,11 @@ namespace Jhipster.Domain.Services
             return $"{temp}/api/activate?key={key}";
         }
 
-        public virtual async Task SendOrder(string MerchantName, string OrderCode, decimal TotalPayment)
+        public virtual async Task SendOrder(string MerchantName, string OrderCode, decimal TotalPayment,string Item)
         {
             string Email = "ops@pharmadi.vn";
             var temp = _configuration.GetValue<string>("EmailTemplate:MailOrder");
-            await _emailSender.SendEmailAsync(Email, "Khách hàng đặt đơn", string.Format(temp, MerchantName, OrderCode, TotalPayment));
+            await _emailSender.SendEmailAsync(Email, "Khách hàng đặt đơn", string.Format(temp, MerchantName, OrderCode, TotalPayment,Item));
         }
     }
 }
