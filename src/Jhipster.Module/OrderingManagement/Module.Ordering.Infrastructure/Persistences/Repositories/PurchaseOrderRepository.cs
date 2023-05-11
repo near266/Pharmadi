@@ -49,7 +49,9 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             request.OrderCode = shortCode;
             await _context.PurchaseOrders.AddAsync(request);
             var check = CheckMerchant(request.MerchantId);
-            await _mailService.SendOrder(check,shortCode,request.TotalPayment);
+            var checkitem =  _context.Carts.Where(i=>i.UserId==request.MerchantId).Select(i=> "<br />Item: " + i.Product.ProductName+ "<br />").ToList();
+            string ListProduct = String.Join("\n",checkitem);
+            await _mailService.SendOrder(check,shortCode,request.TotalPayment,ListProduct);
             return await _context.SaveChangesAsync();
         }
 
