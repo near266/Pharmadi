@@ -10,6 +10,10 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Jhipster.Helpers;
 using JHipsterNet.Core.Pagination;
 using Module.Ordering.Shared.DTOs;
+using Jhipster.Domain.Services.Interfaces;
+using Jhipster.Infrastructure.Migrations;
+using Module.Factor.Domain.Entities;
+using HistoryOrder = Module.Ordering.Domain.Entities.HistoryOrder;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -17,10 +21,12 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
     {
         private readonly OrderingDbContext _context;
         private readonly IMapper _mapper;
-        public PurchaseOrderRepository(OrderingDbContext context, IMapper mapper)
+        private readonly IMailService _mailService;
+        public PurchaseOrderRepository(OrderingDbContext context, IMapper mapper,IMailService mailService)
         {
             _context = context;
             _mapper = mapper;
+            _mailService = mailService;
         }
         public async Task<int> Add(PurchaseOrder request)
         {
@@ -42,6 +48,10 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             request.LastModifiedDate = request.CreatedDate;
             request.OrderCode = shortCode;
             await _context.PurchaseOrders.AddAsync(request);
+            var check = CheckMerchant(request.MerchantId);
+            var checkitem =  _context.Carts.Where(i=>i.UserId==request.MerchantId).Select(i=> "<br />Item: " + i.Product.ProductName+ "<br />").ToList();
+            string ListProduct = String.Join("\n",checkitem);
+            await _mailService.SendOrder(check,shortCode,request.TotalPayment,ListProduct);
             return await _context.SaveChangesAsync();
         }
 
@@ -235,6 +245,11 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             };
             return value;
 
+        }
+        public string CheckMerchant(Guid id)
+        {
+            var check =  _context.Merchants.FirstOrDefault(i => i.Id == id);
+            return check.MerchantName;
         }
     }
 }

@@ -9,13 +9,13 @@ using Module.Catalog.Shared.DTOs;
 
 namespace Module.Catalog.Application.Queries.ProductQ
 {
-    public class ViewProductNewQuery : IRequest<PagedList<ProductSearchDTO>>
+    public class ViewProductNewQuery : IRequest<PagedList<NewProductDTO>>
     {
         public int page { get; set; }
         public int pageSize { get; set; }
         public Guid? userId { get; set; }
     }
-    public class ViewProductNewQueryHandler : IRequestHandler<ViewProductNewQuery, PagedList<ProductSearchDTO>>
+    public class ViewProductNewQueryHandler : IRequestHandler<ViewProductNewQuery, PagedList<NewProductDTO>>
     {
         private readonly IProductRepository _repo;
         private readonly IMapper _mapper;
@@ -24,7 +24,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<PagedList<ProductSearchDTO>> Handle(ViewProductNewQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<NewProductDTO>> Handle(ViewProductNewQuery request, CancellationToken cancellationToken)
         {
             return await _repo.ViewProductNew(request.page, request.pageSize, request.userId);
         }

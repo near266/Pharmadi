@@ -21,6 +21,7 @@ using Module.Factor.Application.Queries.MerchantQ;
 using Module.Ordering.Application.Commands.HistoryOrderCm;
 using BFF.Web.DTOs.PurchaseOrderSvc;
 using Module.Ordering.Application.Commands.ProductSaleCm;
+using Jhipster.Domain.Services.Interfaces;
 
 namespace BFF.Web.ProductSvc
 {
@@ -31,11 +32,14 @@ namespace BFF.Web.ProductSvc
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
         private readonly ILogger<PurchaseOrderController> _logger;
+        private readonly IMailService _mailService;
 
-        public PurchaseOrderController(IMediator mediator, IMapper mapper, ILogger<PurchaseOrderController> logger)
+
+        public PurchaseOrderController(IMediator mediator, IMapper mapper,IMailService mailService, ILogger<PurchaseOrderController> logger)
         {
             _mediator = mediator;
             _logger = logger;
+            _mailService=mailService;
             _mapper = mapper;
         }
         private string GetUserIdFromContext()
