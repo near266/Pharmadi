@@ -70,6 +70,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.Ordering.Shared", "src\Jhipster.Module\OrderingManagement\Module.Ordering.Shared\Module.Ordering.Shared.csproj", "{1C2EB4E1-42AE-4A8A-A4FD-4223642EEB03}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jhipster.Infrastructure", "src\Jhipster.Infrastructure\Jhipster.Infrastructure.csproj", "{1605B4B9-F276-40B1-AFE9-4BDD40894846}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A9FB4EF2-7B20-4872-A6F6-FE83CF27E937} = {A9FB4EF2-7B20-4872-A6F6-FE83CF27E937}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FactorManagement", "FactorManagement", "{3BA2236D-4E13-438A-B48F-176B7788E211}"
 EndProject
@@ -87,13 +90,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "delivery.svc", "delivery.sv
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Email", "Email", "{35EF31AA-2861-4AEE-97F7-C89FBC523160}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Module.Email", "Module.Email\Module.Email.csproj", "{B8E0798B-01A1-48CB-B248-E4C6B981D7D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.Email", "Module.Email\Module.Email.csproj", "{B8E0798B-01A1-48CB-B248-E4C6B981D7D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Module.Email.Application", "Module.Emai.Application\Module.Email.Application.csproj", "{52ED7BA3-D045-4DB8-AC05-87E6DB5E385A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.Email.Application", "Module.Emai.Application\Module.Email.Application.csproj", "{52ED7BA3-D045-4DB8-AC05-87E6DB5E385A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Module.Email.Domain", "Module.Email.Domain\Module.Email.Domain.csproj", "{A9FB4EF2-7B20-4872-A6F6-FE83CF27E937}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.Email.Domain", "Module.Email.Domain\Module.Email.Domain.csproj", "{A9FB4EF2-7B20-4872-A6F6-FE83CF27E937}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Module.Email.Infrastructure", "Module.Email.Infrastructure\Module.Email.Infrastructure.csproj", "{0405ABA1-CB64-4ECB-B4FD-B3FCE0AC38E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.Email.Infrastructure", "Module.Email.Infrastructure\Module.Email.Infrastructure.csproj", "{0405ABA1-CB64-4ECB-B4FD-B3FCE0AC38E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
