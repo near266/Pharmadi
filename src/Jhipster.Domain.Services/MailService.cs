@@ -61,11 +61,18 @@ namespace Jhipster.Domain.Services
             await _emailSender.SendEmailAsync(mail, "Cấp mật khẩu tạm thời (Quên mật khẩu)", string.Format(temp, "", newPassword));
             //TODO send reset Email
         }
-
+       
         private string GenLink(string key)
         {
             var temp = _configuration.GetConnectionString("AIO");
             return $"{temp}/api/activate?key={key}";
+        }
+
+        public virtual async Task SendOrder(string MerchantName, string OrderCode, decimal TotalPayment,string Item)
+        {
+            string Email = "ops@pharmadi.vn";
+            var temp = _configuration.GetValue<string>("EmailTemplate:MailOrder");
+            await _emailSender.SendEmailAsync(Email, "Khách hàng đặt đơn", string.Format(temp, MerchantName, OrderCode, TotalPayment,Item));
         }
     }
 }
