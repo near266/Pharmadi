@@ -25,3 +25,4 @@ namespace Module.Ordering.Domain.Entities
         public IEnumerable<OrderItem> OrderItems { get; set; }
     }
 }
+// Khách hàng {1} vừa thực hiện giao dịch {2} với giá tiền {3}
