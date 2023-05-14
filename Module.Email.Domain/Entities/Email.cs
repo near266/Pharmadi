@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace Module.Email.Domain.Entities
 {
-    public class Email
-    {
+  
         [Table("DeliveryDatas")]
-        public class DeliveryData : BaseEntity<Guid>
+        public class Email : BaseEntity<Guid>
         {
             [Description("Dữ liệu cần chuyển đi: OTP, Password Temp, Username, . . .")]
             public string Data { get; set; }
@@ -25,5 +24,5 @@ namespace Module.Email.Domain.Entities
             public bool IsCancelled { get; set; }
             public bool IsSend { get; set; }
         }
-    }
+    
 }

@@ -20,6 +20,7 @@ namespace Module.Email.Infrastructure.Persistences
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+     
         }
     }
 }

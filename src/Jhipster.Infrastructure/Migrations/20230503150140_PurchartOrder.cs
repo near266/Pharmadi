@@ -21,5 +21,6 @@ namespace Jhipster.Infrastructure.Migrations
                 name: "Description",
                 table: "PurchaseOrders");
         }
+
     }
 }

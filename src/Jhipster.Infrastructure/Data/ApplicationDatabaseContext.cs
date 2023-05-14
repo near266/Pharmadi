@@ -30,6 +30,7 @@ namespace Jhipster.Infrastructure.Data
             _httpContextAccessor = httpContextAccessor;
         }
 
+
         #region 1. Catalog module
         public DbSet<GroupBrand> GroupBrands { get; set; }
         public DbSet<Brand> Brands { get; set; }
@@ -67,7 +68,9 @@ namespace Jhipster.Infrastructure.Data
         public DbSet<FunctionType> FunctionTypes { get; set; }
         public DbSet<RoleFunction> RoleFunctions { get; set; }
         #endregion
-
+        #region EmailModule
+        public DbSet<Module.Email.Domain.Entities.Email> emails { get; set; }
+        #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
