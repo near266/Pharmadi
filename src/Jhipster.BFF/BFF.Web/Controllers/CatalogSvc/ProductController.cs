@@ -383,21 +383,17 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductBestSale  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                PagedList<SaleProductDTO>? res;
+                //PagedList<SaleProductDTO>? res;
 
-                string recordKey = $"{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
-                res = await _cache.GetRecordAsync<PagedList<SaleProductDTO>>(recordKey);
-                if (res is null)
-                {
-                    try
-                    {
-                        request.userId = Guid.Parse(GetUserIdFromContext());
-                    }
-                    catch
-                    { }
-                    res = await _mediator.Send(request);
-                    await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromDays(3));
-                }
+                //string recordKey = $"{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
+                //res = await _cache.GetRecordAsync<PagedList<SaleProductDTO>>(recordKey);
+                //if (res is null)
+                //{
+                  
+                //    res = await _mediator.Send(request);
+                //    await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromSeconds(3));
+                //}
+                var res = await _mediator.Send(request);
 
                 return Ok(res);
             }
@@ -577,20 +573,38 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("PinProductInBrand")]
-        public async Task<ActionResult<int>> PinProductInBrand([FromBody] SearchProductQuery request)
+        public async Task<ActionResult<int>> PinProductInBrand([FromBody] PinProductRequest request)
         {
             _logger.LogInformation($"REST request Pin Product : {JsonConvert.SerializeObject(request)}");
             try
             {
-                request.userId= Guid.Parse(GetUserIdFromContext());
-
-                var result = await _mediator.Send(request);
-                foreach(var item in result.Data)
+                var pro = new GetListProductSimilarCategoryByBrandIdQuery
                 {
-                    var update = new UpdateStatusProductCommand { Id = item.Id, Status = 10};
+                   
+                    brandId=request.brandId,
+                    page=1,
+                    pageSize=10000,
+                    UserId = Guid.Parse(GetUserIdFromContext())
+            };
+
+  
+
+                var result = await _mediator.Send(pro);
+                var temp =result.Data.Select(i=>i.Products.Select(q=>i.Id)).ToList();
+                foreach(var p in request.ProIds)
+                {
+
+                    if (request.ProIds.Contains(p))
+                    {
+
+                    var update = new UpdateStatusProductCommand { Id = p, Status = 10};
                      _mediator.Send(update);
+                    }
+
+                        
 
                 }
+                
 
                 return Ok(1);
             }
