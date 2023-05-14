@@ -18,15 +18,10 @@ using Module.Ordering;
 using Module.Factor;
 using Jhipster.gRPC.Contracts.Shared.Identity;
 using Jhipster.gRPC.Contracts.Shared.Services;
-using Module.Factor.Application.Persistences;
-using Module.Factor.Infrastructure.Persistence.Repositories;
 using Jhipster.Domain.Repositories.Interfaces;
 using Jhipster.Infrastructure.Data.Repositories;
 using Module.Redis;
-using Microsoft.Extensions.Caching.Distributed;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Jhipster.Crosscutting.Constants;
+using Module.Email;
 
 [assembly: ApiController]
 
@@ -128,6 +123,7 @@ namespace Jhipster
             services.AddFactorModule(Configuration);
             services.AddPermissionModule(Configuration);
             services.AddOrderingModule(Configuration);
+            services.AddEmailModule(Configuration);
             services.AddScoped(typeof(IAccountService), typeof(AccountServices));
 
             //services.AddBasketModule(Configuration);

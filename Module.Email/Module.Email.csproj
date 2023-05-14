@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.QualityTools.Testing.Fakes" Version="16.11.230815" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Module.Emai.Application\Module.Email.Application.csproj" />
+    <ProjectReference Include="..\Module.Email.Domain\Module.Email.Domain.csproj" />
+    <ProjectReference Include="..\Module.Email.Infrastructure\Module.Email.Infrastructure.csproj" />
+    <ProjectReference Include="..\src\Jhipster.Infrastructure\Jhipster.Infrastructure.csproj" />
+  </ItemGroup>
+
+
+</Project>

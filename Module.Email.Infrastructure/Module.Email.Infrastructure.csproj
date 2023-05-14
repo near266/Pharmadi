@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Module.Emai.Application\Module.Email.Application.csproj" />
+    <ProjectReference Include="..\Module.Email.Domain\Module.Email.Domain.csproj" />
+    <ProjectReference Include="..\src\Jhipster.Infrastructure\Jhipster.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\Persistences\Repositories\" />
+  </ItemGroup>
+
+</Project>
