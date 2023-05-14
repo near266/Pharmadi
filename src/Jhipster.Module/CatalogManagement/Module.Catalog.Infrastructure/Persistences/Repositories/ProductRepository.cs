@@ -166,10 +166,38 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
         public async Task<PagedList<SaleProductDTO>> ViewProductBestSale(int page, int pageSize, Guid? userId)
         {
-            var result = new PagedList<SaleProductDTO>();
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
+            //var result = new PagedList<SaleProductDTO>();
+            //var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
 
-            var query2 = await query.Select(i => new SaleProductDTO
+            //var query2 = await query.Select(i => new SaleProductDTO
+            //{
+            //    Id = i.Id,
+            //    SKU = i.SKU,
+            //    Price = i.Price,
+            //    SalePrice = i.SalePrice,
+            //    ProductName = i.ProductName,
+            //    UnitName = i.UnitName,
+            //    Image = i.Image,
+            //    Specification = i.Specification,
+            //    Archived = i.Archived,
+            //    LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
+            //    CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
+            //    SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
+            //    CanOrder = i.CanOrder,
+            //    ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+            //    sellingProducts=i.sellingProducts!=null ? i.sellingProducts:0
+
+            //}).OrderByDescending(i => i.sellingProducts).Skip(pageSize * (page - 1))
+            //            .Take(pageSize)
+            //            .ToListAsync();
+
+            //result.Data = query2.AsEnumerable();
+            //result.TotalCount = query.Count();
+            // return result;
+            var result = new PagedList<SaleProductDTO>();
+            var query = _context.Products.Where(i => i.Archived == false).AsNoTracking();
+
+            var query2 = await query.Select( i => new SaleProductDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
@@ -181,18 +209,26 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Specification = i.Specification,
                 Archived = i.Archived,
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
-                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
+                CartNumber = (userId != null) ?
+                    _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id)
+                        .Select(i => i.Quantity)
+                        .SingleOrDefault()
+                        .ToString() : "0",
+                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id)
+                    .Select(a => a.Quantity)
+                    .SingleOrDefault(),
                 CanOrder = i.CanOrder,
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
-                sellingProducts=i.sellingProducts!=null ? i.sellingProducts:0
+                sellingProducts = i.sellingProducts != null ? i.sellingProducts : 0
 
-            }).OrderByDescending(i => i.sellingProducts).Skip(pageSize * (page - 1))
-                        .Take(pageSize)
-                        .ToListAsync();
+            }).OrderByDescending(i => i.sellingProducts)
+                .Skip(pageSize * (page - 1))
+                .Take(pageSize)
+                .ToListAsync();
 
-            result.Data = query2.AsEnumerable();
-            result.TotalCount = query.Count();
+            result.Data =  query2.ToList();
+            result.TotalCount = await query.CountAsync();
+
             return result;
         }
 

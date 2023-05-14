@@ -383,21 +383,17 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductBestSale  : {JsonConvert.SerializeObject(request)}");
             try
             {
-                PagedList<SaleProductDTO>? res;
+                //PagedList<SaleProductDTO>? res;
 
-                string recordKey = $"{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
-                res = await _cache.GetRecordAsync<PagedList<SaleProductDTO>>(recordKey);
-                if (res is null)
-                {
-                    try
-                    {
-                        request.userId = Guid.Parse(GetUserIdFromContext());
-                    }
-                    catch
-                    { }
-                    res = await _mediator.Send(request);
-                    await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromDays(3));
-                }
+                //string recordKey = $"{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
+                //res = await _cache.GetRecordAsync<PagedList<SaleProductDTO>>(recordKey);
+                //if (res is null)
+                //{
+                  
+                //    res = await _mediator.Send(request);
+                //    await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromSeconds(3));
+                //}
+                var res = await _mediator.Send(request);
 
                 return Ok(res);
             }
