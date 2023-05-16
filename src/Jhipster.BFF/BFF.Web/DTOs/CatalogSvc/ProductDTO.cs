@@ -153,13 +153,13 @@ namespace BFF.Web.DTOs.CatalogSvc
 
     }
     public class PinProductRequest {
-        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public int page { get; set; }
-        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public int pageSize { get; set; }
         public Guid brandId { get; set; }
         public Guid UserId { get; set; }
-        public List<Guid> ProIds { get; set; } 
+        public List<Guid>? ProIds { get; set; } 
     
     }
 

@@ -587,26 +587,28 @@ namespace BFF.Web.ProductSvc
                     UserId = Guid.Parse(GetUserIdFromContext())
             };
 
-  
-
-                var result = await _mediator.Send(pro);
-                var temp =result.Data.Select(i=>i.Products.Select(q=>i.Id)).ToList();
-                foreach(var p in request.ProIds)
-                {
-
-                    if (request.ProIds.Contains(p))
+ 
+               
+             
+                    foreach(var p in request.ProIds)
                     {
 
                     var update = new UpdateStatusProductCommand { Id = p, Status = 10};
-                     _mediator.Send(update);
+                     await _mediator.Send(update);
                     }
+                return Ok(1);
+                
+
+                   
+
+                    
+                   
 
                         
 
-                }
+                
                 
 
-                return Ok(1);
             }
             catch (Exception ex)
             {
