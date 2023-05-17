@@ -87,12 +87,12 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                             CreatedDate = item1.CreatedDate,
                             Login = item2.Login,
                             LastModifiedBy = item1.LastModifiedBy,
-                            LastModifiedDate = item1.LastModifiedDate,
+                            LastModifiedDate = item1.LastModifiedDate!=null ? item1.LastModifiedDate:item1.CreatedDate,
                         });
                     }
                 }
 
-            var data = dataMerchant
+            var data = dataMerchant.OrderByDescending(i=>i.LastModifiedDate)
                     .Skip(pageSize * (page - 1))
                     .Take(pageSize);
             var res = new PagedList<MerchantAdminDTO>();
