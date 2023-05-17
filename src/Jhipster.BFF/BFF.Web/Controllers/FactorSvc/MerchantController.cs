@@ -237,12 +237,14 @@ namespace BFF.Web.Controllers.FactorSvc
                 var role = GetListUserRole();
                 if (role.Any(s => s.Contains(RolesConstants.ADMIN)) == true)
                 {
+                    request.LastModifiedDate = DateTime.Now;
                     request.AddressStatus = 2;
                     request.Status = 2;
                     return Ok(await _mediator.Send(request));
                 }
                 else
                 {
+                    request.LastModifiedDate = DateTime.Now;
                     request.AddressStatus = 1;
                     request.Status = 1;
                     return Ok(await _mediator.Send(request));
