@@ -60,7 +60,7 @@ namespace BFF.Web.DTOs
         [System.Text.Json.Serialization.JsonIgnore]
         public string? Login { get; set; }
 
-        public string? Email { get; set; }
+        public string Email { get; set; }
 
         private string? _langKey;
         [System.Text.Json.Serialization.JsonIgnore]
