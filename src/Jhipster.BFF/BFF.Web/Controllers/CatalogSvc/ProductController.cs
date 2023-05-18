@@ -19,6 +19,7 @@ using Module.Catalog.Shared.DTOs;
 using Module.Redis.Configurations;
 using Module.Redis.Library.Helpers;
 using Google.Apis.Logging;
+using System.Linq;
 
 namespace BFF.Web.ProductSvc
 {
@@ -578,23 +579,22 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request Pin Product : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var pro = new GetListProductSimilarCategoryByBrandIdQuery
-                {
-                   
-                    brandId=request.brandId,
-                    page=1,
-                    pageSize=10000,
-                    UserId = Guid.Parse(GetUserIdFromContext())
-            };
+                var pro = new GetProductIdByBrandIdQuery { 
+                
+                 BrandId=request.brandId
+                };
+                
 
- 
-               
-             
-                    foreach(var p in request.ProIds)
+                var temp = await _mediator.Send(pro);
+                
+          
+                foreach (var p in request.Products)
                     {
-
-                    var update = new UpdateStatusProductCommand { Id = p, Status = 10};
+                    if (temp.Any(i=>i==p.ProductId))
+                    {
+                    var update = new UpdateStatusProductCommand { Id = p.ProductId, Status = p.Status};
                      await _mediator.Send(update);
+                    }
                     }
                 return Ok(1);
                 

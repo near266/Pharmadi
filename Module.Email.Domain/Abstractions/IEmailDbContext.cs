@@ -11,6 +11,7 @@ namespace Module.Email.Domain.Abstractions
     public interface IEmailDbContext
     {
        public DbSet<Module.Email.Domain.Entities.Email> emails { get; set; }
+       public DbSet<Utm> Utms { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
