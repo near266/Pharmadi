@@ -152,14 +152,16 @@ namespace BFF.Web.DTOs.CatalogSvc
 
 
     }
+    public class PinProductUpdate {
+    public Guid ProductId { get; set; }
+    public int Status { get; set; }
+    }
+
     public class PinProductRequest {
-        [System.Text.Json.Serialization.JsonIgnore]
-        public int page { get; set; }
-        [System.Text.Json.Serialization.JsonIgnore]
-        public int pageSize { get; set; }
+       
         public Guid brandId { get; set; }
-        public Guid UserId { get; set; }
-        public List<Guid>? ProIds { get; set; } 
+        public List<PinProductUpdate> Products { get; set; }
+      
     
     }
 

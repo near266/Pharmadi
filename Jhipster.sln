@@ -88,7 +88,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.Factor.Shared", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "delivery.svc", "delivery.svc", "{BBE8A6C6-80B4-4E77-ADB1-C18FD765A2F5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Email", "Email", "{35EF31AA-2861-4AEE-97F7-C89FBC523160}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EmailAndUtm", "EmailAndUtm", "{35EF31AA-2861-4AEE-97F7-C89FBC523160}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Module.Email", "Module.Email\Module.Email.csproj", "{B8E0798B-01A1-48CB-B248-E4C6B981D7D3}"
 EndProject

@@ -650,5 +650,11 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
             return res;
         }
+
+        public async Task<List<Guid>> GetPorductIdbyBrandId(Guid Brandid)
+        {
+            var  result = await _context.Products.Where(i => i.BrandId == Brandid).Select(i=>i.Id).ToListAsync();
+            return result;
+        }
     }
 }

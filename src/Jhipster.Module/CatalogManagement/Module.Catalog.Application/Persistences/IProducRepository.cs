@@ -24,5 +24,6 @@ namespace Module.Catalog.Application.Persistences
         Task<PagedList<SearchProductBrandId>> GetListProductSimilarCategoryByBrandId(int page, int pageSize, Guid brandId, Guid? userId);
         Task<int> ArchivedProduct(List<Guid> ids);
         Task<PagedList<ViewProductPromotionDTO>> ViewProductForeign(string? keyword, int page, int pageSize, Guid? userId);
+        Task<List<Guid>> GetPorductIdbyBrandId(Guid Brandid);
     }
 }

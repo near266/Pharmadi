@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Module.Ordering.Domain.Entities;
 using Module.Catalog.Domain.Entities;
 using Module.Permission.Core.Entities;
+using Module.Email.Domain.Entities;
 
 namespace Jhipster.Infrastructure.Data
 {
@@ -70,6 +71,7 @@ namespace Jhipster.Infrastructure.Data
         #endregion
         #region EmailModule
         public DbSet<Module.Email.Domain.Entities.Email> emails { get; set; }
+        public DbSet<Utm> Utms { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)
