@@ -30,6 +30,8 @@ using Module.Catalog.Shared.DTOs;
 using Module.Catalog.Application.Queries.BrandQ;
 using Module.Ordering.Application.Commands.HistoryOrderCm;
 using Module.Ordering.Application.Commands.ProductSaleCm;
+using Module.Email.Application.Commands;
+using Module.Email.Domain.Entities;
 
 namespace Jhipster.Configuration.AutoMapper
 {
@@ -174,6 +176,8 @@ namespace Jhipster.Configuration.AutoMapper
             //CreateMap<ProductSearchListRequest, ViewProductPromotionQuery>();
             //CreateMap<Product, ProductInforSearchResponse>();
 
+            //Utm
+
             CreateMap<Product, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             #endregion
@@ -203,6 +207,14 @@ namespace Jhipster.Configuration.AutoMapper
 
             CreateMap<ProductSaleAddCommand, ProductSale>();
             CreateMap<ProductSale, ProductSale>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // Utm
+            #endregion
+
+            #region Utm
+            CreateMap<AddUtmCommand, Utm>();
+            CreateMap<Utm, Utm>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
             #endregion
         }
     }

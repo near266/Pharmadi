@@ -137,4 +137,14 @@ namespace Module.Catalog.Shared.DTOs
         public IEnumerable<Product> Products { get; set; }
 
     }
+    public class ProductClassificationByCountryDTO
+    
+    
+    { 
+     public Guid? IdBrand { get; set; }
+     public string? BrandName { get; set; }
+     public IEnumerable<Product> Products { get; set; }
+
+    }
+
 }

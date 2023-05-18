@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Module.Emai.Application\Module.Email.Application.csproj" />
     <ProjectReference Include="..\..\Jhipster.Domain.Services\Jhipster.Domain.Services.csproj" />
     <ProjectReference Include="..\..\Jhipster.gRPC.Contracts.Shared\Jhipster.gRPC.Contracts.Shared.csproj" />
     <ProjectReference Include="..\..\Jhipster.Module\CatalogManagement\Module.Catalog\Module.Catalog.csproj" />

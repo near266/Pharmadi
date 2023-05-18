@@ -150,7 +150,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
                     SumProduct = _context.Products.Where(i => brId.Contains((Guid) i.BrandId) && i.Archived == false).Count(),
-                    products = _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).AsEnumerable()
+                    products = _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).OrderByDescending(i=>i.LastModifiedDate).AsEnumerable()
 
 
 
@@ -173,7 +173,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
                     SumProduct = _context.Products.Where(a => a.BrandId==(Guid?)i.Id && i.Archived ==false).Count(),
-                    products = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).AsEnumerable()
+                    products = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).AsEnumerable()
 
                 })
                     .Skip(pageSize * (page - 1))
@@ -195,7 +195,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
                     SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).Count(),
-                    products= _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).AsEnumerable()
+                    products= _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).AsEnumerable()
                 })
                     .Skip(pageSize * (page - 1))
                         .Take(pageSize).ToListAsync();

@@ -83,8 +83,13 @@ namespace BFF.Web.DTOs
         public string Password { get; set; }
 
         public string? PhoneNumber { get; set; }
+        public string? Campaign { get; set; }
+        public string? Content { get; set; }
+        public string? Medium { get; set; }
+        public string? Source { get; set; }
 
-       
+
+
 
     }
     
