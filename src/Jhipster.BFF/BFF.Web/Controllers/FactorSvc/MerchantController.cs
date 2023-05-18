@@ -84,7 +84,12 @@ namespace BFF.Web.Controllers.FactorSvc
                 {
                     Username = request.PhoneNumber,
                     Password = request.Password,
-                    rememberMe = true
+                    rememberMe = true,
+                    Campaign = request.Campaign,
+                    Content = request.Content,
+                    Medium =request.Medium,
+                    Source=request.Source
+
                 };
                 //gen token
                 var client = new RestClient(_configuration.GetConnectionString("AIO"));

@@ -25,5 +25,6 @@ namespace Module.Catalog.Application.Persistences
         Task<int> ArchivedProduct(List<Guid> ids);
         Task<PagedList<ViewProductPromotionDTO>> ViewProductForeign(string? keyword, int page, int pageSize, Guid? userId);
         Task<List<Guid>> GetPorductIdbyBrandId(Guid Brandid);
+        Task<IEnumerable<ProductClassificationByCountryDTO>> ProductClassificationByCountry(int page, int pageSize, int Type);
     }
 }

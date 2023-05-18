@@ -656,5 +656,40 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var  result = await _context.Products.Where(i => i.BrandId == Brandid).Select(i=>i.Id).ToListAsync();
             return result;
         }
+
+        public  async Task<IEnumerable<ProductClassificationByCountryDTO>> ProductClassificationByCountry(int page, int pageSize, int Type)
+        {
+            
+            var query = _context.Products.AsQueryable();
+            if(Type ==1)
+            {
+                var listpro = query.Where(i => i.ImportedProducts >=1&& i .Archived == false).Distinct()
+                    .Select(i=>new ProductClassificationByCountryDTO { 
+                 IdBrand =i.BrandId,
+                 BrandName=i.Brand.BrandName,
+                 Products=  _context.Products.Where(a=>a.BrandId==i.BrandId).ToList(),
+                
+                }).Skip(pageSize * (page - 1))
+                        .Take(pageSize).AsEnumerable();
+                return listpro;
+            }
+            if(Type ==2)
+            {
+                var listpro = query.Where(i =>i.ImportedProducts == 0&& i.Archived == false).Distinct()
+                    .Select(i => new ProductClassificationByCountryDTO
+                {
+                    IdBrand = i.BrandId,
+                    BrandName = i.Brand.BrandName,
+                    Products = _context.Products.Where(a => a.BrandId == i.BrandId).ToList(),
+
+                }).Skip(pageSize * (page - 1))
+                        .Take(pageSize).AsEnumerable();
+                return listpro;
+
+            }
+            return new List<ProductClassificationByCountryDTO>();
+
+        }
+         
     }
 }

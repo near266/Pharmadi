@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,6 @@ namespace Module.Email.Domain.Entities
         public string? Source { get; set; }
         public DateTime? DateLogin { get; set; }
         public DateTime? DateRegister { get; set; }
+     
     }
 }

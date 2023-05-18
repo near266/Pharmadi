@@ -13,8 +13,4 @@
     <ProjectReference Include="..\src\Jhipster.Infrastructure\Jhipster.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\Persistences\Repositories\" />
-  </ItemGroup>
-
 </Project>
