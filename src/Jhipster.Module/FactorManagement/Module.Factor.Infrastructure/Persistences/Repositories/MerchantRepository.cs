@@ -97,7 +97,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                     .Take(pageSize);
             var res = new PagedList<MerchantAdminDTO>();
             res.Data = data;
-            res.TotalCount = query.Count();
+            res.TotalCount = dataMerchant.Count();
             return res;
         }
 
