@@ -59,7 +59,7 @@ public class MailKitEmailSender : IEmailSender
 
             var codeFlow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
             {
-                DataStore = new FileDataStore("CredentialCacheFolder", false),
+               // DataStore = new FileDataStore("CredentialCacheFolder", false),
                 Scopes = new[] { "https://mail.google.com/" },
                 ClientSecrets = clientSecrets
             });
