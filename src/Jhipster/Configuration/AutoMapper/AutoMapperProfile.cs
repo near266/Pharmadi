@@ -72,6 +72,7 @@ namespace Jhipster.Configuration.AutoMapper
 
             //merchant
             CreateMap<Merchant, MerchantAddCommand>();
+            CreateMap<AddUtmMerchantCommand, Utm>();
             CreateMap<MerchantAddCommand, Merchant>();
             CreateMap<Merchant, Merchant>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<RegisterRequest, RegisterAccountCommand>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

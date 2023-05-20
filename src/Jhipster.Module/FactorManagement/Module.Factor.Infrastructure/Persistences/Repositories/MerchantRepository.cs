@@ -6,6 +6,7 @@ using Module.Factor.Infrastructure.Persistences;
 using Jhipster.Service.Utilities;
 using Module.Factor.Application.DTO;
 using Jhipster.Infrastructure.Data;
+using Module.Email.Domain.Entities;
 
 namespace Module.Factor.Infrastructure.Persistence.Repositories
 {
@@ -148,6 +149,12 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 return await _context.SaveChangesAsync(default);
             }
             return -1;
+        }
+
+        public async Task<int> AddUtmMerchant(Utm utm)
+        {
+            _dbContext.Utms.Add(utm);
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }
