@@ -87,7 +87,8 @@ namespace BFF.Web.DTOs
         public string? Content { get; set; }
         public string? Medium { get; set; }
         public string? Source { get; set; }
-
+        public DateTime? DateLogin { get; set; }
+        public DateTime? DateRegister { get; set; }
 
 
 
