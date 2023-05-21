@@ -46,8 +46,8 @@ namespace Jhipster.Configuration
 
                      options.ClientId = configuration["ExternalProviders:MailKit:SMTP:ClientID"];
                      options.ClientSecret = configuration["ExternalProviders:MailKit:SMTP:ClientSecret"];
-                     
-
+                     options.SaveTokens = true;
+                     options.AuthorizationEndpoint += "?prompt=none"; 
                  });
             return services;
         }
