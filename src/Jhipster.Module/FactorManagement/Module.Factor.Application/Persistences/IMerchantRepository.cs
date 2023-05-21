@@ -1,6 +1,7 @@
 ﻿using Module.Factor.Domain.Entities;
 using Jhipster.Service.Utilities;
 using Module.Factor.Application.DTO;
+using Module.Email.Domain.Entities;
 
 namespace Module.Factor.Application.Persistences
 {
@@ -14,5 +15,6 @@ namespace Module.Factor.Application.Persistences
         Task<IEnumerable<Merchant>> SearchToChoose(string? keyword);
         Task UpdateActiveMerchant(Guid id);
         Task<int> UpdateAddressStatus(Guid userid);
+        Task<int> AddUtmMerchant(Utm utm);
     }
 }

@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using MediatR;
-using Module.Email.Application.Persistences;
-using Module.Email.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using Module.Factor.Application.Persistences;
+using Module.Email.Domain.Entities;
 
-namespace Module.Email.Application.Commands
+namespace Module.Factor.Application.Commands.MerchantCm
 {
-    public class AddUtmCommand : IRequest<int>
+    public class AddUtmMerchantCommand : IRequest<int>
     {
         [JsonIgnore]
         public Guid Id { get; set; }
@@ -36,19 +36,19 @@ namespace Module.Email.Application.Commands
 
         public DateTime? LastModifiedDate { get; set; }
     }
-    public class AddUtmCommandHandler : IRequestHandler<AddUtmCommand, int>
+    public class AddUtmMerchantCommandHandler : IRequestHandler<AddUtmMerchantCommand, int>
     {
-        private readonly IUtmRepository _repo;
+        private readonly IMerchantRepository _repo;
         private readonly IMapper _mapper;
-      public AddUtmCommandHandler (IUtmRepository utmRepository, IMapper mapper)
+        public AddUtmMerchantCommandHandler(IMerchantRepository MerchantRepository, IMapper mapper)
         {
-            _repo = utmRepository;
+            _repo = MerchantRepository;
             _mapper = mapper;
         }
-        public async Task<int> Handle(AddUtmCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(AddUtmMerchantCommand request, CancellationToken cancellationToken)
         {
             var result = _mapper.Map<Utm>(request);
-            return await _repo.Add(result);
+            return await _repo.AddUtmMerchant(result);
         }
     }
 }
