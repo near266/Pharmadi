@@ -47,6 +47,7 @@ namespace Jhipster.Domain
         public string ResetKey { get; set; }
 
         [Column("reset_date")] public DateTime? ResetDate { get; set; }
+        [NotMapped]
 
         [JsonIgnore] public virtual ICollection<UserRole> UserRoles { get; set; }
 
