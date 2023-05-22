@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection;
 using Jhipster.Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
@@ -46,6 +47,7 @@ namespace Jhipster.Domain
         public string ResetKey { get; set; }
 
         [Column("reset_date")] public DateTime? ResetDate { get; set; }
+        [NotMapped]
 
         [JsonIgnore] public virtual ICollection<UserRole> UserRoles { get; set; }
 

@@ -634,21 +634,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpPost("ProductClassificationByCountry")]
-        public async Task<IActionResult> ProductClassificationByCountry([FromBody] ProductClassificationByCountryQuery request)
-        {
-            _logger.LogInformation($"REST request ProductClassificationByCountry : {JsonConvert.SerializeObject(request)}");
-            try
-            {
-                var result = await _mediator.Send(request);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"REST request to ProductClassificationByCountry fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
-            }
-        }
+       
     }
 }
 

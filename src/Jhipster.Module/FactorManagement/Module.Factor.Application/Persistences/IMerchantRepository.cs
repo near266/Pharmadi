@@ -16,5 +16,6 @@ namespace Module.Factor.Application.Persistences
         Task UpdateActiveMerchant(Guid id);
         Task<int> UpdateAddressStatus(Guid userid);
         Task<int> AddUtmMerchant(Utm utm);
+        Task<int> AddUtmUser(UtmUser utmUser);
     }
 }

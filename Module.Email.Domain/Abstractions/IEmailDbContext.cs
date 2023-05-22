@@ -12,6 +12,7 @@ namespace Module.Email.Domain.Abstractions
     {
        public DbSet<Module.Email.Domain.Entities.Email> emails { get; set; }
        public DbSet<Utm> Utms { get; set; }
+       public DbSet<UtmUser> UtmUsers { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

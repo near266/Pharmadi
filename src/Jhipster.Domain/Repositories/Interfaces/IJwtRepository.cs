@@ -9,5 +9,6 @@ namespace Jhipster.Domain.Repositories.Interfaces
     public interface  IJwtRepository
     {
         Task<string> GetIdUser(string username);
+        Task<string> CheckRegister(string Id);
     }
 }
