@@ -91,7 +91,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                             Login = item2.Login,
                             LastModifiedBy = item1.LastModifiedBy,
                             LastModifiedDate = item1.LastModifiedDate != null ? item1.LastModifiedDate : item1.CreatedDate,
-                            Utm = await _dbContext.UtmsUsers.Where(i=>i.UserId == item2.Id).Select(i=>i.Utms).ToListAsync(),
+                            Utm = await _dbContext.UtmsUsers.Where(i=>i.UserId == item2.Id).Select(i=>i.Utms).FirstOrDefaultAsync(),
                           
 
                         }); ;

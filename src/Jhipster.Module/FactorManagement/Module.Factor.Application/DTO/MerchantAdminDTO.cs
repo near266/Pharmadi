@@ -62,6 +62,6 @@ namespace Module.Factor.Application.DTO
         public string? LastModifiedBy { get; set; }
         public DateTime? LastModifiedDate { get; set; }
         public string? Login { get; set; }
-        public IEnumerable <Utm>? Utm { get; set; }
+        public Utm? Utm { get; set; }
     }
 }
