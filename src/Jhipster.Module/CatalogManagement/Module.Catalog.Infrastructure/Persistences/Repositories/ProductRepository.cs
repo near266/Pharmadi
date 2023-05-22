@@ -197,7 +197,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var result = new PagedList<SaleProductDTO>();
             var query = _context.Products.Where(i => i.Archived == false).AsNoTracking();
 
-            var query2 = await query.Select( i => new SaleProductDTO
+            var query2 = await query.Select(i => new SaleProductDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
@@ -226,7 +226,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 .Take(pageSize)
                 .ToListAsync();
 
-            result.Data =  query2.ToList();
+            result.Data = query2.ToList();
             result.TotalCount = await query.CountAsync();
 
             return result;
@@ -253,7 +253,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder,
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
-                NewProduct=i.NewProduct!=null ?i.NewProduct:0
+                NewProduct = i.NewProduct != null ? i.NewProduct : 0
 
             }).OrderByDescending(i => i.NewProduct).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -324,7 +324,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CanOrder = i.CanOrder,
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
                 Country = i.Country,
-                ImportedProducts= i.ImportedProducts !=null ? i.ImportedProducts:0
+                ImportedProducts = i.ImportedProducts != null ? i.ImportedProducts : 0
 
             }).Where(a => a.Country.ToLower() != "việt nam").OrderByDescending(i => i.ImportedProducts).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -403,8 +403,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 }
                 else
                 {
+                    query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => categoryIds.Contains(cp.CategoryId)));
                     var cateId = new List<Guid>();
-                    cateId.AddRange(categoryIds);
                     foreach (var item in categoryIds)
                     {
                         var childs = await _context.Categories.Where(i => i.ParentId == item).Select(i => i.Id).ToListAsync();
@@ -412,9 +412,12 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                         {
                             cateId.AddRange(childs);
                         }
-                        query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => cateId.Contains(cp.CategoryId)));
+                      var  query1 = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => cateId.Contains(cp.CategoryId)));
+                        query = query.Where(i => !query1.Contains(i));
                     }
+                  
 
+                    
                 }
 
             }
@@ -614,11 +617,11 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var CateProId = cate.Select(i => i.Id).ToList();
             var CatePro = new List<Guid>();
             CatePro.AddRange(CateProId);
-            foreach(var item in CateProId)
+            foreach (var item in CateProId)
             {
                 var checkcate = await _context.Categories.Where(i => i.ParentId == item).ToListAsync();
                 CatePro.AddRange(checkcate.Select(i => i.Id));
-            }    
+            }
             var result = cate.Select(i => new SearchProductBrandId
             {
                 Id = i.Id,
@@ -653,36 +656,37 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<List<Guid>> GetPorductIdbyBrandId(Guid Brandid)
         {
-            var  result = await _context.Products.Where(i => i.BrandId == Brandid).Select(i=>i.Id).ToListAsync();
+            var result = await _context.Products.Where(i => i.BrandId == Brandid).Select(i => i.Id).ToListAsync();
             return result;
         }
 
-        public  async Task<IEnumerable<ProductClassificationByCountryDTO>> ProductClassificationByCountry(int page, int pageSize, int Type)
+        public async Task<IEnumerable<ProductClassificationByCountryDTO>> ProductClassificationByCountry(int page, int pageSize, int Type)
         {
-            
+
             var query = _context.Products.AsQueryable();
-            if(Type ==1)
+            if (Type == 1)
             {
-                var listpro = query.Where(i => i.ImportedProducts >=1&& i .Archived == false).Distinct()
-                    .Select(i=>new ProductClassificationByCountryDTO { 
-                 IdBrand =i.BrandId,
-                 BrandName=i.Brand.BrandName,
-                 Products=  _context.Products.Where(a=>a.BrandId==i.BrandId).ToList(),
-                
-                }).Skip(pageSize * (page - 1))
+                var listpro = query.Where(i => i.ImportedProducts >= 1 && i.Archived == false).Distinct()
+                    .Select(i => new ProductClassificationByCountryDTO
+                    {
+                        IdBrand = i.BrandId,
+                        BrandName = i.Brand.BrandName,
+                        Products = _context.Products.Where(a => a.BrandId == i.BrandId).ToList(),
+
+                    }).Skip(pageSize * (page - 1))
                         .Take(pageSize).AsEnumerable();
                 return listpro;
             }
-            if(Type ==2)
+            if (Type == 2)
             {
-                var listpro = query.Where(i =>i.ImportedProducts == 0&& i.Archived == false).Distinct()
+                var listpro = query.Where(i => i.ImportedProducts == 0 && i.Archived == false).Distinct()
                     .Select(i => new ProductClassificationByCountryDTO
-                {
-                    IdBrand = i.BrandId,
-                    BrandName = i.Brand.BrandName,
-                    Products = _context.Products.Where(a => a.BrandId == i.BrandId).ToList(),
+                    {
+                        IdBrand = i.BrandId,
+                        BrandName = i.Brand.BrandName,
+                        Products = _context.Products.Where(a => a.BrandId == i.BrandId).ToList(),
 
-                }).Skip(pageSize * (page - 1))
+                    }).Skip(pageSize * (page - 1))
                         .Take(pageSize).AsEnumerable();
                 return listpro;
 
@@ -690,6 +694,6 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return new List<ProductClassificationByCountryDTO>();
 
         }
-         
+
     }
 }
