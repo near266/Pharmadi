@@ -1,4 +1,5 @@
 ﻿using Jhipster.Domain.Repositories.Interfaces;
+using Jhipster.Infrastructure.Migrations;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,16 +24,25 @@ namespace Jhipster.Infrastructure.Data.Repositories
         }
         public async Task<string> CheckRegister(string Id)
         {
-            var idMerchant = new Guid(Id);
-            var check = await _applicationDatabaseContext.Merchants.SingleOrDefaultAsync(i => i.Id == idMerchant);
-            if (check == null)
+            Guid result;
+            bool isValidGuid = Guid.TryParse(Id, out result);
+            if (isValidGuid)
             {
-                return "No exit Merchant";
+                var idMerchant = new Guid(Id);
+                var check = await _applicationDatabaseContext.Merchants.SingleOrDefaultAsync(i => i.Id == idMerchant);
+                if (check == null)
+                {
+                    return "No exit Merchant";
+                }
+                else
+                {
+                    if (check.Status == 2 && check.AddressStatus == 2) return "true";
+                    else return "false";
+                }
             }
             else
             {
-                if (check.Status == 2 && check.AddressStatus == 2) return "true";
-                else return "false";
+                return "Employee";
             }
         }
     }
