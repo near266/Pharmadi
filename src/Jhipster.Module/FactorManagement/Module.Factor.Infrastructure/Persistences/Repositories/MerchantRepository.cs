@@ -39,7 +39,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         }
 
         public async Task<PagedList<MerchantAdminDTO>> GetAllAdmin(int page, int pageSize, string? name, DateTime? StartDate, DateTime? EndDate, int? Status, string? Email, string? PhoneNumber)
-        {
+            {
             var query = _context.Merchants.AsQueryable();
             if (name != null)
             {
@@ -52,6 +52,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             query = PhoneNumber != null ? query.Where(i => i.PhoneNumber.Contains(PhoneNumber)) : query;
             query = StartDate != null ? query.Where(i => i.CreatedDate > StartDate) : query;
             query = EndDate != null ? query.Where(i => i.CreatedDate < EndDate) : query;
+            
             var dataUser = _dbContext.Users.AsQueryable();
             var dataMerchant = new List<MerchantAdminDTO>();
             foreach (var item1 in query)
@@ -59,7 +60,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 {
                     if (item1.Id.ToString() == item2.Id)
                     {
-                        dataMerchant.Add(new MerchantAdminDTO()
+                        
+                         dataMerchant.Add(new MerchantAdminDTO()
                         {
                             Id = item1.Id,
                             TaxCode = item1.TaxCode,
@@ -88,8 +90,11 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                             CreatedDate = item1.CreatedDate,
                             Login = item2.Login,
                             LastModifiedBy = item1.LastModifiedBy,
-                            LastModifiedDate = item1.LastModifiedDate!=null ? item1.LastModifiedDate:item1.CreatedDate,
-                        });
+                            LastModifiedDate = item1.LastModifiedDate != null ? item1.LastModifiedDate : item1.CreatedDate,
+                            Utm = _dbContext.UtmsUsers.Where(i=>i.UserId == item2.Id).Select(i=>i.Utms).ToList(),
+                          
+
+                        }); ;
                     }
                 }
 
@@ -154,6 +159,12 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         public async Task<int> AddUtmMerchant(Utm utm)
         {
             _dbContext.Utms.Add(utm);
+            return await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> AddUtmUser(UtmUser utmUser)
+        {
+            _dbContext.UtmsUsers.Add(utmUser);
             return await _dbContext.SaveChangesAsync();
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Module.Email.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,6 +8,20 @@ using System.Threading.Tasks;
 
 namespace Module.Factor.Application.DTO
 {
+    public class UtmDTO {
+        public Guid Id { get; set; }
+        public string? Utmlink { get; set; }
+        public string? Campaign { get; set; }
+        public string? Content { get; set; }
+        public string? Medium { get; set; }
+        public string? Source { get; set; }
+        public DateTime? DateLogin { get; set; }
+        public DateTime? DateRegister { get; set; }
+    
+        public DateTime CreatedDate { get; set; }
+       
+    }
+
     public class MerchantAdminDTO
     {
         public Guid Id { get; set; }
@@ -47,5 +62,6 @@ namespace Module.Factor.Application.DTO
         public string? LastModifiedBy { get; set; }
         public DateTime? LastModifiedDate { get; set; }
         public string? Login { get; set; }
+        public IEnumerable <Utm>? Utm { get; set; }
     }
 }
