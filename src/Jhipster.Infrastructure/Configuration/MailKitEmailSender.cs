@@ -44,43 +44,43 @@ public class MailKitEmailSender : IEmailSender
             email.Body = new TextPart(TextFormat.Html) { Text = message };
 
             // send email
-            //using (var smtp = new SmtpClient())
-            //{
-            //    smtp.Connect(Options.Host_Address, Options.Host_Port, Options.Host_SecureSocketOptions);
-            //    smtp.Authenticate(Options.Host_Username, Options.Host_Password);
-            //    smtp.Send(email);
-            //    smtp.Disconnect(true);
-            //}
-            var clientSecrets = new ClientSecrets
+            using (var smtp = new SmtpClient())
             {
-                ClientId = Options.ClientId,
-                ClientSecret = Options.ClientSecret
-            };
-
-            var codeFlow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
-            {
-               // DataStore = new FileDataStore("CredentialCacheFolder", false),
-                Scopes = new[] { "https://mail.google.com/" },
-                ClientSecrets = clientSecrets
-            });
-
-            // Note: For a web app, you'll want to use AuthorizationCodeWebApp instead.
-            var codeReceiver = new LocalServerCodeReceiver();
-            var authCode = new AuthorizationCodeInstalledApp(codeFlow, codeReceiver);
-
-            var credential = await authCode.AuthorizeAsync(Options.Host_Username, CancellationToken.None);
-
-            
-            var oauth2 = new SaslMechanismOAuth2(credential.UserId, credential.Token.AccessToken);
-
-            using (var client = new SmtpClient())
-            {
-                await client.ConnectAsync(Options.Host_Address, Options.Host_Port, SecureSocketOptions.SslOnConnect);
-                await client.AuthenticateAsync(oauth2);
-                await client.SendAsync(email,CancellationToken.None);
-                await client.DisconnectAsync(true);
+                smtp.Connect(Options.Host_Address, Options.Host_Port, Options.Host_SecureSocketOptions);
+                smtp.Authenticate(Options.Host_Username, Options.Host_Password);
+                smtp.Send(email);
+                smtp.Disconnect(true);
             }
-            
+            //var clientSecrets = new ClientSecrets
+            //{
+            //    ClientId = Options.ClientId,
+            //    ClientSecret = Options.ClientSecret
+            //};
+
+            //var codeFlow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
+            //{
+            //   // DataStore = new FileDataStore("CredentialCacheFolder", false),
+            //    Scopes = new[] { "https://mail.google.com/" },
+            //    ClientSecrets = clientSecrets
+            //});
+
+            //// Note: For a web app, you'll want to use AuthorizationCodeWebApp instead.
+            //var codeReceiver = new LocalServerCodeReceiver();
+            //var authCode = new AuthorizationCodeInstalledApp(codeFlow, codeReceiver);
+
+            //var credential = await authCode.AuthorizeAsync(Options.Host_Username, CancellationToken.None);
+
+
+            //var oauth2 = new SaslMechanismOAuth2(credential.UserId, credential.Token.AccessToken);
+
+            //using (var client = new SmtpClient())
+            //{
+            //    await client.ConnectAsync(Options.Host_Address, Options.Host_Port, SecureSocketOptions.SslOnConnect);
+            //    await client.AuthenticateAsync(oauth2);
+            //    await client.SendAsync(email,CancellationToken.None);
+            //    await client.DisconnectAsync(true);
+            //}
+
         }
         catch(Exception  ex)
         {
