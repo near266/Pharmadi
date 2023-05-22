@@ -203,6 +203,54 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 result.TotalCount = query.Count();
                 return result;
             }
+            if (type == 4)
+            {
+                var listpro = _context.Products.Where(i => i.ImportedProducts == 0 && i.Archived == false).Select(i => i.BrandId).Distinct();
+                var pro = _context.Products.Where(i => i.ImportedProducts == 0 && i.Archived == false).Select(i => i.Id);
+                var brId = _context.Brands.Where(i => listpro.Contains(i.Id) && i.Archived == false).Select(i => i.Id).ToList();
+                var data = await query.Where(i => i.Archived == false && listpro.Contains(i.Id)).Include(i => i.GroupBrand).Select(i => new BrandDTO
+                {
+                    Id = i.Id,
+                    GroupBrandId = i.GroupBrandId,
+                    Intro = i.Intro,
+                    BrandName = i.BrandName,
+                    LogoBrand = i.LogoBrand,
+                    Pin = i.Pin,
+                    GroupBrand = i.GroupBrand,
+                    SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).Count(),
+                    products = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).OrderByDescending(i => i.LastModifiedDate).AsEnumerable()
+                })
+                    .Skip(pageSize * (page - 1))
+                        .Take(pageSize).ToListAsync();
+                result.Data = data;
+                result.TotalCount = query.Count();
+                return result;
+            }
+            if (type == 5)
+            {
+                var listpro = _context.Products.Where(i => i.ImportedProducts >= 1 && i.Archived == false).Select(i => i.BrandId).Distinct();
+                var pro = _context.Products.Where(i => i.ImportedProducts >= 1 && i.Archived == false).Select(i => i.Id);
+                var brId = _context.Brands.Where(i => listpro.Contains(i.Id) && i.Archived == false).Select(i => i.Id).ToList();
+                var data = await query.Where(i =>i.Archived == false && listpro.Contains(i.Id)).Include(i => i.GroupBrand).Select(i => new BrandDTO
+                {
+                    Id = i.Id,
+                    GroupBrandId = i.GroupBrandId,
+                    Intro = i.Intro,
+                    BrandName = i.BrandName,
+                    LogoBrand = i.LogoBrand,
+                    Pin = i.Pin,
+                    GroupBrand = i.GroupBrand,
+                    SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).Count(),
+                    products = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).OrderByDescending(i => i.LastModifiedDate).AsEnumerable()
+                })
+                    .Skip(pageSize * (page - 1))
+                        .Take(pageSize).ToListAsync();
+                result.Data = data;
+                result.TotalCount = query.Count();
+                return result;
+            }
+
+         
             return result;
 
         }
