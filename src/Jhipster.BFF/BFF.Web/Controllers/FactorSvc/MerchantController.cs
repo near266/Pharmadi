@@ -116,6 +116,23 @@ namespace BFF.Web.Controllers.FactorSvc
                     await _mediator.Send(rqMerchant);
 
                 }
+                //add Utm
+                var utm = new AddUtmMerchantCommand
+                {
+                    Id = new Guid(),
+                    Utmlink=request.Utmlink,
+                    Campaign = request.Campaign,
+                    Content = request.Content,
+                    Medium = request.Medium,
+                    Source = request.Source,
+                    DateLogin = request.DateLogin,
+                    DateRegister = request.DateRegister,
+                    CreatedDate = DateTime.Now,
+                    CreatedBy= GetUserIdFromContext(),
+                    
+
+                };
+                await _mediator.Send(utm);
                 return Ok(reponse.Content);
 
             }

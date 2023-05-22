@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Module.Email.Domain\Module.Email.Domain.csproj" />
     <ProjectReference Include="..\..\..\Jhipster.Crosscutting\Jhipster.Crosscutting.csproj" />
     <ProjectReference Include="..\Module.Factor.Domain\Module.Factor.Domain.csproj" />
     <ProjectReference Include="..\Module.Factor.Shared\Module.Factor.Shared.csproj" />

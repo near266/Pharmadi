@@ -11,7 +11,7 @@ namespace Module.Catalog.Domain.Entities
         [MaxLength(1000)]
         public string ProductName { get; set; }
         [MaxLength(1000)]
-        public string? Function { get; set; }
+        public string? UserObject { get; set; }
         public decimal? Price { get; set; }
         public decimal? SalePrice { get; set; }
         [MaxLength(2000)]
@@ -25,7 +25,7 @@ namespace Module.Catalog.Domain.Entities
         public bool? HideProduct { get; set; }
         public List<string>? Image { get; set; }
         public string? Industry { get; set; }
-        public string? Effect { get; set; }
+        public string? Warning { get; set; }
         public string? Preserve { get; set; }
         public string? Dosage { get; set; }
         public string? DosageForms { get; set; }

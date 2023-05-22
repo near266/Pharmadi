@@ -16,6 +16,8 @@ namespace Module.Catalog.Shared.DTOs
         public decimal? Price { get; set; }
         public decimal? SalePrice { get; set; }
         public string? UnitName { get; set; }
+        public string? UserObject { get; set; }
+        public string? Warning { get; set; }
         public Guid? BrandId { get; set; }
         public Brand? Brand { get; set; }
         public List<string>? Image { get; set; }
