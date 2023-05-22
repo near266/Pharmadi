@@ -66,7 +66,7 @@ namespace BFF.Web.ProductSvc
                     Id = request.Id,
                     SKU = request.SKU,
                     ProductName = request.ProductName,
-                    Function = request.Function,
+                    UserObject = request.Function,
                     PostContentId = request.PostContentId,
                     SalePrice = request.SalePrice,
                     Price = request.Price,
@@ -76,7 +76,7 @@ namespace BFF.Web.ProductSvc
                     Status = request.Status,
                     Image = request.Image,
                     Industry = request.Industry,
-                    Effect = request.Effect,
+                    Warning = request.Effect,
                     Preserve = request.Preserve,
                     Dosage = request.Dosage,
                     DosageForms = request.DosageForms,
@@ -193,7 +193,7 @@ namespace BFF.Web.ProductSvc
                     Id = request.Id,
                     SKU = request.SKU,
                     ProductName = request.ProductName,
-                    Function = request.Function,
+                    UserObject = request.UserObject,
                     PostContentId = request.PostContentId,
                     SalePrice = request.SalePrice,
                     Price = request.Price,
@@ -203,7 +203,7 @@ namespace BFF.Web.ProductSvc
                     Status = request.Status,
                     Image = request.Image,
                     Industry = request.Industry,
-                    Effect = request.Effect,
+                    Warning = request.Warning,
                     Preserve = request.Preserve,
                     Dosage = request.Dosage,
                     DosageForms = request.DosageForms,
@@ -634,21 +634,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpPost("ProductClassificationByCountry")]
-        public async Task<IActionResult> ProductClassificationByCountry([FromBody] ProductClassificationByCountryQuery request)
-        {
-            _logger.LogInformation($"REST request ProductClassificationByCountry : {JsonConvert.SerializeObject(request)}");
-            try
-            {
-                var result = await _mediator.Send(request);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"REST request to ProductClassificationByCountry fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
-            }
-        }
+       
     }
 }
 

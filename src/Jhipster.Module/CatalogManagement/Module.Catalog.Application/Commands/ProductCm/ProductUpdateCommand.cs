@@ -12,7 +12,7 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public Guid Id { get; set; }
         public string? SKU { get; set; }
         public string? ProductName { get; set; }
-        public string? Function { get; set; }
+        public string? UserObject { get; set; }
         public decimal? Price { get; set; }
         public decimal? SalePrice { get; set; }
         public string? Description { get; set; }
@@ -23,7 +23,7 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public bool? HideProduct { get; set; }
         public List<string>? Image { get; set; }
         public string? Industry { get; set; }
-        public string? Effect { get; set; }
+        public string? Warning { get; set; }
         public string? Preserve { get; set; }
         public bool? Archived { get; set; }
         public string? Dosage { get; set; }

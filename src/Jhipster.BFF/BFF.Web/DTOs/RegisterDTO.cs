@@ -83,11 +83,15 @@ namespace BFF.Web.DTOs
         public string Password { get; set; }
 
         public string? PhoneNumber { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        public Guid ? UtmId { get; set; }
+        public string? Utmlink { get; set; }
         public string? Campaign { get; set; }
         public string? Content { get; set; }
         public string? Medium { get; set; }
         public string? Source { get; set; }
-
+        public DateTime? DateLogin { get; set; }
+        public DateTime? DateRegister { get; set; }
 
 
 

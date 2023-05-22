@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Jhipster.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Jhipster.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    partial class ApplicationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20230519110758_updatename")]
+    partial class updatename
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -847,40 +849,6 @@ namespace Jhipster.Infrastructure.Migrations
                     b.ToTable("Utms");
                 });
 
-            modelBuilder.Entity("Module.Email.Domain.Entities.UtmUser", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("UtmId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UtmId");
-
-                    b.ToTable("UtmsUsers");
-                });
-
             modelBuilder.Entity("Module.Factor.Domain.Entities.Merchant", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1451,21 +1419,6 @@ namespace Jhipster.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Module.Email.Domain.Entities.UtmUser", b =>
-                {
-                    b.HasOne("Jhipster.Domain.User", "Users")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.HasOne("Module.Email.Domain.Entities.Utm", "Utms")
-                        .WithMany()
-                        .HasForeignKey("UtmId");
-
-                    b.Navigation("Users");
-
-                    b.Navigation("Utms");
                 });
 
             modelBuilder.Entity("Module.Ordering.Domain.Entities.Cart", b =>

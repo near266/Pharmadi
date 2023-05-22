@@ -20,6 +20,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Module.Redis.Configurations;
 using Jhipster.Domain;
 using LanguageExt.Pretty;
+using Module.Factor.Application.Commands.UtmMechantCm;
 
 namespace BFF.Web.Controllers.FactorSvc
 {
@@ -116,6 +117,33 @@ namespace BFF.Web.Controllers.FactorSvc
                     await _mediator.Send(rqMerchant);
 
                 }
+                //add Utm
+                request.UtmId = Guid.NewGuid();
+                var utm = new AddUtmMerchantCommand
+                {
+                    Id = (Guid)request.UtmId,
+                    Utmlink=request.Utmlink,
+                    Campaign = request.Campaign,
+                    Content = request.Content,
+                    Medium = request.Medium,
+                    Source = request.Source,
+                    DateLogin = request.DateLogin,
+                    DateRegister = request.DateRegister,
+                    CreatedDate = DateTime.Now,
+                    CreatedBy= GetUserIdFromContext(),
+                    
+
+                };
+                await _mediator.Send(utm);
+                //add utmuser
+                var utmUser = new AddUtmUserCommand
+                {
+                    Id = Guid.NewGuid(),
+                    UtmId = request.UtmId,
+                    UserId = step1.Id,
+                    CreatedDate= DateTime.Now,
+                };
+                await _mediator.Send(utmUser);
                 return Ok(reponse.Content);
 
             }

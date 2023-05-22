@@ -72,6 +72,7 @@ namespace Jhipster.Infrastructure.Data
         #region EmailModule
         public DbSet<Module.Email.Domain.Entities.Email> emails { get; set; }
         public DbSet<Utm> Utms { get; set; }
+        public DbSet<UtmUser> UtmsUsers { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)

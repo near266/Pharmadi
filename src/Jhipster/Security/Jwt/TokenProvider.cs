@@ -62,11 +62,11 @@ namespace Jhipster.Security.Jwt
             var s=claimsIdentity.Name;
             var id = await _jwtRepository.GetIdUser(s);
             var authValue = string.Join(",", roles.Map(it => it.Value));
-
+            var checkMerchant =await _jwtRepository.CheckRegister(id);
             var req = new RoleFunctionGetQuery { roles = authValue };
             var function_name = await _mediator.Send(req);
 
-            var subject = CreateSubject(principal, function_name, id);
+            var subject = CreateSubject(principal, function_name, id,checkMerchant);
             var validity =
                 DateTime.UtcNow.AddSeconds(rememberMe
                     ? _tokenValidityInSecondsForRememberMe
@@ -126,17 +126,18 @@ namespace Jhipster.Security.Jwt
                 _securitySettings.Authentication.Jwt.TokenValidityInSecondsForRememberMe;
         }
 
-        private static ClaimsIdentity CreateSubject(IPrincipal principal, string function, string UserId)
+        private static ClaimsIdentity CreateSubject(IPrincipal principal, string function, string UserId,string checkMerchant)
         {
             var username = principal.Identity.Name;
             var roles = GetRoles(principal);
             var authValue = string.Join(",", roles.Map(it => it.Value));
-
+           
             return new ClaimsIdentity(new[] {
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(AuthoritiesKey, authValue),
                 new Claim("function_name", function),
-                new Claim("UserId",UserId)
+                new Claim("UserId",UserId),
+                new Claim("Accept",checkMerchant)
             });
         }
 
@@ -146,5 +147,6 @@ namespace Jhipster.Security.Jwt
                 ? user.FindAll(it => it.Type == ClaimTypes.Role)
                 : Enumerable.Empty<Claim>();
         }
+       
     }
 }

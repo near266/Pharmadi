@@ -32,6 +32,7 @@ using Module.Ordering.Application.Commands.HistoryOrderCm;
 using Module.Ordering.Application.Commands.ProductSaleCm;
 using Module.Email.Application.Commands;
 using Module.Email.Domain.Entities;
+using Module.Factor.Application.Commands.UtmMechantCm;
 
 namespace Jhipster.Configuration.AutoMapper
 {
@@ -72,6 +73,7 @@ namespace Jhipster.Configuration.AutoMapper
 
             //merchant
             CreateMap<Merchant, MerchantAddCommand>();
+            CreateMap<AddUtmMerchantCommand, Utm>();
             CreateMap<MerchantAddCommand, Merchant>();
             CreateMap<Merchant, Merchant>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<RegisterRequest, RegisterAccountCommand>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
@@ -176,7 +178,7 @@ namespace Jhipster.Configuration.AutoMapper
             //CreateMap<ProductSearchListRequest, ViewProductPromotionQuery>();
             //CreateMap<Product, ProductInforSearchResponse>();
 
-            //Utm
+            
 
             CreateMap<Product, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
@@ -213,7 +215,9 @@ namespace Jhipster.Configuration.AutoMapper
 
             #region Utm
             CreateMap<AddUtmCommand, Utm>();
+            CreateMap<AddUtmUserCommand,UtmUser>();
             CreateMap<Utm, Utm>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<UtmUser, UtmUser>().ReverseMap().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             #endregion
         }
