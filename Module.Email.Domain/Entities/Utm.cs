@@ -17,6 +17,8 @@ namespace Module.Email.Domain.Entities
         public string? Source { get; set; }
         public DateTime? DateLogin { get; set; }
         public DateTime? DateRegister { get; set; }
+        public IEnumerable<UtmUser>? UtmUser { get; set; }
+
      
     }
 }
