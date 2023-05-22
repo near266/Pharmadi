@@ -40,7 +40,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
 
         public async Task<PagedList<MerchantAdminDTO>> GetAllAdmin(int page, int pageSize, string? name, DateTime? StartDate, DateTime? EndDate, int? Status, string? Email, string? PhoneNumber)
             {
-            var query = _context.Merchants.AsQueryable();
+            var query =  _context.Merchants.AsQueryable();
             if (name != null)
             {
                 name = name.ToLower();
@@ -53,7 +53,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             query = StartDate != null ? query.Where(i => i.CreatedDate > StartDate) : query;
             query = EndDate != null ? query.Where(i => i.CreatedDate < EndDate) : query;
             
-            var dataUser = _dbContext.Users.AsQueryable();
+            var dataUser = await _dbContext.Users.ToListAsync();
             var dataMerchant = new List<MerchantAdminDTO>();
             foreach (var item1 in query)
                 foreach (var item2 in dataUser)
@@ -91,7 +91,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                             Login = item2.Login,
                             LastModifiedBy = item1.LastModifiedBy,
                             LastModifiedDate = item1.LastModifiedDate != null ? item1.LastModifiedDate : item1.CreatedDate,
-                            Utm = _dbContext.UtmsUsers.Where(i=>i.UserId == item2.Id).Select(i=>i.Utms).ToList(),
+                            Utm = await _dbContext.UtmsUsers.Where(i=>i.UserId == item2.Id).Select(i=>i.Utms).ToListAsync(),
                           
 
                         }); ;
