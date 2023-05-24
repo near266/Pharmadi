@@ -259,8 +259,6 @@ namespace BFF.Web.Controllers.FactorSvc
             }
 
         }
-        [Authorize(Roles = RolesConstants.MERCHANT)]
-
         [HttpPost("MerchantUpdate")]
         public async Task<IActionResult> MerchantUpdate([FromBody] MerchantUpdateCommand request)
         {
