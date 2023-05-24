@@ -269,8 +269,8 @@ namespace BFF.Web.Controllers.FactorSvc
                 if (role.Any(s => s.Contains(RolesConstants.ADMIN)) == true)
                 {
                     request.LastModifiedDate = DateTime.Now;
-                    request.AddressStatus = 2;
-                    request.Status = 2;
+                    request.AddressStatus = 1;
+                    request.Status = 1;
                     return Ok(await _mediator.Send(request));
                 }
                 else
