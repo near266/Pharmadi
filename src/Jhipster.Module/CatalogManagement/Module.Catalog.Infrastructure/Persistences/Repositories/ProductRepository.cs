@@ -241,8 +241,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = i.SuggestPrice,
-                SalePrice = i.SalePrice,
+                SuggestPrice =(userId!=null)? i.SuggestPrice:null,
+                SalePrice = (userId != null) ? i.SalePrice:null,
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
@@ -310,8 +310,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = i.SuggestPrice,
-                SalePrice = i.SalePrice,
+                SuggestPrice = (userId != null) ? i.SuggestPrice:null,
+                SalePrice = (userId != null) ? i.SalePrice:null,
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
