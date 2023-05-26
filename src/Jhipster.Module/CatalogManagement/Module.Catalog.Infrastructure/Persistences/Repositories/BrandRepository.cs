@@ -154,10 +154,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
 
 
-                }).Skip(pageSize * (page - 1))
-                  .Take(pageSize).ToListAsync();
-                result.Data = data;
-                result.TotalCount = query.Count();
+                }).ToListAsync();
+                result.Data = data.Skip(pageSize * (page - 1))
+                  .Take(pageSize);
+                result.TotalCount = data.Count();
                 return result;
             }
             if (type == 2)
@@ -175,11 +175,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     SumProduct = _context.Products.Where(a => a.BrandId==(Guid?)i.Id && i.Archived ==false).Count(),
                     products = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).AsEnumerable()
 
-                })
-                    .Skip(pageSize * (page - 1))
-                        .Take(pageSize).ToListAsync();
-                result.Data = data;
-                result.TotalCount = query.Count();
+                }).ToListAsync();
+                result.Data = data.Skip(pageSize * (page - 1))
+                  .Take(pageSize);
+                result.TotalCount = data.Count();
                 return result;
             }
             if (type == 3)
@@ -196,11 +195,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     GroupBrand = i.GroupBrand,
                     SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).Count(),
                     products= _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).AsEnumerable()
-                })
-                    .Skip(pageSize * (page - 1))
-                        .Take(pageSize).ToListAsync();
-                result.Data = data;
-                result.TotalCount = query.Count();
+                }).ToListAsync();
+                result.Data = data.Skip(pageSize * (page - 1))
+                  .Take(pageSize);
+                result.TotalCount = data.Count();
                 return result;
             }
             if (type == 4)
@@ -219,11 +217,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     GroupBrand = i.GroupBrand,
                     SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).Count(),
                     products = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).OrderByDescending(i => i.LastModifiedDate).AsEnumerable()
-                })
-                    .Skip(pageSize * (page - 1))
-                        .Take(pageSize).ToListAsync();
-                result.Data = data;
-                result.TotalCount = query.Count();
+                }).ToListAsync();
+                result.Data = data.Skip(pageSize * (page - 1))
+                  .Take(pageSize);
+                result.TotalCount = data.Count();
                 return result;
             }
             if (type == 5)
@@ -242,11 +239,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     GroupBrand = i.GroupBrand,
                     SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).Count(),
                     products = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).OrderByDescending(i => i.LastModifiedDate).AsEnumerable()
-                })
-                    .Skip(pageSize * (page - 1))
-                        .Take(pageSize).ToListAsync();
-                result.Data = data;
-                result.TotalCount = query.Count();
+                }).ToListAsync();
+                result.Data = data.Skip(pageSize * (page - 1))
+                  .Take(pageSize);
+                result.TotalCount = data.Count();
                 return result;
             }
 
