@@ -12,7 +12,7 @@ namespace Module.Catalog.Domain.Entities
         public string ProductName { get; set; }
         [MaxLength(1000)]
         public string? UserObject { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         [MaxLength(2000)]
         public string? Description { get; set; }

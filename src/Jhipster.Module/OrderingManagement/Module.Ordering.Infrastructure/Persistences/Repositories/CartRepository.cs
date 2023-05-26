@@ -156,7 +156,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 }
             }
             var data = res.Skip(pageSize * (page - 1)).Take(pageSize).ToList();
-            var totalPrice = _context.Carts.Where(i => i.UserId == userId).Sum(i => i.Product.Price);
+            var totalPrice = _context.Carts.Where(i => i.UserId == userId).Sum(i => i.Product.SuggestPrice);
             var totalDiscount = _context.Carts.Where(i => i.UserId == userId).Sum(i => i.Product.SalePrice);
 
 
@@ -199,7 +199,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                                ProductId = s.Id,
                                ProductName = s.ProductName,
                                Image = s.Image,
-                               Price = s.Price,
+                               Price = s.SuggestPrice,
                                DiscountPrice = s.SalePrice,
                                BrandName = sst.BrandName,
                                Quantity = st.Quantity ?? 0,
@@ -222,7 +222,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                                ProductId = st.ProductId,
                                ProductName = sst.ProductName,
                                Image = sst.Image,
-                               Price = sst.Price,
+                               Price = sst.SuggestPrice,
                                DiscountPrice = sst.SalePrice,
                                BrandName = brand.BrandName,
                                Quantity = carts.Quantity ?? 0,
@@ -243,7 +243,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                                ProductId = s.Id,
                                ProductName = s.ProductName,
                                Image = s.Image,
-                               Price = s.Price,
+                               Price = s.SuggestPrice,
                                DiscountPrice = s.SalePrice,
                                BrandName = st.BrandName,
                                Quantity = carts.Quantity ?? 0,
@@ -265,7 +265,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                                ProductId = s.Id,
                                ProductName = s.ProductName,
                                Image = s.Image,
-                               Price = s.Price,
+                               Price = s.SuggestPrice,
                                DiscountPrice = s.SalePrice,
                                BrandName = st.BrandName,
                                Quantity = carts.Quantity ?? 0,
@@ -285,7 +285,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
 
             foreach (var item in data)
             {
-                var checkPrice = item.Product.Price != null ? item.Product.Price : item.Product.SalePrice;
+                var checkPrice = item.Product.SuggestPrice != null ? item.Product. SuggestPrice : item.Product.SalePrice;
                 var summ = (int)(item.Quantity * checkPrice);
                 res.TotalPrice += summ;
 
