@@ -13,7 +13,7 @@ namespace Module.Catalog.Shared.DTOs
         public Guid Id { get; set; }
         public string SKU { get; set; }
         public string ProductName { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? UnitName { get; set; }
         public string? UserObject { get; set; }
@@ -40,7 +40,7 @@ namespace Module.Catalog.Shared.DTOs
         public Guid Id { get; set; }
         public string SKU { get; set; }
         public string ProductName { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? UnitName { get; set; }
         public Guid? BrandId { get; set; }
@@ -66,7 +66,7 @@ namespace Module.Catalog.Shared.DTOs
         public Guid Id { get; set; }
         public string SKU { get; set; }
         public string ProductName { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? UnitName { get; set; }
         public Guid? BrandId { get; set; }
@@ -92,7 +92,7 @@ namespace Module.Catalog.Shared.DTOs
         public Guid Id { get; set; }
         public string SKU { get; set; }
         public string ProductName { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? UnitName { get; set; }
         public Guid? BrandId { get; set; }
@@ -122,7 +122,7 @@ namespace Module.Catalog.Shared.DTOs
 
         public string ProductName { get; set; }
         public string? Specification { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? Description { get; set; }
         public int? Quantitysold { get; set; }
