@@ -203,8 +203,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             if (type == 4)
             {
-                var listpro = _context.Products.Where(i => i.ImportedProducts == 0 && i.Archived == false).Select(i => i.BrandId).Distinct();
-                var pro = _context.Products.Where(i => i.ImportedProducts == 0 && i.Archived == false).Select(i => i.Id);
+                var listpro = _context.Products.Where(i => i.Country.ToLower() == "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.BrandId).Distinct();
+                var pro = _context.Products.Where(i => i.Country.ToLower() == "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.Id);
                 var brId = _context.Brands.Where(i => listpro.Contains(i.Id) && i.Archived == false).Select(i => i.Id).ToList();
                 var data = await query.Where(i => i.Archived == false && listpro.Contains(i.Id)).Include(i => i.GroupBrand).Select(i => new BrandDTO
                 {
@@ -225,8 +225,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             if (type == 5)
             {
-                var listpro = _context.Products.Where(i => i.ImportedProducts >= 1 && i.Archived == false).Select(i => i.BrandId).Distinct();
-                var pro = _context.Products.Where(i => i.ImportedProducts >= 1 && i.Archived == false).Select(i => i.Id);
+                var listpro = _context.Products.Where(i => i.Country.ToLower() != "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.BrandId).Distinct();
+                var pro = _context.Products.Where(i => i.Country.ToLower() != "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.Id);
                 var brId = _context.Brands.Where(i => listpro.Contains(i.Id) && i.Archived == false).Select(i => i.Id).ToList();
                 var data = await query.Where(i =>i.Archived == false && listpro.Contains(i.Id)).Include(i => i.GroupBrand).Select(i => new BrandDTO
                 {
