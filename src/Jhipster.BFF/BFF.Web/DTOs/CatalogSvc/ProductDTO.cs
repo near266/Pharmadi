@@ -29,7 +29,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public string SKU { get; set; }
         public string ProductName { get; set; }
         public string? Function { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? Description { get; set; }
         public string? UnitName { get; set; }
@@ -64,6 +64,8 @@ namespace BFF.Web.DTOs.CatalogSvc
         public int? ImportedProducts { get; set; }
         public int? sellingProducts { get; set; }
         public string? ShortName { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
 
 
     }
@@ -92,7 +94,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public Guid Id { get; set; }
         public string ProductName { get; set; }
         public string? Specification { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? Description { get; set; }
         public int?Quantitysold { get; set; }
@@ -107,7 +109,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public string SKU { get; set; }
         public string ProductName { get; set; }
         public string? Function { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public int Status { get; set; }
         public int Number { get; set; }  
@@ -118,7 +120,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public string? SKU { get; set; }
         public string? ProductName { get; set; }
         public string? UserObject { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? Description { get; set; }
         public string? UnitName { get; set; }
@@ -149,6 +151,8 @@ namespace BFF.Web.DTOs.CatalogSvc
         public int? ImportedProducts { get; set; }
         public int? sellingProducts { get; set; }
         public string? ShortName { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
 
 
     }

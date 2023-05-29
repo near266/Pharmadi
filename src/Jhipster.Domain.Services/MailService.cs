@@ -74,5 +74,12 @@ namespace Jhipster.Domain.Services
             var temp = _configuration.GetValue<string>("EmailTemplate:MailOrder");
             await _emailSender.SendEmailAsync(Email, "Khách hàng đặt đơn", string.Format(temp, MerchantName, OrderCode, TotalPayment,Item));
         }
+
+        public virtual async Task SendMailSp(string? Name, string? Email, string? PhoneNumber, string? NamePharma, string? Mesaage)
+        {
+            string mail = "ops@pharmadi.vn";
+            var temp = _configuration.GetValue<string>("EmailTemplate:MailSp");
+            await _emailSender.SendEmailAsync(mail, "Cần hỗ trợ", string.Format(temp, Name, NamePharma,Mesaage, PhoneNumber, Email));
+        }
     }
 }

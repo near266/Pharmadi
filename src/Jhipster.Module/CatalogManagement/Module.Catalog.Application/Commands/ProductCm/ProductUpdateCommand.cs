@@ -13,7 +13,7 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public string? SKU { get; set; }
         public string? ProductName { get; set; }
         public string? UserObject { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? Description { get; set; }
         public string? UnitName { get; set; }
@@ -42,6 +42,8 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public int? ImportedProducts { get; set; }
         public int? sellingProducts { get; set; }
         public string? ShortName { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
     }
     public class ProductUpdateCommandHandler : IRequestHandler<ProductUpdateCommand, int>
     {
