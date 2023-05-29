@@ -38,8 +38,10 @@ namespace Module.Catalog.Domain.Entities
         public bool? CanOrder { get; set; }
         public int? NewProduct { get; set; }
         public int? ImportedProducts { get; set; }
-        public int? sellingProducts{get;set;}
+        public int? sellingProducts { get; set; }
         public string? ShortName { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
         public PostContent? PostContent { get; set; }
         public IEnumerable<LabelProduct> LabelProducts { get; set; }
         public IEnumerable<TagProduct> TagProducts { get; set; }

@@ -32,6 +32,8 @@ namespace Module.Catalog.Shared.DTOs
         public float? Discount { get; set; }
         public bool? CanOrder { get; set; }
         public string? ShortName { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
 
 
     }
@@ -58,6 +60,8 @@ namespace Module.Catalog.Shared.DTOs
         public bool? CanOrder { get; set; }
         public string? ShortName { get; set; }
         public int? NewProduct { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
 
 
     }
@@ -84,6 +88,8 @@ namespace Module.Catalog.Shared.DTOs
         public bool? CanOrder { get; set; }
         public string? ShortName { get; set; }
         public int? sellingProducts { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
 
 
     }
@@ -112,6 +118,8 @@ namespace Module.Catalog.Shared.DTOs
         public string? Country { get; set; }
 
         public int? ImportedProducts { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
 
 
     }
@@ -129,6 +137,8 @@ namespace Module.Catalog.Shared.DTOs
         public string? UnitName { get; set; }
         public int Status { get; set; }
         public List<string>? Image { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
     }
     public class SearchProductBrandId
     {

@@ -153,7 +153,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                BannerProduct1 = i.BannerProduct1,
+                BannerProduct2 = i.BannerProduct2
 
 
             }).Skip(pageSize * (page - 1))
@@ -219,7 +221,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     .SingleOrDefault(),
                 CanOrder = i.CanOrder,
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
-                sellingProducts = i.sellingProducts != null ? i.sellingProducts : 0
+                sellingProducts = i.sellingProducts != null ? i.sellingProducts : 0,
+                BannerProduct1 = i.BannerProduct1,
+                BannerProduct2 = i.BannerProduct2
 
             }).OrderByDescending(i => i.sellingProducts)
                 .Skip(pageSize * (page - 1))
@@ -253,7 +257,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder,
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
-                NewProduct = i.NewProduct != null ? i.NewProduct : 0
+                NewProduct = i.NewProduct != null ? i.NewProduct : 0,
+                BannerProduct1=i.BannerProduct1,
+                BannerProduct2=i.BannerProduct2
 
             }).OrderByDescending(i => i.NewProduct).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -288,7 +294,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder,
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
-                Country = i.Country
+                Country = i.Country,
+                BannerProduct1 = i.BannerProduct1,
+                BannerProduct2 = i.BannerProduct2
 
             }).OrderByDescending(i => i.Discount).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -324,7 +332,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CanOrder = i.CanOrder,
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
                 Country = i.Country,
-                ImportedProducts = i.ImportedProducts != null ? i.ImportedProducts : 0
+                ImportedProducts = i.ImportedProducts != null ? i.ImportedProducts : 0,
+                BannerProduct1 = i.BannerProduct1,
+                BannerProduct2 = i.BannerProduct2
 
             }).Where(a => a.Country.ToLower() != "việt nam").OrderByDescending(i => i.ImportedProducts).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -495,7 +505,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                BannerProduct1 = i.BannerProduct1,
+                BannerProduct2 = i.BannerProduct2
 
             }).Take(10).AsEnumerable();
 
@@ -530,7 +542,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
 
                     CanOrder = i.CanOrder,
-                    ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
+                    ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                    BannerProduct1 = i.BannerProduct1,
+                    BannerProduct2 = i.BannerProduct2
 
                 }).AsEnumerable();
 
@@ -555,7 +569,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Archived = i.Archived,
                     LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                    CanOrder = i.CanOrder
+                    CanOrder = i.CanOrder,
+                    BannerProduct1 = i.BannerProduct1,
+                    BannerProduct2 = i.BannerProduct2
 
                 }).AsEnumerable();
 
@@ -599,7 +615,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Brand = i.Brand,
                 Archived = i.Archived,
                 CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
+                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                BannerProduct1 = i.BannerProduct1,
+                BannerProduct2 = i.BannerProduct2
 
             }).AsEnumerable();
 

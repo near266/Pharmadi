@@ -94,6 +94,8 @@ namespace BFF.Web.ProductSvc
                     ImportedProducts = request.ImportedProducts,
                     sellingProducts = request.sellingProducts,
                     ShortName=request.ShortName,
+                    BannerProduct1= request.BannerProduct1,
+                    BannerProduct2= request.BannerProduct2,
                 };
                 await _mediator.Send(step1);
 
@@ -220,7 +222,9 @@ namespace BFF.Web.ProductSvc
                     NewProduct = request.NewProduct,
                     ImportedProducts = request.ImportedProducts,
                     sellingProducts = request.sellingProducts,
-                    ShortName=request.ShortName
+                    ShortName=request.ShortName,
+                    BannerProduct1=request.BannerProduct1,
+                    BannerProduct2=request.BannerProduct2,
                 };
 
                 result = await _mediator.Send(step1);
