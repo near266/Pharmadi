@@ -21,6 +21,7 @@ using Module.Redis.Configurations;
 using Jhipster.Domain;
 using LanguageExt.Pretty;
 using Module.Factor.Application.Commands.UtmMechantCm;
+using BFF.Web.Share;
 
 namespace BFF.Web.Controllers.FactorSvc
 {
@@ -66,6 +67,12 @@ namespace BFF.Web.Controllers.FactorSvc
             _logger.LogInformation($"REST request RegisterByUser : {JsonConvert.SerializeObject(request)}");
             try
             {
+                if (request.Email == null || request.Email.Length == 0) { throw new Exception("Không để trống email,vui lòng kiểm tra lại"); }
+                if (CheckString.CheckValidEmail(request.Email) == false) { throw new Exception("Email không hợp lệ,vui lòng kiểm tra lại"); }
+               // if (request.Login == null || request.Login.Length == 0) { throw new Exception("Không để trống tên tài khoản,vui lòng kiểm tra lại"); }
+                if (request.PhoneNumber == null || request.PhoneNumber.Length == 0) { throw new Exception("Không để trống số điện thoại,vui lòng kiểm tra lại"); }
+                if (CheckString.CheckInvalidPhoneNumber(request.PhoneNumber) == false) { throw new Exception("Số điện thoại không hợp lệ, vui lòng kiểm tra lại"); }
+                if (CheckString.CheckValidPassword(request.Password) == false) { throw new Exception("Mật khẩu phải có kí tự đặc biệt, chữ hoa, chữ thường, số và có tối thiểu 6 kí tự"); }
                 // role merchant
                 var AddRole = new HashSet<string>();
                 AddRole.Add("ROLE_MERCHANT");
@@ -88,8 +95,8 @@ namespace BFF.Web.Controllers.FactorSvc
                     rememberMe = true,
                     Campaign = request.Campaign,
                     Content = request.Content,
-                    Medium =request.Medium,
-                    Source=request.Source
+                    Medium = request.Medium,
+                    Source = request.Source
 
                 };
                 //gen token
@@ -122,7 +129,7 @@ namespace BFF.Web.Controllers.FactorSvc
                 var utm = new AddUtmMerchantCommand
                 {
                     Id = (Guid)request.UtmId,
-                    Utmlink=request.Utmlink,
+                    Utmlink = request.Utmlink,
                     Campaign = request.Campaign,
                     Content = request.Content,
                     Medium = request.Medium,
@@ -130,8 +137,8 @@ namespace BFF.Web.Controllers.FactorSvc
                     DateLogin = request.DateLogin,
                     DateRegister = request.DateRegister,
                     CreatedDate = DateTime.Now,
-                    CreatedBy= GetUserIdFromContext(),
-                    
+                    CreatedBy = GetUserIdFromContext(),
+
 
                 };
                 await _mediator.Send(utm);
@@ -141,7 +148,7 @@ namespace BFF.Web.Controllers.FactorSvc
                     Id = Guid.NewGuid(),
                     UtmId = request.UtmId,
                     UserId = step1.Id,
-                    CreatedDate= DateTime.Now,
+                    CreatedDate = DateTime.Now,
                 };
                 await _mediator.Send(utmUser);
                 return Ok(reponse.Content);
@@ -150,7 +157,11 @@ namespace BFF.Web.Controllers.FactorSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to RegisterByUser fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
+                var errorObject = new
+                {
+                    ErrorMessage = ex.Message
+                };
+                return StatusCode(500, errorObject);
             }
         }
         [HttpPost("AddMerchant")]
@@ -269,8 +280,8 @@ namespace BFF.Web.Controllers.FactorSvc
                 if (role.Any(s => s.Contains(RolesConstants.ADMIN)) == true)
                 {
                     request.LastModifiedDate = DateTime.Now;
-                    request.AddressStatus = 2;
-                    request.Status = 2;
+                    request.AddressStatus = 1;
+                    request.Status = 1;
                     return Ok(await _mediator.Send(request));
                 }
                 else

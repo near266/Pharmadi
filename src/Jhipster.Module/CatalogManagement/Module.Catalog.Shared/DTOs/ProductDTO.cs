@@ -13,7 +13,7 @@ namespace Module.Catalog.Shared.DTOs
         public Guid Id { get; set; }
         public string SKU { get; set; }
         public string ProductName { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? UnitName { get; set; }
         public string? UserObject { get; set; }
@@ -32,6 +32,8 @@ namespace Module.Catalog.Shared.DTOs
         public float? Discount { get; set; }
         public bool? CanOrder { get; set; }
         public string? ShortName { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
 
 
     }
@@ -40,7 +42,7 @@ namespace Module.Catalog.Shared.DTOs
         public Guid Id { get; set; }
         public string SKU { get; set; }
         public string ProductName { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? UnitName { get; set; }
         public Guid? BrandId { get; set; }
@@ -58,6 +60,8 @@ namespace Module.Catalog.Shared.DTOs
         public bool? CanOrder { get; set; }
         public string? ShortName { get; set; }
         public int? NewProduct { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
 
 
     }
@@ -66,7 +70,7 @@ namespace Module.Catalog.Shared.DTOs
         public Guid Id { get; set; }
         public string SKU { get; set; }
         public string ProductName { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? UnitName { get; set; }
         public Guid? BrandId { get; set; }
@@ -84,6 +88,8 @@ namespace Module.Catalog.Shared.DTOs
         public bool? CanOrder { get; set; }
         public string? ShortName { get; set; }
         public int? sellingProducts { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
 
 
     }
@@ -92,7 +98,7 @@ namespace Module.Catalog.Shared.DTOs
         public Guid Id { get; set; }
         public string SKU { get; set; }
         public string ProductName { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? UnitName { get; set; }
         public Guid? BrandId { get; set; }
@@ -112,6 +118,8 @@ namespace Module.Catalog.Shared.DTOs
         public string? Country { get; set; }
 
         public int? ImportedProducts { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
 
 
     }
@@ -122,13 +130,15 @@ namespace Module.Catalog.Shared.DTOs
 
         public string ProductName { get; set; }
         public string? Specification { get; set; }
-        public decimal? Price { get; set; }
+        public decimal? SuggestPrice { get; set; }
         public decimal? SalePrice { get; set; }
         public string? Description { get; set; }
         public int? Quantitysold { get; set; }
         public string? UnitName { get; set; }
         public int Status { get; set; }
         public List<string>? Image { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
     }
     public class SearchProductBrandId
     {
