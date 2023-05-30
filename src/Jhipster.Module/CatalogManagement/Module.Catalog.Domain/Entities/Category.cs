@@ -16,6 +16,7 @@ namespace Module.Catalog.Domain.Entities
         public string? Descripton { get; set; }
         public Guid? ParentId { get; set; }
         public bool IsLeaf { get; set; }
+        public string? Image { get; set; }
         public IEnumerable<Category>? Categories { get; set; }
         public IEnumerable<PostContent>? PostContents { get; set; }
     }
