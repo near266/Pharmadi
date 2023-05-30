@@ -29,4 +29,15 @@ namespace BFF.Web.DTOs.CatalogSvc
         public Guid ProductId { get; set; }
         public Guid Id { get; set; }
     }
+    public class CategoryLv1 {
+     public Guid Id { get; set; }
+     public bool IsLeaf { get; set; }
+
+    }
+    public class PinCategoryLv1Request {
+    public List<CategoryLv1> categoryLv1s { get; set; }
+    
+    }
+
+
 }
