@@ -96,6 +96,8 @@ namespace BFF.Web.ProductSvc
                     ShortName=request.ShortName,
                     BannerProduct1= request.BannerProduct1,
                     BannerProduct2= request.BannerProduct2,
+                    Different=request.Different,
+                    ClinicalResearch=request.ClinicalResearch,
                 };
                 await _mediator.Send(step1);
 
@@ -225,6 +227,8 @@ namespace BFF.Web.ProductSvc
                     ShortName=request.ShortName,
                     BannerProduct1=request.BannerProduct1,
                     BannerProduct2=request.BannerProduct2,
+                    Different=request.Different,
+                    ClinicalResearch=request.ClinicalResearch,
                 };
 
                 result = await _mediator.Send(step1);
