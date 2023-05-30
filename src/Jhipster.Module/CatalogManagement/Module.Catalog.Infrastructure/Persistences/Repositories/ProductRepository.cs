@@ -10,6 +10,8 @@ using Jhipster.Domain;
 using AutoMapper.QueryableExtensions;
 using Microsoft.VisualBasic;
 using System.Linq;
+using Jhipster.Infrastructure.Migrations;
+using System.Text;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -197,14 +199,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             //result.TotalCount = query.Count();
             // return result;
             var result = new PagedList<SaleProductDTO>();
-            var query = _context.Products.Where(i => i.Archived == false).AsNoTracking();
+            var query =await _context.Products.Where(i => i.Archived == false).AsNoTracking().ToListAsync();
 
-            var query2 = await query.Select(i => new SaleProductDTO
+            var query2 =  query.Select(i => new SaleProductDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = i.SuggestPrice,
-                SalePrice = i.SalePrice,
+                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
+                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
@@ -228,25 +230,35 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }).OrderByDescending(i => i.sellingProducts)
                 .Skip(pageSize * (page - 1))
                 .Take(pageSize)
-                .ToListAsync();
+                .ToList();
 
             result.Data = query2.ToList();
-            result.TotalCount = await query.CountAsync();
+            result.TotalCount =  query.Count();
 
             return result;
         }
-
+        public string Price(decimal? x)
+        {
+            var sup = x.ToString();
+            StringBuilder sb = new StringBuilder(sup);
+            char replaceChar = 'x';
+            for (int i = 1; i < sb.Length; i++)
+            {
+                sb[i] = replaceChar;
+            }
+            return sb.ToString();
+        }
         public async Task<PagedList<NewProductDTO>> ViewProductNew(int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<NewProductDTO>();
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
-
-            var query2 = await query.Select(i => new NewProductDTO
+            var query =await _context.Products.Where(i => i.Archived == false).AsQueryable().ToListAsync();
+         
+            var query2 =  query.Select(i => new NewProductDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice =(userId!=null)? i.SuggestPrice:null,
-                SalePrice = (userId != null) ? i.SalePrice:null,
+                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
+                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
@@ -258,12 +270,12 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CanOrder = i.CanOrder,
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
                 NewProduct = i.NewProduct != null ? i.NewProduct : 0,
-                BannerProduct1=i.BannerProduct1,
-                BannerProduct2=i.BannerProduct2
+                BannerProduct1 = i.BannerProduct1,
+                BannerProduct2 = i.BannerProduct2
 
             }).OrderByDescending(i => i.NewProduct).Skip(pageSize * (page - 1))
                         .Take(pageSize)
-                        .ToListAsync();
+                        .ToList();
 
             result.Data = query2.AsEnumerable();
             result.TotalCount = query.Count();
@@ -306,39 +318,39 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             result.TotalCount = query.Count();
             return result;
         }
-        public async Task<PagedList<ViewProductPromotionDTO>> ViewProductForeign(string? keyword, int page, int pageSize, Guid? userId)
+        public async Task<PagedList<ViewProductForeignDTO>> ViewProductForeign(string? keyword, int page, int pageSize, Guid? userId)
         {
-            var result = new PagedList<ViewProductPromotionDTO>();
+            var result = new PagedList<ViewProductForeignDTO>();
             var query = _context.Products.Where(i => i.Archived == false && i.Country.ToLower() != "việt nam").AsQueryable();
             if (keyword != null)
             {
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
             }
-            var query2 = await query.Select(i => new ViewProductPromotionDTO
+            var listPro = await query.ToListAsync();
+            var query2 = listPro.Select(p => new ViewProductForeignDTO
             {
-                Id = i.Id,
-                SKU = i.SKU,
-                SuggestPrice = (userId != null) ? i.SuggestPrice:null,
-                SalePrice = (userId != null) ? i.SalePrice:null,
-                ProductName = i.ProductName,
-                UnitName = i.UnitName,
-                Image = i.Image,
-                Specification = i.Specification,
-                SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
-                Archived = i.Archived,
-                Discount = i.SuggestPrice != 0 ? (float?)(((i.SuggestPrice - i.SalePrice) / i.SuggestPrice) * 100) : 0,
-                LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
-                CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
-                CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
-                Country = i.Country,
-                ImportedProducts = i.ImportedProducts != null ? i.ImportedProducts : 0,
-                BannerProduct1 = i.BannerProduct1,
-                BannerProduct2 = i.BannerProduct2
-
+                Id = p.Id,
+                SKU = p.SKU,
+                SuggestPrice = (userId != null) ? p.SuggestPrice.ToString() : Price(p.SuggestPrice),
+                SalePrice = (userId != null) ? p.SalePrice.ToString() : Price(p.SalePrice),
+                ProductName = p.ProductName,
+                UnitName = p.UnitName,
+                Image = p.Image,
+                Specification = p.Specification,
+                SaleNumber = _context.ProductSales.Where(s => s.ProductId == p.Id).Select(s => s.Quantity).FirstOrDefault(),
+                Archived = p.Archived,
+                Discount = p.SuggestPrice != 0 ? (float?)(((p.SuggestPrice - p.SalePrice) / p.SuggestPrice) * 100) : 0,
+                LabelProducts = _context.LabelProducts.Include(lp => lp.Label).Where(lp => lp.ProductId == p.Id).AsEnumerable(),
+                CartNumber = (userId != null) ? _context.Carts.Where(c => c.UserId == userId && c.ProductId == p.Id).Select(c => c.Quantity).FirstOrDefault().ToString() : "0",
+                CanOrder = p.CanOrder,
+                ShortName = p.ShortName != null ? p.ShortName : p.ProductName.Substring(0, 25),
+                Country = p.Country!=null?p.Country:" ",
+                ImportedProducts = p.ImportedProducts != null ? p.ImportedProducts : 0,
+                BannerProduct1 = p.BannerProduct1,
+                BannerProduct2 = p.BannerProduct2
             }).Where(a => a.Country.ToLower() != "việt nam").OrderByDescending(i => i.ImportedProducts).Skip(pageSize * (page - 1))
                         .Take(pageSize)
-                        .ToListAsync();
+                        .ToList();
 
             result.Data = query2.AsEnumerable();
             result.TotalCount = query.Count();
@@ -422,12 +434,12 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                         {
                             cateId.AddRange(childs);
                         }
-                      var  query1 = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => cateId.Contains(cp.CategoryId)));
+                        var query1 = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => cateId.Contains(cp.CategoryId)));
                         query = query.Where(i => !query1.Contains(i));
                     }
-                  
 
-                    
+
+
                 }
 
             }
