@@ -20,6 +20,8 @@ namespace Module.Catalog.Application.Commands.CategoryCm
         public string CategoryName { get; set; }
         public string? Descripton { get; set; }
         public Guid? ParentId { get; set; }
+        public string? Image { get; set; }
+
         public bool IsLeaf { get; set; }
         [JsonIgnore]
         public Guid? LastModifiedBy { get; set; }

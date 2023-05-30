@@ -42,8 +42,8 @@ namespace Module.Catalog.Shared.DTOs
         public Guid Id { get; set; }
         public string SKU { get; set; }
         public string ProductName { get; set; }
-        public decimal? SuggestPrice { get; set; }
-        public decimal? SalePrice { get; set; }
+        public string SuggestPrice { get; set; }
+        public string SalePrice { get; set; }
         public string? UnitName { get; set; }
         public Guid? BrandId { get; set; }
         public Brand? Brand { get; set; }
@@ -70,8 +70,8 @@ namespace Module.Catalog.Shared.DTOs
         public Guid Id { get; set; }
         public string SKU { get; set; }
         public string ProductName { get; set; }
-        public decimal? SuggestPrice { get; set; }
-        public decimal? SalePrice { get; set; }
+        public string? SuggestPrice { get; set; }
+        public string? SalePrice { get; set; }
         public string? UnitName { get; set; }
         public Guid? BrandId { get; set; }
         public Brand? Brand { get; set; }
@@ -122,6 +122,34 @@ namespace Module.Catalog.Shared.DTOs
         public string? BannerProduct2 { get; set; }
 
 
+    }
+    public class ViewProductForeignDTO
+    {
+        public Guid Id { get; set; }
+        public string SKU { get; set; }
+        public string ProductName { get; set; }
+        public string? SuggestPrice { get; set; }
+        public string? SalePrice { get; set; }
+        public string? UnitName { get; set; }
+        public Guid? BrandId { get; set; }
+        public Brand? Brand { get; set; }
+        public List<string>? Image { get; set; }
+        public string? Specification { get; set; }
+        public IEnumerable<LabelProduct>? LabelProducts { get; set; }
+        public IEnumerable<CategoryProduct>? CategoryProducts { get; set; }
+        public Brand? Brands { get; set; }
+        public int? SaleNumber { get; set; }
+        public string CartNumber { get; set; } = "0";
+        public bool? Archived { get; set; }
+        [JsonIgnore]
+        public float? Discount { get; set; }
+        public bool? CanOrder { get; set; }
+        public string? ShortName { get; set; }
+        public string? Country { get; set; }
+
+        public int? ImportedProducts { get; set; }
+        public string? BannerProduct1 { get; set; }
+        public string? BannerProduct2 { get; set; }
     }
     public class SearchProductDTO
     {
