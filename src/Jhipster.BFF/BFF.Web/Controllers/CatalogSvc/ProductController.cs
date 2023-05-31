@@ -362,7 +362,6 @@ namespace BFF.Web.ProductSvc
             }
         }
 
-        [AllowAnonymous]
         [HttpPost("ViewProductForU")]
         public async Task<IActionResult> ViewProductForU([FromBody] ViewProductForUQuery request)
         {
@@ -384,7 +383,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [AllowAnonymous]
 
         [HttpPost("ViewProductBestSale")]
         public async Task<IActionResult> ViewProductBestSale([FromBody] ViewProductBestSaleQuery request)
@@ -398,10 +396,16 @@ namespace BFF.Web.ProductSvc
                 //res = await _cache.GetRecordAsync<PagedList<SaleProductDTO>>(recordKey);
                 //if (res is null)
                 //{
-                  
+
                 //    res = await _mediator.Send(request);
                 //    await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromSeconds(3));
                 //}
+                try
+                {
+                    request.userId = Guid.Parse(GetUserIdFromContext());
+                }
+                catch
+                { }
                 var res = await _mediator.Send(request);
 
                 return Ok(res);
