@@ -61,6 +61,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] CategoryUpdateCommand request)
