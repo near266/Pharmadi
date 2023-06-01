@@ -20,6 +20,7 @@ using Module.Redis.Configurations;
 using Module.Redis.Library.Helpers;
 using Google.Apis.Logging;
 using System.Linq;
+using Jhipster.Infrastructure.Migrations;
 
 namespace BFF.Web.ProductSvc
 {
@@ -218,7 +219,7 @@ namespace BFF.Web.ProductSvc
                     Number = request.Number,
                     LastModifiedBy = request.LastModifiedBy,
                     LastModifiedDate = request.LastModifiedDate,
-                    Archived = request.Archived,
+                    Archived = false,
                     HideProduct = request.HideProduct,
                     CanOrder = request.CanOrder,
                     NewProduct = request.NewProduct,
@@ -331,8 +332,7 @@ namespace BFF.Web.ProductSvc
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError($"REST request to search Product fail: {ex.Message}");
-                    return StatusCode(401, ex.Message);
+                    
                 }
                 var result = await _mediator.Send(request);
                 return Ok(result);
