@@ -321,7 +321,7 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Search")]
-        public async Task<ActionResult<PagedList<Product>>> Search([FromBody] SearchProductQuery request)
+        public async Task<IActionResult> Search([FromBody] SearchProductQuery request)
         {
             _logger.LogInformation($"REST request search Product : {JsonConvert.SerializeObject(request)}");
             try

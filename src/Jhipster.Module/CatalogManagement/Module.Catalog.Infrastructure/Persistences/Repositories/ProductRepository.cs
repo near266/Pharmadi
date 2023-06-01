@@ -201,9 +201,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             //result.TotalCount = query.Count();
             // return result;
             var result = new PagedList<SaleProductDTO>();
-            var query =await _context.Products.Where(i => i.Archived == false).AsNoTracking().ToListAsync();
+            var query = await _context.Products.Where(i => i.Archived == false).AsNoTracking().ToListAsync();
 
-            var query2 =  query.Select(i => new SaleProductDTO
+            var query2 = query.Select(i => new SaleProductDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
@@ -235,7 +235,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 .ToList();
 
             result.Data = query2.ToList();
-            result.TotalCount =  query.Count();
+            result.TotalCount = query.Count();
 
             return result;
         }
@@ -253,9 +253,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<NewProductDTO>> ViewProductNew(int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<NewProductDTO>();
-            var query =await _context.Products.Where(i => i.Archived == false).AsQueryable().ToListAsync();
-         
-            var query2 =  query.Select(i => new NewProductDTO
+            var query = await _context.Products.Where(i => i.Archived == false).AsQueryable().ToListAsync();
+
+            var query2 = query.Select(i => new NewProductDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
@@ -346,7 +346,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CartNumber = (userId != null) ? _context.Carts.Where(c => c.UserId == userId && c.ProductId == p.Id).Select(c => c.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = p.CanOrder,
                 ShortName = p.ShortName != null ? p.ShortName : p.ProductName.Substring(0, 25),
-                Country = p.Country!=null?p.Country:" ",
+                Country = p.Country != null ? p.Country : " ",
                 ImportedProducts = p.ImportedProducts != null ? p.ImportedProducts : 0,
                 BannerProduct1 = p.BannerProduct1,
                 BannerProduct2 = p.BannerProduct2
@@ -358,35 +358,16 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             result.TotalCount = query.Count();
             return result;
         }
-        public async Task<PagedList<ProductSearchDTO>> SearchProduct(string? keyword, List<Guid> categoryIds, List<Guid> cateLevel2Ids, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
+        public async Task<PagedList<SearchMcProductDTO>> SearchProduct(string? keyword, List<Guid> categoryIds, List<Guid> cateLevel2Ids, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
         {
-            var result = new PagedList<ProductSearchDTO>();
+            var result = new PagedList<SearchMcProductDTO>();
             var query = _context.Products.Include(i => i.Brand).Where(i => i.Archived == false).AsQueryable();
             if (keyword != null)
             {
                 keyword = keyword.ToLower();
                 query = query.Where(i => i.SKU.ToLower().Contains(keyword) || i.ProductName.ToLower().Contains(keyword));
             }
-            //if (categoryIds != null && categoryIds.Count() > 0)
-            //{
-            //    var lisCate = await _context.CategoryProducts.Where(i=>categoryIds.Contains(i.CategoryId)).Select(i=>i.CategoryId).ToListAsync();
-            //     var parentId = await _context.Categories.Where(i => lisCate.Contains(i.Id)).Select(i => i.ParentId).ToListAsync();
-            //    var listcate = await _context.Categories.Where(i=> categoryIds.Contains(i.Id) && parentId.Contains(i.ParentId) ).Select(i=>i.Id).ToListAsync();
-            //    var ListcatePro = await _context.CategoryProducts.Where(i=> listcate.Contains(i.CategoryId)).Select(i=>i.ProductId).ToListAsync();
-            //    if(parentId != null)
-            //    {
 
-            //    query =   query.Where(i=>ListcatePro.Contains(i.Id));
-
-            //    }
-            //    else
-            //    {
-
-            //    query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(i => categoryIds.Contains(i.CategoryId)));
-            //    }
-
-
-            //}
 
             if (categoryIds != null && categoryIds.Count() > 0)
             {
@@ -394,34 +375,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 //check cate2 có không nếu không có thì chỉ tìm kiếm theo cate1 
                 if (cateLevel2Ids != null && cateLevel2Ids.Count() > 0)
                 {
-                    //lau product theo cate cap 1
 
-
-
-
-
-                    //// lần lượt for với item là cate1
-                    //foreach (var item in categoryIds)
-                    //{
-                    //    // thực hiện lấy list child của từng item 
-                    //    var childs = await _context.Categories.Where(i => i.ParentId == item).Select(i => i.Id).ToListAsync();
-
-                    //    // dùng hàm SequenceEqual để check xem 2 list có phần tử chung hay không
-                    //    // nếu item có child( là 1 list) và 1 vài phần tử đó cũng thuộc cate2 thì thực hiện remove item( vì mk sẽ tìm kiếm theo cate2 chứ ko tìm kiếm theo parent của nó nữa)
-                    //    if (cateLevel2Ids.SequenceEqual(childs))
-                    //    {
-                    //        categoryIds.Remove(item);
-                    //    }
-                    //    if (categoryIds.Count() == 0)
-                    //    {
-                    //        categoryIds = new List<Guid>();
-                    //        break;
-                    //    }
-                    //}
-                    //// sau khi quá trình check kết thúc
-                    //// kết quả thu được là xóa tất cả cate1 mà có child nằm trong cateLevel2Ids
-                    //// thực hiện gộp 2 mảng cate1 và cate2 để được list cuối cùng và tìm kiếm 
-                    //categoryIds.AddRange(cateLevel2Ids);
                     query = query.Include(i => i.CategoryProducts).Where(i => i.CategoryProducts.Any(cp => cateLevel2Ids.Contains(cp.CategoryId)));
 
                 }
@@ -455,8 +409,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 query = query.Include(i => i.TagProducts).Where(i => i.TagProducts.Any(i => tagIds.Contains(i.TagId)));
             }
-
-            var query2 = await query.Select(i => new ProductSearchDTO
+            var viewdata = await query.ToListAsync();
+            var query2 = viewdata.Select(i => new SearchMcProductDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
@@ -475,8 +429,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
 
             }).Skip(pageSize * (page - 1))
-                        .Take(pageSize)
-                        .ToListAsync();
+                        .Take(pageSize).ToList();
 
             result.Data = query2.AsEnumerable();
             result.TotalCount = query.Count();
@@ -739,12 +692,12 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<int> DeleteDiscountProduct(Guid id)
         {
             var check = await _context.productDiscounts.FirstOrDefaultAsync(i => i.Id == id);
-             _context.productDiscounts.Remove(check);
+            _context.productDiscounts.Remove(check);
             return await _context.SaveChangesAsync();
         }
         public async Task<int> UpdateProductDiscount(ProductDiscount rq)
         {
-            var check = await _context.productDiscounts.FirstOrDefaultAsync(i=>i.Id == rq.Id);
+            var check = await _context.productDiscounts.FirstOrDefaultAsync(i => i.Id == rq.Id);
             check = _mapper.Map<ProductDiscount, ProductDiscount>(rq, check);
 
             return await _context.SaveChangesAsync(default);
