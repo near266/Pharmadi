@@ -159,7 +159,7 @@ namespace Jhipster.Configuration.AutoMapper
             CreateMap<WarehouseProductAddCommand, WarehouseProduct>();
             CreateMap<WarehouseProduct, WarehouseProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<WarehouseProductUpdateCommand, WarehouseProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
+            CreateMap<ProductDiscount, ProductDiscount>();
 
             //CreateMap<ProductSearchRequest, SearchProductQuery>();
             //CreateMap<Product, ProductInforSearchResponse>();
