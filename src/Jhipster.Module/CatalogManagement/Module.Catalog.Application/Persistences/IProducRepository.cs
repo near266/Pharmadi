@@ -20,7 +20,7 @@ namespace Module.Catalog.Application.Persistences
         Task<IEnumerable<ProductSearchDTO>> ViewListProductWithBrand(Guid Id, Guid? userId);
         Task<PagedList<ProductSearchDTO>> ViewListProductSimilarCategory(Guid Id, Guid? userId);
         Task<List<List<string>>> FakeData();
-        Task<IEnumerable<ProductSearchDTO>> SearchToChoose(string? keyword);
+        Task<IEnumerable<SearchToChooseDTO>> SearchToChoose(string? keyword);
         Task<PagedList<SearchProductBrandId>> GetListProductSimilarCategoryByBrandId(int page, int pageSize, Guid brandId, Guid? userId);
         Task<int> ArchivedProduct(List<Guid> ids);
         Task<PagedList<ViewProductForeignDTO>> ViewProductForeign(string? keyword, int page, int pageSize, Guid? userId);
