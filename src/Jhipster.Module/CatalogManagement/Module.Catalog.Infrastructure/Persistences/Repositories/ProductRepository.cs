@@ -116,7 +116,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
                 old = _mapper.Map<Product, Product>(request, old);
 
-                return await _context.SaveChangesAsync(default);
+                return await _context.SaveChangesAsync();
             }
             return 0;
         }
