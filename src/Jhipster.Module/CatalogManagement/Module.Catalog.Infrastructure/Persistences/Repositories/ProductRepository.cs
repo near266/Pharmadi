@@ -146,8 +146,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = i.SuggestPrice,
-                SalePrice = i.SalePrice,
+                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
+                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
@@ -295,8 +295,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = i.SuggestPrice,
-                SalePrice = i.SalePrice,
+                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
+                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
@@ -460,8 +460,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = i.SuggestPrice,
-                SalePrice = i.SalePrice,
+                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
+                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
                 ProductName = i.ProductName,
                 Brand = i.Brand,
                 UnitName = i.UnitName,
@@ -508,8 +508,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = i.SuggestPrice,
-                SalePrice = i.SalePrice,
+                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
+                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
@@ -544,8 +544,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 {
                     Id = i.Id,
                     SKU = i.SKU,
-                    SuggestPrice = i.SuggestPrice,
-                    SalePrice = i.SalePrice,
+                    SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
+                    SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
                     ProductName = i.ProductName,
                     UnitName = i.UnitName,
                     Image = i.Image,
@@ -573,8 +573,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 {
                     Id = i.Id,
                     SKU = i.SKU,
-                    SuggestPrice = i.SuggestPrice,
-                    SalePrice = i.SalePrice,
+                    SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
+                    SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
                     ProductName = i.ProductName,
                     UnitName = i.UnitName,
                     Image = i.Image,
@@ -601,7 +601,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return await _context.Products.Select(i => i.Image).ToListAsync();
         }
 
-        public async Task<IEnumerable<ProductSearchDTO>> SearchToChoose(string? keyword)
+        public async Task<IEnumerable<SearchToChooseDTO>> SearchToChoose(string? keyword)
         {
             var query = _context.Products.AsQueryable();
             if (keyword != null)
@@ -614,7 +614,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             //    query = query.Where(i => i.ProductName == "@#$");
             //}
 
-            var query2 = query.Select(i => new ProductSearchDTO
+            var query2 = query.Select(i => new SearchToChooseDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
