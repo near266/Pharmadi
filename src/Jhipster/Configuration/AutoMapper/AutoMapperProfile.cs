@@ -180,7 +180,7 @@ namespace Jhipster.Configuration.AutoMapper
 
             
 
-            CreateMap<Product, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Product, Product>();
 
             #endregion
             
