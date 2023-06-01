@@ -145,8 +145,8 @@ namespace Jhipster.Configuration.AutoMapper
             //product
             CreateMap<ProductAddRequest, ProductAddCommand>();
             CreateMap<ProductAddCommand, Product>();
-            CreateMap<ProductUpdateCommand, Product>();
-            CreateMap<Product, Product>();
+            CreateMap<ProductUpdateCommand, Product>().ReverseMap();
+            CreateMap<Product, Product>().ReverseMap();
             
             CreateMap<ProductListDTO, Product>().ReverseMap();
             CreateMap<ViewProductWithBrandQuery, Product>();
@@ -177,10 +177,6 @@ namespace Jhipster.Configuration.AutoMapper
             //CreateMap<ProductSearchListRequest, ViewProductNewQuery>();
             //CreateMap<ProductSearchListRequest, ViewProductPromotionQuery>();
             //CreateMap<Product, ProductInforSearchResponse>();
-
-            
-
-            CreateMap<Product, Product>();
 
             #endregion
             
