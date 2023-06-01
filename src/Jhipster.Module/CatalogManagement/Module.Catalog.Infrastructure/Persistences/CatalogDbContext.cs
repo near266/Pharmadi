@@ -22,6 +22,7 @@ namespace Module.Catalog.Infrastructure.Persistence
         public DbSet<PostContent> PostContents { get; set; }
         public DbSet<ProductSale> ProductSales { get; set; }
         public DbSet<Cart> Carts { get; set; }
+        public DbSet<ProductDiscount> productDiscounts { get; set; }
 
         public CatalogDbContext(DbContextOptions<CatalogDbContext> options) : base(options)
         {

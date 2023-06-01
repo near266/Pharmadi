@@ -12,6 +12,8 @@ using Microsoft.VisualBasic;
 using System.Linq;
 using Jhipster.Infrastructure.Migrations;
 using System.Text;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System.Security.Cryptography;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -724,6 +726,29 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return new List<ProductClassificationByCountryDTO>();
 
         }
+        public async Task<int> AddProductDiscount(ProductDiscount rq)
+        {
+            await _context.productDiscounts.AddAsync(rq);
+            return await _context.SaveChangesAsync();
+        }
+        public async Task<List<ProductDiscount>> ViewDiscountByUserId(Guid id)
+        {
+            return await _context.productDiscounts.Where(i => i.ProductId == id)
+                         .OrderBy(i => i.Range).ToListAsync();
+        }
+        public async Task<int> DeleteDiscountProduct(Guid id)
+        {
+            var check = await _context.productDiscounts.FirstOrDefaultAsync(i => i.Id == id);
+             _context.productDiscounts.Remove(check);
+            return await _context.SaveChangesAsync();
+        }
+        public async Task<int> UpdateProductDiscount(ProductDiscount rq)
+        {
+            var check = await _context.productDiscounts.FirstOrDefaultAsync(i=>i.Id == rq.Id);
+            check = _mapper.Map<ProductDiscount, ProductDiscount>(rq, check);
 
+            return await _context.SaveChangesAsync(default);
+
+        }
     }
 }
