@@ -145,7 +145,7 @@ namespace Jhipster.Configuration.AutoMapper
             //product
             CreateMap<ProductAddRequest, ProductAddCommand>();
             CreateMap<ProductAddCommand, Product>();
-            CreateMap<ProductUpdateCommand, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<ProductUpdateCommand, Product>();
             CreateMap<Product, Product>();
             
             CreateMap<ProductListDTO, Product>().ReverseMap();
