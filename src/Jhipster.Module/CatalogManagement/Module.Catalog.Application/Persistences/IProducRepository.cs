@@ -10,7 +10,7 @@ namespace Module.Catalog.Application.Persistences
         Task<int> Update(Product request);
         Task<int> Delete(Guid id);
         Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU, string? ProductName, int? status);
-        Task<Product> ViewDetail(Guid Id);
+        Task<ProductDetail> ViewDetail(Guid Id,Guid? UserId);
         Task<PagedList<ProductSearchDTO>> ViewProductForU(string? keyword, int page, int pageSize, Guid? userId);
         Task<PagedList<SaleProductDTO>> ViewProductBestSale(int page, int pageSize, Guid? userId);
         Task<PagedList<NewProductDTO>> ViewProductNew(int page, int pageSize, Guid? userId);

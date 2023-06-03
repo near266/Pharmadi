@@ -154,6 +154,7 @@ namespace Jhipster.Configuration.AutoMapper
 
 
             CreateMap<ViewProductSimilarQuery, Product>();
+            CreateMap<Product, ProductDetail>().ReverseMap();
             CreateMap<GetAllAminDTO,Product>().ReverseMap();
             //warehouse
             CreateMap<WarehouseProductAddCommand, WarehouseProduct>();
