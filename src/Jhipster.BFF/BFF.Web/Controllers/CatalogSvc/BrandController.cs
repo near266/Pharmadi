@@ -146,6 +146,14 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request GetListBrandIsHaveGroup : {JsonConvert.SerializeObject(request)}");
             try
             {
+                try
+                {
+                    request.UserId = Guid.Parse(GetUserIdFromContext());
+                }
+                catch (Exception ex)
+                {
+
+                }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
