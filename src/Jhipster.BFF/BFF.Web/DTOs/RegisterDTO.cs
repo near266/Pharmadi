@@ -81,10 +81,11 @@ namespace BFF.Web.DTOs
         public const int PasswordMaxLength = 100;
 
         public string? Password { get; set; }
-
+        public string ConfirmPassword { get; set; }
+        public List<string>? Pdf { get; set; }
         public string? PhoneNumber { get; set; }
         [System.Text.Json.Serialization.JsonIgnore]
-        public Guid ? UtmId { get; set; }
+        public Guid? UtmId { get; set; }
         public string? Utmlink { get; set; }
         public string? Campaign { get; set; }
         public string? Content { get; set; }
@@ -96,7 +97,7 @@ namespace BFF.Web.DTOs
 
 
     }
-    
+
     public class RegisterByAdminDTO
     {
         [System.Text.Json.Serialization.JsonIgnore]
