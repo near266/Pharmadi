@@ -121,7 +121,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<Product> ViewDetail(Guid Id)
+        public async Task<ProductDetail> ViewDetail(Guid Id,Guid? UserId)
         {
             var obj = await _context.Products
                                     .Include(p => p.Brand).Include(p => p.PostContent)
@@ -130,7 +130,18 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                                     .Include(p => p.CategoryProducts).ThenInclude(l => l.Category)
                                     .Include(p => p.WarehouseProducts)
                                     .FirstOrDefaultAsync(i => i.Id == Id);
-            return obj;
+            var value = _mapper.Map<ProductDetail>(obj);
+            if (UserId != null)
+            {
+                value.SalePrice = obj.SalePrice.ToString();
+                value.SuggestPrice = obj.SuggestPrice.ToString();
+            }   
+            else
+            {
+                value.SalePrice = Price(obj.SalePrice);
+                value.SuggestPrice = Price(obj.SuggestPrice);
+            }    
+            return value;
         }
 
         // int 

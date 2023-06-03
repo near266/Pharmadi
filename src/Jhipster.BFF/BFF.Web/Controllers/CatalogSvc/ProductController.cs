@@ -512,7 +512,11 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductWithBrand : {JsonConvert.SerializeObject(request)}");
             try
             {
-                request.userId = Guid.Parse(GetUserIdFromContext());
+                try
+                {
+                    request.userId = Guid.Parse(GetUserIdFromContext());
+                }
+                catch { }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -528,7 +532,11 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductSimilarCategory : {JsonConvert.SerializeObject(request)}");
             try
             {
-                request.userId = Guid.Parse(GetUserIdFromContext());
+                try
+                {
+                    request.userId = Guid.Parse(GetUserIdFromContext());
+                }
+                catch { }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }

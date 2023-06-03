@@ -12,14 +12,15 @@ using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Queries.BrandQ
 {
-    public class GetListBrandIsHaveGroupIdQuery : IRequest<PagedList<BrandDTO>>
+    public class GetListBrandIsHaveGroupIdQuery : IRequest<PagedList<IsHaveGroupDTO>>
     {
         public int page { get; set; }
         public int pageSize { get; set; }
         public int type { get; set; }
         public Guid? GroupBrandId { get; set; } 
+        public Guid? UserId { get; set; }
     }
-    public class GetListBrandIsHaveGroupIdQueryHandler : IRequestHandler<GetListBrandIsHaveGroupIdQuery, PagedList<BrandDTO>>
+    public class GetListBrandIsHaveGroupIdQueryHandler : IRequestHandler<GetListBrandIsHaveGroupIdQuery, PagedList<IsHaveGroupDTO>>
     {
         private readonly IBrandRepository _repo;
         private readonly IMapper _mapper;
@@ -28,9 +29,9 @@ namespace Module.Catalog.Application.Queries.BrandQ
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<PagedList<BrandDTO>> Handle(GetListBrandIsHaveGroupIdQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<IsHaveGroupDTO>> Handle(GetListBrandIsHaveGroupIdQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.IsHaveGroup(request.page,request.pageSize,request.type,request.GroupBrandId);
+            return await _repo.IsHaveGroup(request.page,request.pageSize,request.type,request.GroupBrandId,request.UserId);
         }
     }
 }
