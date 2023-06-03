@@ -302,7 +302,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
             }
-            var query2 = await query.Select(i => new ViewProductPromotionDTO
+            var listPro = await query.ToListAsync();
+
+            var query2 =  listPro.Select(i => new ViewProductPromotionDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
@@ -325,7 +327,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
             }).OrderByDescending(i => i.Discount).Skip(pageSize * (page - 1))
                         .Take(pageSize)
-                        .ToListAsync();
+                        .ToList();
 
             result.Data = query2.AsEnumerable();
             result.TotalCount = query.Count();
@@ -467,8 +469,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 query = query.Where(i => (obj.Brand == null || i.Brand.BrandName.ToLower().Contains(obj.Brand.BrandName.ToLower()) && i.Id != obj.Id));
             }
+            var listPro = await query.ToListAsync();
 
-            var query2 = query.Select(i => new ProductSearchDTO
+            var query2 = listPro.Select(i => new ProductSearchDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
