@@ -14,7 +14,7 @@ namespace Module.Catalog.Application.Persistences
         Task<IEnumerable<BrandDTO>> Search(string? keyword);
         Task<PagedList<BrandDTO>> GetAllAdmin(int page, int pageSize);
         Task<int> PinBrand(Brand brand);
-        Task<PagedList<BrandDTO>> IsHaveGroup(int page , int pageSize,int type ,Guid? GroupBrandId);
+        Task<PagedList<IsHaveGroupDTO>> IsHaveGroup(int page , int pageSize,int type ,Guid? GroupBrandId, Guid? UserId);
         Task<List<string>> ImageBrand();
         Task<bool> IsBrandEmtyGroup(Guid? Id);
         Task<List<Guid>> GetListBrandByGroupId(Guid? groupId);

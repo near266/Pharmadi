@@ -21,6 +21,18 @@ namespace Module.Catalog.Shared.DTOs
         public int SumProduct { get; set; }
         public IEnumerable<Product>? products { get; set; }
     }
+    public class IsHaveGroupDTO
+    {
+        public Guid Id { get; set; }
+        public Guid? GroupBrandId { get; set; }
+        public string Intro { get; set; }
+        public string BrandName { get; set; }
+        public string LogoBrand { get; set; }
+        public bool? Pin { get; set; }
+        public GroupBrand? GroupBrand { get; set; }
+        public int SumProduct { get; set; }
+        public IEnumerable<ProductDetail>? products { get; set; }
+    }
     public class AddBrandDTO
     {
         [JsonIgnore]
