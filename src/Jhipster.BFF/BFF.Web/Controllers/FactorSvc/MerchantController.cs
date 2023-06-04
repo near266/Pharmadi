@@ -67,12 +67,16 @@ namespace BFF.Web.Controllers.FactorSvc
             _logger.LogInformation($"REST request RegisterByUser : {JsonConvert.SerializeObject(request)}");
             try
             {
+                //if (request.Login == null || request.Login.Length == 0) { throw new Exception("Không để trống tên tài khoản , vui lòng nhập đầy đủ thông tin."); }
                 if (request.Email == null || request.Email.Length == 0) { throw new Exception("Không để trống email,vui lòng kiểm tra lại"); }
                 if (CheckString.CheckValidEmail(request.Email) == false) { throw new Exception("Email không hợp lệ,vui lòng kiểm tra lại"); }
-               // if (request.Login == null || request.Login.Length == 0) { throw new Exception("Không để trống tên tài khoản,vui lòng kiểm tra lại"); }
+                // if (request.Login == null || request.Login.Length == 0) { throw new Exception("Không để trống tên tài khoản,vui lòng kiểm tra lại"); }
                 if (request.PhoneNumber == null || request.PhoneNumber.Length == 0) { throw new Exception("Không để trống số điện thoại,vui lòng kiểm tra lại"); }
                 if (CheckString.CheckInvalidPhoneNumber(request.PhoneNumber) == false) { throw new Exception("Số điện thoại không hợp lệ, vui lòng kiểm tra lại"); }
-                if (CheckString.CheckValidPassword(request.Password) == false) { throw new Exception("Mật khẩu phải có kí tự đặc biệt, chữ hoa, chữ thường, số và có tối thiểu 6 kí tự"); }
+                if (CheckString.CheckValidPassword(request.Password) == false) { throw new Exception("Mật khẩu phải có tối thiểu 6 kí tự"); }
+                if (request.Password != request.ConfirmPassword) { throw new Exception("Mật khẩu không khớp ,vui lòng kiểm tra lại"); }
+                if (request.Password == null || request.Password.Length == 0) { throw new Exception("Không để mật khẩu trống"); }
+                if (request.Pdf == null || request.Pdf.Count == 0) { throw new Exception("Không để trống giấy phép GPP, vui lòng điền đầy đủ thông tin"); }
                 // role merchant
                 var AddRole = new HashSet<string>();
                 AddRole.Add("ROLE_MERCHANT");
@@ -118,6 +122,7 @@ namespace BFF.Web.Controllers.FactorSvc
                         CreatedDate = DateTime.Now,
                         Email = request.Email,
                         Status = 1,
+                        GPPImage = request.Pdf,
                         AddressStatus = 1
 
                     };

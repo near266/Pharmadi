@@ -45,6 +45,8 @@ namespace Module.Catalog.Application.Commands.ProductCm
         [JsonIgnore]
         public DateTime CreatedDate { get; set; }
         public bool? CanOrder { get; set; }
+        public string? Different { get; set; }
+        public string? ClinicalResearch { get; set; }
     }
     public class ProductAddCommandHandler : IRequestHandler<ProductAddCommand, int>
     {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Jhipster.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Jhipster.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDatabaseContext))]
-    partial class ApplicationDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20230530203137_update_Product")]
+    partial class update_Product
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -346,9 +348,6 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Property<string>("Descripton")
                         .HasColumnType("text");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("text");
-
                     b.Property<bool>("IsLeaf")
                         .HasColumnType("boolean");
 
@@ -653,45 +652,6 @@ namespace Jhipster.Infrastructure.Migrations
                     b.HasIndex("PostContentId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Module.Catalog.Domain.Entities.ProductDiscount", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<float>("Discount")
-                        .HasColumnType("real");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Range")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Unit")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("productDiscounts");
                 });
 
             modelBuilder.Entity("Module.Catalog.Domain.Entities.Tag", b =>
@@ -1475,17 +1435,6 @@ namespace Jhipster.Infrastructure.Migrations
                     b.Navigation("Brand");
 
                     b.Navigation("PostContent");
-                });
-
-            modelBuilder.Entity("Module.Catalog.Domain.Entities.ProductDiscount", b =>
-                {
-                    b.HasOne("Module.Catalog.Domain.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Module.Catalog.Domain.Entities.TagProduct", b =>

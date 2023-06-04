@@ -23,7 +23,10 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("UserId")?.Value;
         }
-
+        private string GetAcces()
+        {
+            return User.FindFirst("Accept")?.Value;
+        }
         public BrandController(IMediator mediator, ILogger<BrandController> logger)
         {
             _mediator = mediator;
@@ -39,8 +42,8 @@ namespace BFF.Web.ProductSvc
             {
                 request.Id = Guid.NewGuid();
                 request.CreatedDate = DateTime.Now;
-                var UserId= new Guid(GetUserIdFromContext());
-                request.CreatedBy= UserId;
+                var UserId = new Guid(GetUserIdFromContext());
+                request.CreatedBy = UserId;
                 request.Archived = false;
                 var result = await _mediator.Send(request);
                 return Ok(result);
@@ -51,7 +54,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-      
+
         [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Update")]
@@ -105,8 +108,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
-
+       
         [HttpPost("GetAllAdmin")]
         public async Task<ActionResult<PagedList<Brand>>> GetAllAdmin([FromBody] BrandGetAllAdminQuery request)
         {
@@ -125,7 +127,7 @@ namespace BFF.Web.ProductSvc
         [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("PinBrand")]
-        public async Task<IActionResult> PinBrand ([FromBody] BrandPinCommand request)
+        public async Task<IActionResult> PinBrand([FromBody] BrandPinCommand request)
         {
             _logger.LogInformation($"REST request get all Brand Pin : {JsonConvert.SerializeObject(request)}");
             try
@@ -139,13 +141,29 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-    
+
         [HttpPost("GetListBrandIsHaveGroup")]
         public async Task<IActionResult> GetListBrandIsHaveGroup([FromBody] GetListBrandIsHaveGroupIdQuery request)
         {
             _logger.LogInformation($"REST request GetListBrandIsHaveGroup : {JsonConvert.SerializeObject(request)}");
             try
             {
+                try
+                {
+                    var checkMerchant = GetAcces();
+                    if (checkMerchant.ToLower() == "true")
+                    {
+                        request.UserId = Guid.Parse(GetUserIdFromContext());
+                    }
+                    else
+                    {
+                        request.UserId = null;
+                    }
+                }
+                catch
+                {
+
+                }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -161,18 +179,18 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ImageBrand : {JsonConvert.SerializeObject(request)}");
             try
             {
-                //var result = await _mediator.Send(request);
-                //return Ok(result);
-                var imagebrand = new List<string>
-                {
-                    "https://image.pharmadi.vn/StorageProduct/logoBrand/Arko.jpg",
-                    "https://image.pharmadi.vn/StorageProduct/logoBrand/DGW.jpg",
-                    "https://image.pharmadi.vn/StorageProduct/logoBrand/DK.jpg",
-                    "https://image.pharmadi.vn/StorageProduct/logoBrand/genacol.jpg",
-                    "https://image.pharmadi.vn/StorageProduct/logoBrand/Oenobiol.jpg",
-                    "https://image.pharmadi.vn/StorageProduct/logoBrand/Vivita_.jpg",
-                };
-                return Ok(imagebrand);
+                var result = await _mediator.Send(request);
+                return Ok(result);
+                //var imagebrand = new List<string>
+                //{
+                //    "https://image.pharmadi.vn/StorageProduct/logoBrand/Arko.jpg",
+                //    "https://image.pharmadi.vn/StorageProduct/logoBrand/DGW.jpg",
+                //    "https://image.pharmadi.vn/StorageProduct/logoBrand/DK.jpg",
+                //    "https://image.pharmadi.vn/StorageProduct/logoBrand/genacol.jpg",
+                //    "https://image.pharmadi.vn/StorageProduct/logoBrand/Oenobiol.jpg",
+                //    "https://image.pharmadi.vn/StorageProduct/logoBrand/Vivita_.jpg",
+                //};
+                // return Ok(imagebrand);
             }
             catch (Exception ex)
             {
@@ -180,23 +198,24 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-       
+
         [HttpPost("AddBrandToGroup")]
         public async Task<ActionResult<int>> AddBrandToGroup([FromBody] AddBrandToGroupRequest request)
         {
             _logger.LogInformation($"REST request AddBrandToGroup : {JsonConvert.SerializeObject(request)}");
             try
             {
-       
+
                 foreach (var rq in request.BrandIds)
                 {
-                    var br = new BrandUpdateCommand { 
-                      Id=rq.Id,
-                      GroupBrandId=request.GroupId,
-                
-                      
+                    var br = new BrandUpdateCommand
+                    {
+                        Id = rq.Id,
+                        GroupBrandId = request.GroupId,
+
+
                     };
-                    var result =  await _mediator.Send(br);
+                    var result = await _mediator.Send(br);
 
                 }
                 return Ok(1);

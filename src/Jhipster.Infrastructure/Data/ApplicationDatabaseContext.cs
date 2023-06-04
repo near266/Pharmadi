@@ -44,6 +44,7 @@ namespace Jhipster.Infrastructure.Data
         public DbSet<Label> Labels { get; set; }
         public DbSet<LabelProduct> LabelProducts { get; set; }
         public DbSet<PostContent> PostContents { get; set; }
+        public DbSet<ProductDiscount> productDiscounts { get; set; }
 
         public DbSet<Module.Catalog.Domain.Entities.Product> Products { get; set; }
 

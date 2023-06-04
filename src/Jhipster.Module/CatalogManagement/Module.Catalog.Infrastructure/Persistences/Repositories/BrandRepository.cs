@@ -8,6 +8,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
 using System.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Text;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -53,7 +54,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<IEnumerable<BrandDTO>> Search(string? keyword)
         {
             var query = _context.Brands.AsQueryable();
-            var result = await query.Where(i=> i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
+            var result = await query.Where(i => i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
             {
                 Id = i.Id,
                 GroupBrandId = i.GroupBrandId,
@@ -70,8 +71,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if (keyword != null)
             {
                 keyword = keyword.ToLower();
-               
-                var data = await query.Where(i =>i.BrandName.ToLower().Contains(keyword) && i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
+
+                var data = await query.Where(i => i.BrandName.ToLower().Contains(keyword) && i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
                 {
                     Id = i.Id,
                     GroupBrandId = i.GroupBrandId,
@@ -85,7 +86,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
                 })
               .ToListAsync();
-           
+
                 return data;
             }
             return result;
@@ -95,7 +96,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             var result = new PagedList<BrandDTO>();
             var query = _context.Brands.AsQueryable();
-             var data = await query.Where(i => i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
+            var data = await query.Where(i => i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
             {
 
                 Id = i.Id,
@@ -110,8 +111,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
 
 
-             }).Skip(pageSize * (page - 1))
-                  .Take(pageSize).ToListAsync();
+            }).Skip(pageSize * (page - 1))
+                 .Take(pageSize).ToListAsync();
             result.Data = data;
             result.TotalCount = query.Count();
             return result;
@@ -119,27 +120,37 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<int> PinBrand(Brand brand)
         {
-            var old = await _context.Brands.FirstOrDefaultAsync(i=>i.Id==brand.Id);
+            var old = await _context.Brands.FirstOrDefaultAsync(i => i.Id == brand.Id);
             if (old != null)
             {
-                old.LastModifiedDate= DateTime.UtcNow;
-                old.LastModifiedBy=brand.LastModifiedBy; 
-                old.Pin= brand.Pin;
+                old.LastModifiedDate = DateTime.UtcNow;
+                old.LastModifiedBy = brand.LastModifiedBy;
+                old.Pin = brand.Pin;
                 _context.SaveChanges();
                 return 1;
             }
             return 0;
         }
-
-        public async Task<PagedList<BrandDTO>> IsHaveGroup(int page, int pageSize, int type, Guid? GroupBrandId)
+        public string Price(string? sup)
+        {
+            
+            StringBuilder sb = new StringBuilder(sup);
+            char replaceChar = 'x';
+            for (int i = 1; i < sb.Length; i++)
+            {
+                sb[i] = replaceChar;
+            }
+            return sb.ToString();
+        }
+        public async Task<PagedList<IsHaveGroupDTO>> IsHaveGroup(int page, int pageSize, int type, Guid? GroupBrandId, Guid? UserId)
         {
             var query = _context.Brands.AsQueryable();
-            var result = new PagedList<BrandDTO>();
+            var result = new PagedList<IsHaveGroupDTO>();
             if (type == 1)
             {
                 var brId = _context.Brands.Where(i => i.GroupBrandId == GroupBrandId && i.Archived == false).Select(i => i.Id).ToList();
 
-                var data = await query.Where(i => i.GroupBrandId != null&& i.GroupBrandId==GroupBrandId && i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
+                var data = await query.Where(i => i.GroupBrandId != null && i.GroupBrandId == GroupBrandId && i.Archived == false).Include(i => i.GroupBrand).Select(i => new IsHaveGroupDTO
                 {
 
                     Id = i.Id,
@@ -149,12 +160,29 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     LogoBrand = i.LogoBrand,
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(i => brId.Contains((Guid) i.BrandId) && i.Archived == false).Count(),
-                    products = _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).OrderByDescending(i=>i.LastModifiedDate).AsEnumerable()
+                    SumProduct = _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).Count(),
+                    products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList())
 
 
 
                 }).ToListAsync();
+                foreach (var item in data)
+                {
+                    foreach (var produt in item.products)
+                    {
+                        if (UserId == null)
+                        {
+                            produt.SalePrice = Price(produt.SalePrice);
+                            produt.SuggestPrice = Price(produt.SuggestPrice);
+                        }
+                        else
+                        {
+
+                            produt.SalePrice = produt.SalePrice;
+                            produt.SuggestPrice = produt.SuggestPrice;
+                        }
+                    }
+                }
                 result.Data = data.Skip(pageSize * (page - 1))
                   .Take(pageSize);
                 result.TotalCount = data.Count();
@@ -163,28 +191,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if (type == 2)
             {
                 var brId = _context.Brands.Where(i => i.GroupBrandId == null && i.Archived == false).Select(i => i.Id).ToList();
-                var data = await query.Where(i => i.GroupBrandId == null && i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
-                {
-                    Id = i.Id,
-                    GroupBrandId = i.GroupBrandId,
-                    Intro = i.Intro,
-                    BrandName = i.BrandName,
-                    LogoBrand = i.LogoBrand,
-                    Pin = i.Pin,
-                    GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(a => a.BrandId==(Guid?)i.Id && i.Archived ==false).Count(),
-                    products = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).AsEnumerable()
-
-                }).ToListAsync();
-                result.Data = data.Skip(pageSize * (page - 1))
-                  .Take(pageSize);
-                result.TotalCount = data.Count();
-                return result;
-            }
-            if (type == 3)
-            {
-                var brId = _context.Brands.Where(i => i.Pin == true && i.Archived == false).Select(i => i.Id).ToList();
-                var data = await query.Where(i => i.Pin == true && i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
+                var data = await query.Where(i => i.GroupBrandId == null && i.Archived == false).Include(i => i.GroupBrand).Select(i => new IsHaveGroupDTO
                 {
                     Id = i.Id,
                     GroupBrandId = i.GroupBrandId,
@@ -194,8 +201,63 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
                     SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).Count(),
-                    products= _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).AsEnumerable()
+                    products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList())
+
                 }).ToListAsync();
+                foreach (var item in data)
+                {
+                    foreach (var produt in item.products)
+                    {
+                        if (UserId == null)
+                        {
+                            produt.SalePrice = Price(produt.SalePrice);
+                            produt.SuggestPrice = Price(produt.SuggestPrice);
+                        }
+                        else
+                        {
+
+                            produt.SalePrice = produt.SalePrice;
+                            produt.SuggestPrice = produt.SuggestPrice;
+                        }
+                    }
+                }
+                result.Data = data.Skip(pageSize * (page - 1))
+                  .Take(pageSize);
+                result.TotalCount = data.Count();
+                return result;
+            }
+            if (type == 3)
+            {
+                var brId = _context.Brands.Where(i => i.Pin == true && i.Archived == false).Select(i => i.Id).ToList();
+                var data = await query.Where(i => i.Pin == true && i.Archived == false).Include(i => i.GroupBrand).Select(i => new IsHaveGroupDTO
+                {
+                    Id = i.Id,
+                    GroupBrandId = i.GroupBrandId,
+                    Intro = i.Intro,
+                    BrandName = i.BrandName,
+                    LogoBrand = i.LogoBrand,
+                    Pin = i.Pin,
+                    GroupBrand = i.GroupBrand,
+                    SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).Count(),
+                    products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList())
+                }).ToListAsync();
+                foreach (var item in data)
+                {
+                    foreach (var produt in item.products)
+                    {
+                        if (UserId == null)
+                        {
+                            produt.SalePrice = Price(produt.SalePrice);
+                            produt.SuggestPrice = Price(produt.SuggestPrice);
+                        }
+                        else
+                        {
+
+                            produt.SalePrice = produt.SalePrice;
+                            produt.SuggestPrice = produt.SuggestPrice;
+                        }
+                    }
+                }
                 result.Data = data.Skip(pageSize * (page - 1))
                   .Take(pageSize);
                 result.TotalCount = data.Count();
@@ -206,7 +268,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 var listpro = _context.Products.Where(i => i.Country.ToLower() == "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.BrandId).Distinct();
                 var pro = _context.Products.Where(i => i.Country.ToLower() == "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.Id);
                 var brId = _context.Brands.Where(i => listpro.Contains(i.Id) && i.Archived == false).Select(i => i.Id).ToList();
-                var data = await query.Where(i => i.Archived == false && listpro.Contains(i.Id)).Include(i => i.GroupBrand).Select(i => new BrandDTO
+                var data = await query.Where(i => i.Archived == false && listpro.Contains(i.Id)).Include(i => i.GroupBrand).Select(i => new IsHaveGroupDTO
                 {
                     Id = i.Id,
                     GroupBrandId = i.GroupBrandId,
@@ -216,8 +278,25 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
                     SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).Count(),
-                    products = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).OrderByDescending(i => i.LastModifiedDate).AsEnumerable()
+                    products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).OrderByDescending(i => i.LastModifiedDate).ToList())
                 }).ToListAsync();
+                foreach (var item in data)
+                {
+                    foreach (var produt in item.products)
+                    {
+                        if (UserId == null)
+                        {
+                            produt.SalePrice = Price(produt.SalePrice);
+                            produt.SuggestPrice = Price(produt.SuggestPrice);
+                        }
+                        else
+                        {
+
+                            produt.SalePrice = produt.SalePrice;
+                            produt.SuggestPrice = produt.SuggestPrice;
+                        }
+                    }
+                }
                 result.Data = data.Skip(pageSize * (page - 1))
                   .Take(pageSize);
                 result.TotalCount = data.Count();
@@ -228,7 +307,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 var listpro = _context.Products.Where(i => i.Country.ToLower() != "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.BrandId).Distinct();
                 var pro = _context.Products.Where(i => i.Country.ToLower() != "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.Id);
                 var brId = _context.Brands.Where(i => listpro.Contains(i.Id) && i.Archived == false).Select(i => i.Id).ToList();
-                var data = await query.Where(i =>i.Archived == false && listpro.Contains(i.Id)).Include(i => i.GroupBrand).Select(i => new BrandDTO
+                var data = await query.Where(i => i.Archived == false && listpro.Contains(i.Id)).Include(i => i.GroupBrand).Select(i => new IsHaveGroupDTO
                 {
                     Id = i.Id,
                     GroupBrandId = i.GroupBrandId,
@@ -238,21 +317,39 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
                     SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).Count(),
-                    products = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).OrderByDescending(i => i.LastModifiedDate).AsEnumerable()
+                    products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false && pro.Contains(a.Id)).OrderByDescending(i => i.LastModifiedDate).ToList())
                 }).ToListAsync();
+                foreach (var item in data)
+                {
+                    foreach (var produt in item.products)
+                    {
+                        if (UserId == null)
+                        {
+                            produt.SalePrice = Price(produt.SalePrice);
+                            produt.SuggestPrice = Price(produt.SuggestPrice);
+                        }
+                        else
+                        {
+
+                            produt.SalePrice = produt.SalePrice;
+                            produt.SuggestPrice = produt.SuggestPrice;
+                        }
+                    }
+                }
                 result.Data = data.Skip(pageSize * (page - 1))
                   .Take(pageSize);
                 result.TotalCount = data.Count();
                 return result;
             }
 
-         
+
             return result;
 
         }
-        public async Task<List<string>>ImageBrand()
+        public async Task<List<string>> ImageBrand()
         {
-            return await _context.Brands.Select(i => i.LogoBrand).Take(6).ToListAsync();
+            var s = await _context.Brands.OrderByDescending(i => i.Pin).Select(i => i.LogoBrand).Take(12).ToListAsync();
+            return s;
         }
 
         public async Task<int> AddListBrand(List<Brand> brands)
@@ -269,18 +366,19 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<bool> IsBrandEmtyGroup(Guid? Id)
         {
-           var br= await _context.Brands.FirstOrDefaultAsync(i=>i.Id==Id);
-           var gr = await _context.GroupBrands.FirstOrDefaultAsync(i=>i.Id == br.GroupBrandId);
-            if (gr == null) {
+            var br = await _context.Brands.FirstOrDefaultAsync(i => i.Id == Id);
+            var gr = await _context.GroupBrands.FirstOrDefaultAsync(i => i.Id == br.GroupBrandId);
+            if (gr == null)
+            {
                 return true;
-            
+
             };
             return false;
         }
 
         public async Task<List<Guid>> GetListBrandByGroupId(Guid? Id)
         {
-            var brand = await _context.Brands.Where(i=>i.GroupBrandId==Id).Select(i=>i.Id).ToListAsync();
+            var brand = await _context.Brands.Where(i => i.GroupBrandId == Id).Select(i => i.Id).ToListAsync();
 
             return brand;
         }
@@ -288,16 +386,16 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<int> ArchiveBrand(Guid? Id)
         {
             var res = 0;
-         
-            
-                var obj = await _context.Brands.FirstOrDefaultAsync(i => i.Id.Equals(Id));
-                if (obj != null)
-                {
-                    obj.Archived = true;
-                    obj.GroupBrandId = null;
-                    res =  _context.SaveChanges();
-                }
-           
+
+
+            var obj = await _context.Brands.FirstOrDefaultAsync(i => i.Id.Equals(Id));
+            if (obj != null)
+            {
+                obj.Archived = true;
+                obj.GroupBrandId = null;
+                res = _context.SaveChanges();
+            }
+
 
             return res;
         }
@@ -305,10 +403,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<DetailBrand> BrandDetail(Guid Id)
         {
             var query = _context.Brands.AsQueryable();
-            var Pr = await _context.Products.Where(i=>i.BrandId==Id).Select(i=>i.Id).ToListAsync();
-            var cate  = await _context.CategoryProducts.Where(i=>Pr.Contains(i.ProductId)&&i.Priority==true).Select(i=>i.Category)
-                .Where(a => a.ParentId == null).Select(a=>a.Id).ToListAsync();
-            var catename = await _context.Categories.Where(i=>cate.Contains(i.Id)).OrderBy(a => a.CategoryName).Select(i=>i.CategoryName).ToListAsync();
+            var Pr = await _context.Products.Where(i => i.BrandId == Id).Select(i => i.Id).ToListAsync();
+            var cate = await _context.CategoryProducts.Where(i => Pr.Contains(i.ProductId) && i.Priority == true).Select(i => i.Category)
+                .Where(a => a.ParentId == null).Select(a => a.Id).ToListAsync();
+            var catename = await _context.Categories.Where(i => cate.Contains(i.Id)).OrderBy(a => a.CategoryName).Select(i => i.CategoryName).ToListAsync();
 
             var data = await query.Where(i => i.Id == Id).Select(i => new DetailBrand
             {
@@ -318,14 +416,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 BrandName = i.BrandName,
                 LogoBrand = i.LogoBrand,
                 Pin = i.Pin,
-                CateName =catename ,
+                CateName = catename,
                 GroupBrand = i.GroupBrand,
-                
 
-            }).OrderBy(i=>i.CateName).FirstOrDefaultAsync();
-              
-                return data;
-            
+
+            }).OrderBy(i => i.CateName).FirstOrDefaultAsync();
+
+            return data;
+
         }
     }
 }
