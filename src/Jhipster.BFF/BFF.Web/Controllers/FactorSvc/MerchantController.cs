@@ -67,7 +67,7 @@ namespace BFF.Web.Controllers.FactorSvc
             _logger.LogInformation($"REST request RegisterByUser : {JsonConvert.SerializeObject(request)}");
             try
             {
-                if (request.Login == null || request.Login.Length == 0) { throw new Exception("Không để trống tên tài khoản , vui lòng nhập đầy đủ thông tin."); }
+                //if (request.Login == null || request.Login.Length == 0) { throw new Exception("Không để trống tên tài khoản , vui lòng nhập đầy đủ thông tin."); }
                 if (request.Email == null || request.Email.Length == 0) { throw new Exception("Không để trống email,vui lòng kiểm tra lại"); }
                 if (CheckString.CheckValidEmail(request.Email) == false) { throw new Exception("Email không hợp lệ,vui lòng kiểm tra lại"); }
                 // if (request.Login == null || request.Login.Length == 0) { throw new Exception("Không để trống tên tài khoản,vui lòng kiểm tra lại"); }
