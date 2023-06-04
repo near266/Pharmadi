@@ -134,7 +134,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<Category>> GetAllCategoriesLv1()
         {
-            var listId1 = await _context.Categories.Where(i=>i.ParentId == null)
+            var listId1 = await _context.Categories.Where(i=>i.ParentId == null).OrderBy(i=>i.Image)
                 .AsNoTracking()
                 .IgnoreAutoIncludes()
                 .ToListAsync();
