@@ -44,6 +44,8 @@ namespace Module.Catalog.Application.Commands.ProductCm
         public string? ShortName { get; set; }
         public string? BannerProduct1 { get; set; }
         public string? BannerProduct2 { get; set; }
+        public string? Different { get; set; }
+        public string? ClinicalResearch { get; set; }
     }
     public class ProductUpdateCommandHandler : IRequestHandler<ProductUpdateCommand, int>
     {

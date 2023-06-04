@@ -9,7 +9,7 @@ using Module.Catalog.Shared.DTOs;
 
 namespace Module.Catalog.Application.Queries.ProductQ
 {
-    public class SearchProductQuery : IRequest<PagedList<ProductSearchDTO>>
+    public class SearchProductQuery : IRequest<PagedList<SearchMcProductDTO>>
     {
         public string? keyword { get; set; }
         public List<Guid> categoryIds { get; set; }
@@ -20,7 +20,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
         public int pageSize { get; set; }
         public Guid? userId { get; set; }
     }
-    public class SearchProductQueryHandler : IRequestHandler<SearchProductQuery, PagedList<ProductSearchDTO>>
+    public class SearchProductQueryHandler : IRequestHandler<SearchProductQuery, PagedList<SearchMcProductDTO>>
     {
         private readonly IProductRepository _repo;
         private readonly IMapper _mapper;
@@ -29,7 +29,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<PagedList<ProductSearchDTO>> Handle(SearchProductQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<SearchMcProductDTO>> Handle(SearchProductQuery request, CancellationToken cancellationToken)
         {
             return await _repo.SearchProduct(request.keyword, request.categoryIds,request.cateLevel2Ids, request.brandIds, request.tagIds,request.page, request.pageSize, request.userId);
         }

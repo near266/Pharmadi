@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace Module.Catalog.Application.Queries.ProductQ
 {
-    public class ViewProductForeignQuery : IRequest<PagedList<ViewProductPromotionDTO>>
+    public class ViewProductForeignQuery : IRequest<PagedList<ViewProductForeignDTO>>
     {
         public string? keyword { get; set; }
         public int page { get; set; }
         public int pageSize { get; set; }
         public Guid? userId { get; set; }
     }
-    public class ViewProductForeignQueryHandler : IRequestHandler<ViewProductForeignQuery, PagedList<ViewProductPromotionDTO>>
+    public class ViewProductForeignQueryHandler : IRequestHandler<ViewProductForeignQuery, PagedList<ViewProductForeignDTO>>
     {
         private readonly IProductRepository _repo;
         private readonly IMapper _mapper;
@@ -27,7 +27,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<PagedList<ViewProductPromotionDTO>> Handle(ViewProductForeignQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<ViewProductForeignDTO>> Handle(ViewProductForeignQuery request, CancellationToken cancellationToken)
         {
             return await _repo.ViewProductForeign(request.keyword, request.page, request.pageSize, request.userId);
         }

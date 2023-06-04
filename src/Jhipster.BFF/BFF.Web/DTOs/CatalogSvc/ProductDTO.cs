@@ -34,6 +34,8 @@ namespace BFF.Web.DTOs.CatalogSvc
         public string? Description { get; set; }
         public string? UnitName { get; set; }
         public Guid? BrandId { get; set; }
+        public string? UserObject { get; set; }
+        public string? Warning { get; set; }
         public int Status { get; set; }
         [System.Text.Json.Serialization.JsonIgnore]
         public Guid? PostContentId { get; set; }
@@ -66,6 +68,8 @@ namespace BFF.Web.DTOs.CatalogSvc
         public string? ShortName { get; set; }
         public string? BannerProduct1 { get; set; }
         public string? BannerProduct2 { get; set; }
+        public string? Different { get; set; }
+        public string? ClinicalResearch { get; set; }
 
 
     }
@@ -153,6 +157,8 @@ namespace BFF.Web.DTOs.CatalogSvc
         public string? ShortName { get; set; }
         public string? BannerProduct1 { get; set; }
         public string? BannerProduct2 { get; set; }
+        public string? Different { get; set; }
+        public string? ClinicalResearch { get; set; }
 
 
     }

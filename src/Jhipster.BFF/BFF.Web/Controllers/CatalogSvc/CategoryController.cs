@@ -61,6 +61,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = RolesConstants.ADMIN)]
 
         [HttpPost("Update")]
         public async Task<IActionResult> Update([FromBody] CategoryUpdateCommand request)
@@ -178,6 +179,41 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPut("PinCategoryLv1")]
+        public async Task<ActionResult<int>> PinCategoryLv1([FromBody] PinCategoryLv1Request request)
+        {
+            _logger.LogInformation($"REST request PinCategoryLv1: {JsonConvert.SerializeObject(request)}");
+            try
+            {
+                var cate = new ViewListCategoryLv1Query { };
+                var cateLv1 = await _mediator.Send(cate);
+                foreach (var item in request.categoryLv1s)
+                {
+                    if (cateLv1.Select(i => i.Id).Any(i=>i==item.Id))
+                    {
+                        var up = new CategoryUpdateCommand
+                        {
+                            Id = item.Id,
+                            IsLeaf = item.IsLeaf,
+                        };
+
+                        await _mediator.Send(up);
+                    }
+                    else
+                    {
+                        return BadRequest(0);
+                    }
+                }
+
+                return Ok(1);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"REST request PinCategoryLv1 by fail: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("GetListCategoryLv2")]
         public async Task<ActionResult<PagedList<Category>>> GetListCateloryLv2([FromBody] ViewListCategoryLv2Query request)
         {

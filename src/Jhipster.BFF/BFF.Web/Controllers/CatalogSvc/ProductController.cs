@@ -20,6 +20,7 @@ using Module.Redis.Configurations;
 using Module.Redis.Library.Helpers;
 using Google.Apis.Logging;
 using System.Linq;
+using Jhipster.Infrastructure.Migrations;
 
 namespace BFF.Web.ProductSvc
 {
@@ -43,6 +44,10 @@ namespace BFF.Web.ProductSvc
         private string GetUserIdFromContext()
         {
             return User.FindFirst("UserId")?.Value;
+        }
+        private string GetAcces()
+        {
+            return User.FindFirst("Accept")?.Value;
         }
         [Authorize(Roles = RolesConstants.ADMIN)]
 
@@ -93,9 +98,11 @@ namespace BFF.Web.ProductSvc
                     NewProduct = request.NewProduct,
                     ImportedProducts = request.ImportedProducts,
                     sellingProducts = request.sellingProducts,
-                    ShortName=request.ShortName,
-                    BannerProduct1= request.BannerProduct1,
-                    BannerProduct2= request.BannerProduct2,
+                    ShortName = request.ShortName,
+                    BannerProduct1 = request.BannerProduct1,
+                    BannerProduct2 = request.BannerProduct2,
+                    Different = request.Different,
+                    ClinicalResearch = request.ClinicalResearch,
                 };
                 await _mediator.Send(step1);
 
@@ -216,15 +223,17 @@ namespace BFF.Web.ProductSvc
                     Number = request.Number,
                     LastModifiedBy = request.LastModifiedBy,
                     LastModifiedDate = request.LastModifiedDate,
-                    Archived = request.Archived,
+                    Archived = false,
                     HideProduct = request.HideProduct,
                     CanOrder = request.CanOrder,
                     NewProduct = request.NewProduct,
                     ImportedProducts = request.ImportedProducts,
                     sellingProducts = request.sellingProducts,
-                    ShortName=request.ShortName,
-                    BannerProduct1=request.BannerProduct1,
-                    BannerProduct2=request.BannerProduct2,
+                    ShortName = request.ShortName,
+                    BannerProduct1 = request.BannerProduct1,
+                    BannerProduct2 = request.BannerProduct2,
+                    Different = request.Different,
+                    ClinicalResearch = request.ClinicalResearch,
                 };
 
                 result = await _mediator.Send(step1);
@@ -305,6 +314,23 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request view detail Product : {JsonConvert.SerializeObject(request)}");
             try
             {
+                try
+                {
+                    var checkMerchant = GetAcces();
+                    if(checkMerchant.ToLower()=="true")
+                    {
+                        request.UserId = Guid.Parse(GetUserIdFromContext());
+                    }
+                    else
+                    {
+                        request.UserId = null;
+                    }
+                }
+                catch
+                {
+
+                }
+               
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -316,19 +342,26 @@ namespace BFF.Web.ProductSvc
         }
 
         [HttpPost("Search")]
-        public async Task<ActionResult<PagedList<Product>>> Search([FromBody] SearchProductQuery request)
+        public async Task<IActionResult> Search([FromBody] SearchProductQuery request)
         {
             _logger.LogInformation($"REST request search Product : {JsonConvert.SerializeObject(request)}");
             try
             {
                 try
                 {
-                    request.userId = Guid.Parse(GetUserIdFromContext());
+                    var checkMerchant = GetAcces();
+                    if (checkMerchant.ToLower() == "true")
+                    {
+                        request.userId = Guid.Parse(GetUserIdFromContext());
+                    }
+                    else
+                    {
+                        request.userId = null;
+                    }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    _logger.LogError($"REST request to search Product fail: {ex.Message}");
-                    return StatusCode(401, ex.Message);
+
                 }
                 var result = await _mediator.Send(request);
                 return Ok(result);
@@ -358,7 +391,6 @@ namespace BFF.Web.ProductSvc
             }
         }
 
-        [AllowAnonymous]
         [HttpPost("ViewProductForU")]
         public async Task<IActionResult> ViewProductForU([FromBody] ViewProductForUQuery request)
         {
@@ -367,10 +399,20 @@ namespace BFF.Web.ProductSvc
             {
                 try
                 {
-                    request.userId = Guid.Parse(GetUserIdFromContext());
+                    var checkMerchant = GetAcces();
+                    if (checkMerchant.ToLower() == "true")
+                    {
+                        request.userId = Guid.Parse(GetUserIdFromContext());
+                    }
+                    else
+                    {
+                        request.userId = null;
+                    }
                 }
                 catch
-                { }
+                {
+
+                }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -380,7 +422,6 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [AllowAnonymous]
 
         [HttpPost("ViewProductBestSale")]
         public async Task<IActionResult> ViewProductBestSale([FromBody] ViewProductBestSaleQuery request)
@@ -394,10 +435,26 @@ namespace BFF.Web.ProductSvc
                 //res = await _cache.GetRecordAsync<PagedList<SaleProductDTO>>(recordKey);
                 //if (res is null)
                 //{
-                  
+
                 //    res = await _mediator.Send(request);
                 //    await _cache.SetRecordAsync(recordKey, res, TimeSpan.FromSeconds(3));
                 //}
+                try
+                {
+                    var checkMerchant = GetAcces();
+                    if (checkMerchant.ToLower() == "true")
+                    {
+                        request.userId = Guid.Parse(GetUserIdFromContext());
+                    }
+                    else
+                    {
+                        request.userId = null;
+                    }
+                }
+                catch
+                {
+
+                }
                 var res = await _mediator.Send(request);
 
                 return Ok(res);
@@ -418,9 +475,17 @@ namespace BFF.Web.ProductSvc
             {
                 try
                 {
-                    request.userId = Guid.Parse(GetUserIdFromContext());
+                    var checkMerchant = GetAcces();
+                    if (checkMerchant.ToLower() == "true")
+                    {
+                        request.userId = Guid.Parse(GetUserIdFromContext());
+                    }
+                    else
+                    {
+                        request.userId = null;
+                    }
                 }
-                catch (Exception ex)
+                catch
                 {
 
                 }
@@ -443,7 +508,15 @@ namespace BFF.Web.ProductSvc
             {
                 try
                 {
-                    request.userId = Guid.Parse(GetUserIdFromContext());
+                    var checkMerchant = GetAcces();
+                    if (checkMerchant.ToLower() == "true")
+                    {
+                        request.userId = Guid.Parse(GetUserIdFromContext());
+                    }
+                    else
+                    {
+                        request.userId = null;
+                    }
                 }
                 catch
                 {
@@ -468,7 +541,15 @@ namespace BFF.Web.ProductSvc
             {
                 try
                 {
-                    request.userId = Guid.Parse(GetUserIdFromContext());
+                    var checkMerchant = GetAcces();
+                    if (checkMerchant.ToLower() == "true")
+                    {
+                        request.userId = Guid.Parse(GetUserIdFromContext());
+                    }
+                    else
+                    {
+                        request.userId = null;
+                    }
                 }
                 catch
                 {
@@ -504,7 +585,22 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductWithBrand : {JsonConvert.SerializeObject(request)}");
             try
             {
-                request.userId = Guid.Parse(GetUserIdFromContext());
+                try
+                {
+                    var checkMerchant = GetAcces();
+                    if (checkMerchant.ToLower() == "true")
+                    {
+                        request.userId = Guid.Parse(GetUserIdFromContext());
+                    }
+                    else
+                    {
+                        request.userId = null;
+                    }
+                }
+                catch
+                {
+
+                }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -520,7 +616,22 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request ViewProductSimilarCategory : {JsonConvert.SerializeObject(request)}");
             try
             {
-                request.userId = Guid.Parse(GetUserIdFromContext());
+                try
+                {
+                    var checkMerchant = GetAcces();
+                    if (checkMerchant.ToLower() == "true")
+                    {
+                        request.userId = Guid.Parse(GetUserIdFromContext());
+                    }
+                    else
+                    {
+                        request.userId = null;
+                    }
+                }
+                catch
+                {
+
+                }
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -583,23 +694,24 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request Pin Product : {JsonConvert.SerializeObject(request)}");
             try
             {
-                var pro = new GetProductIdByBrandIdQuery { 
-                
-                 BrandId=request.brandId
+                var pro = new GetProductIdByBrandIdQuery
+                {
+
+                    BrandId = request.brandId
                 };
-                
+
 
                 var temp = await _mediator.Send(pro);
-                
-          
+
+
                 foreach (var p in request.Products)
+                {
+                    if (temp.Any(i => i == p.ProductId))
                     {
-                    if (temp.Any(i=>i==p.ProductId))
-                    {
-                    var update = new UpdateStatusProductCommand { Id = p.ProductId, Status = p.Status};
-                     await _mediator.Send(update);
+                        var update = new UpdateStatusProductCommand { Id = p.ProductId, Status = p.Status };
+                        await _mediator.Send(update);
                     }
-                    }
+                }
                 return Ok(1);
             }
             catch (Exception ex)
@@ -638,7 +750,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-       
+
     }
 }
 

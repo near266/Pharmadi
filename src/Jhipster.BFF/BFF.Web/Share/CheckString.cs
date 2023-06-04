@@ -35,7 +35,8 @@ namespace BFF.Web.Share
         public static bool CheckValidPassword(string password)
         {
 
-            if (Regex.IsMatch(password, @"^(?=.*[!@#$%^&*()])(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$"))
+            //if (Regex.IsMatch(password, @"^(?=.*[!@#$%^&*()])(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$"))
+            if(password.Length()>5)
             {
                 return true;
             }

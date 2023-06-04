@@ -19,6 +19,7 @@ namespace Module.Catalog.Domain.Abstractions
         public DbSet<WarehouseProduct> WarehouseProducts { get; set; }
         public DbSet<PostContent> PostContents { get; set; }
         //public DbSet<Cart> Carts { get; set; }
+        public DbSet<ProductDiscount> productDiscounts { get; set; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

@@ -111,7 +111,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
             var result = new PagedList<Category>();
             var query1 = _context.Categories.AsQueryable();
-            var data = await query1 .ToListAsync();
+            result.Data = await query1 .ToListAsync();
             result.TotalCount = query1.Count();
             return result;
         }
@@ -134,7 +134,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<Category>> GetAllCategoriesLv1()
         {
-            var listId1 = await _context.Categories.Where(i=>i.ParentId == null)
+            var listId1 = await _context.Categories.Where(i=>i.ParentId == null).OrderBy(i=>i.Image)
                 .AsNoTracking()
                 .IgnoreAutoIncludes()
                 .ToListAsync();

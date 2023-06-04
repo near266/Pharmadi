@@ -145,8 +145,8 @@ namespace Jhipster.Configuration.AutoMapper
             //product
             CreateMap<ProductAddRequest, ProductAddCommand>();
             CreateMap<ProductAddCommand, Product>();
-            CreateMap<ProductUpdateCommand, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<Product, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<ProductUpdateCommand, Product>().ReverseMap();
+            CreateMap<Product, Product>().ReverseMap();
             
             CreateMap<ProductListDTO, Product>().ReverseMap();
             CreateMap<ViewProductWithBrandQuery, Product>();
@@ -154,12 +154,13 @@ namespace Jhipster.Configuration.AutoMapper
 
 
             CreateMap<ViewProductSimilarQuery, Product>();
+            CreateMap<Product, ProductDetail>().ReverseMap();
             CreateMap<GetAllAminDTO,Product>().ReverseMap();
             //warehouse
             CreateMap<WarehouseProductAddCommand, WarehouseProduct>();
             CreateMap<WarehouseProduct, WarehouseProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
             CreateMap<WarehouseProductUpdateCommand, WarehouseProduct>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-
+            CreateMap<ProductDiscount, ProductDiscount>();
 
             //CreateMap<ProductSearchRequest, SearchProductQuery>();
             //CreateMap<Product, ProductInforSearchResponse>();
@@ -177,10 +178,6 @@ namespace Jhipster.Configuration.AutoMapper
             //CreateMap<ProductSearchListRequest, ViewProductNewQuery>();
             //CreateMap<ProductSearchListRequest, ViewProductPromotionQuery>();
             //CreateMap<Product, ProductInforSearchResponse>();
-
-            
-
-            CreateMap<Product, Product>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             #endregion
             
