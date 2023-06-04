@@ -23,7 +23,10 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("UserId")?.Value;
         }
-
+        private string GetAcces()
+        {
+            return User.FindFirst("Accept")?.Value;
+        }
         public BrandController(IMediator mediator, ILogger<BrandController> logger)
         {
             _mediator = mediator;
@@ -148,9 +151,17 @@ namespace BFF.Web.ProductSvc
             {
                 try
                 {
-                    request.UserId = Guid.Parse(GetUserIdFromContext());
+                    var checkMerchant = GetAcces();
+                    if (checkMerchant.ToLower() == "true")
+                    {
+                        request.UserId = Guid.Parse(GetUserIdFromContext());
+                    }
+                    else
+                    {
+                        request.UserId = null;
+                    }
                 }
-                catch (Exception ex)
+                catch
                 {
 
                 }
