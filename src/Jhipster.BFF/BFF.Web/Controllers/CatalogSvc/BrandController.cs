@@ -108,8 +108,7 @@ namespace BFF.Web.ProductSvc
                 return StatusCode(500, ex.Message);
             }
         }
-        [Authorize(Roles = RolesConstants.ADMIN)]
-
+       
         [HttpPost("GetAllAdmin")]
         public async Task<ActionResult<PagedList<Brand>>> GetAllAdmin([FromBody] BrandGetAllAdminQuery request)
         {
