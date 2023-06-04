@@ -284,7 +284,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
                 NewProduct = i.NewProduct != null ? i.NewProduct : 0,
                 BannerProduct1 = i.BannerProduct1,
-                BannerProduct2 = i.BannerProduct2
+                BannerProduct2 = i.BannerProduct2,
+                Ingredient=i.Ingredient,
 
             }).OrderByDescending(i => i.NewProduct).Skip(pageSize * (page - 1))
                         .Take(pageSize)

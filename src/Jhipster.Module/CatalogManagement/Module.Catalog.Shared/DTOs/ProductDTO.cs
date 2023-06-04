@@ -131,7 +131,10 @@ namespace Module.Catalog.Shared.DTOs
         public string CartNumber { get; set; } = "0";
         public bool? Archived { get; set; }
         [JsonIgnore]
+
         public float? Discount { get; set; }
+        public string? Ingredient { get; set; }
+
         public bool? CanOrder { get; set; }
         public string? ShortName { get; set; }
         public int? NewProduct { get; set; }
