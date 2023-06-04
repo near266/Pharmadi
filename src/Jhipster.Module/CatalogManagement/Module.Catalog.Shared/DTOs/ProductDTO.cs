@@ -1,6 +1,7 @@
 ﻿using Module.Catalog.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -10,6 +11,11 @@ namespace Module.Catalog.Shared.DTOs
 {
     public class ProductDetail
     {
+        public Guid Id { get; set; }
+        public string? CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string? LastModifiedBy { get; set; }
+        public DateTime? LastModifiedDate { get; set; }
         public string SKU { get; set; }
         public string ProductName { get; set; }
         public string? UserObject { get; set; }
