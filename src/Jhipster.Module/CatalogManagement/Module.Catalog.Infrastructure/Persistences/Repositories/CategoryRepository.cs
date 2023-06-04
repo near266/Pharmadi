@@ -111,7 +111,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
             var result = new PagedList<Category>();
             var query1 = _context.Categories.AsQueryable();
-            var data = await query1 .ToListAsync();
+            result.Data = await query1 .ToListAsync();
             result.TotalCount = query1.Count();
             return result;
         }
