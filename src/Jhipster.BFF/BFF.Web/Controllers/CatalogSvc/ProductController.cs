@@ -21,6 +21,7 @@ using Module.Redis.Library.Helpers;
 using Google.Apis.Logging;
 using System.Linq;
 using Jhipster.Infrastructure.Migrations;
+using Module.Catalog.Application.Commands.ProductDisountCm;
 
 namespace BFF.Web.ProductSvc
 {
@@ -179,7 +180,47 @@ namespace BFF.Web.ProductSvc
                         await _mediator.Send(step6);
                     }
                 }
+                //add discount product
+                if (request.productDiscountCommand != null || request.productDiscountCommand.Count == 0)
+                {
+                    try
+                    {
+                        //add discount product
 
+                        var ListDisPro = new List<AddProductDiscountCommand>();
+                        // với điều kiện List này được sắp xếp theo đúng thứ tự khoảng
+                        for (int i = 0; i < request.productDiscountCommand.Count; i++)
+                        {
+                            // await _mediator.Send(request.productDiscountCommand[0]);
+                            var item1 = request.productDiscountCommand[i];
+                            var item2 = request.productDiscountCommand[i + 1];
+                            ListDisPro.Add(request.productDiscountCommand[0]);
+
+                            if (item1.Max + 1 == item2.Min && item2.Min < item2.Max)
+                            {
+                                ListDisPro.Add(item2);
+                                // await _mediator.Send(item2);
+                            }
+                            else
+                            {
+                                throw new Exception("Thực hiện thành công nhưng nhập sai productDiscount vui lòng cập nhật lại ở phiên bản sắp tới");
+                            }
+                        }
+                        foreach (var item in ListDisPro)
+                        {
+                            item.ProductId = request.Id;
+                            await _mediator.Send(item);
+
+                        }
+
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(200, ex.Message);
+                    }
+                }
                 return Ok(1);
             }
             catch (Exception ex)
@@ -286,7 +327,52 @@ namespace BFF.Web.ProductSvc
                         await _mediator.Send(step6);
                     }
                 }
+                //add discount product
+                if (request.productDiscountCommand != null || request.productDiscountCommand.Count == 0)
+                {
+                    try
+                    {
+                        //add discount product
 
+                        var ListDisPro = new List<UpdateProductDiscountCommand>();
+                        // với điều kiện List này được sắp xếp theo đúng thứ tự khoảng
+                        for (int i = 0; i < request.productDiscountCommand.Count; i++)
+                        {
+                            // await _mediator.Send(request.productDiscountCommand[0]);
+                            var item1 = request.productDiscountCommand[i];
+                            var item2 = request.productDiscountCommand[i + 1];
+                            ListDisPro.Add(request.productDiscountCommand[0]);
+
+                            if (item1.Max + 1 == item2.Min && item2.Min < item2.Max)
+                            {
+                                ListDisPro.Add(item2);
+                                // await _mediator.Send(item2);
+                            }
+                            else
+                            {
+                                throw new Exception("Thực hiện thành công nhưng nhập sai productDiscount vui lòng cập nhật lại ở phiên bản sắp tới");
+                            }
+                        }
+                        var delete = new DeleteProductDiscountCommand()
+                        {
+                            Id = request.Id
+                        };
+                        await _mediator.Send(delete);
+                        foreach (var item in ListDisPro)
+                        {
+
+                            await _mediator.Send(item);
+
+                        }
+
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return StatusCode(200, ex.Message);
+                    }
+                }
                 return Ok(result);
             }
             catch (Exception ex)
@@ -304,6 +390,11 @@ namespace BFF.Web.ProductSvc
             try
             {
                 var result = await _mediator.Send(request);
+                var delete = new DeleteProductDiscountCommand()
+                {
+                    Id = request.Id
+                };
+                await _mediator.Send(delete);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -323,7 +414,7 @@ namespace BFF.Web.ProductSvc
                 {
                     var checkMerchant = GetAcces();
                     var role = GetListUserRole();
-                    if(checkMerchant.ToLower()=="true"|| role.Contains(RolesConstants.ADMIN))
+                    if (checkMerchant.ToLower() == "true" || role.Contains(RolesConstants.ADMIN))
                     {
                         request.UserId = Guid.Parse(GetUserIdFromContext());
                     }
@@ -336,7 +427,7 @@ namespace BFF.Web.ProductSvc
                 {
 
                 }
-               
+
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }

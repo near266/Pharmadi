@@ -122,7 +122,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<ProductDetail> ViewDetail(Guid Id,Guid? UserId)
+        public async Task<ProductDetail> ViewDetail(Guid Id, Guid? UserId)
         {
             var obj = await _context.Products
                                     .Include(p => p.Brand).Include(p => p.PostContent)
@@ -136,12 +136,13 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 value.SalePrice = obj.SalePrice.ToString();
                 value.SuggestPrice = obj.SuggestPrice.ToString();
-            }   
+            }
             else
             {
                 value.SalePrice = Price(obj.SalePrice);
                 value.SuggestPrice = Price(obj.SuggestPrice);
-            }    
+            }
+            value.ProductDiscounts = await _context.productDiscounts.Where(i => i.ProductId == Id).ToListAsync();
             return value;
         }
 
@@ -286,7 +287,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 NewProduct = i.NewProduct != null ? i.NewProduct : 0,
                 BannerProduct1 = i.BannerProduct1,
                 BannerProduct2 = i.BannerProduct2,
-                Ingredient=i.Ingredient,
+                Ingredient = i.Ingredient,
 
             }).OrderByDescending(i => i.NewProduct).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -306,7 +307,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             var listPro = await query.ToListAsync();
 
-            var query2 =  listPro.Select(i => new ViewProductPromotionDTO
+            var query2 = listPro.Select(i => new ViewProductPromotionDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
@@ -708,11 +709,11 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<List<ProductDiscount>> ViewDiscountByUserId(Guid id)
         {
             return await _context.productDiscounts.Where(i => i.ProductId == id)
-                         .OrderBy(i => i.Range).ToListAsync();
+                         .OrderBy(i => i.Max).ToListAsync();
         }
         public async Task<int> DeleteDiscountProduct(Guid id)
         {
-            var check = await _context.productDiscounts.FirstOrDefaultAsync(i => i.Id == id);
+            var check = await _context.productDiscounts.FirstOrDefaultAsync(i => i.ProductId == id);
             _context.productDiscounts.Remove(check);
             return await _context.SaveChangesAsync();
         }
