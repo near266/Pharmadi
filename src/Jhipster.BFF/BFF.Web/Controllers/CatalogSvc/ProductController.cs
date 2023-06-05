@@ -49,6 +49,11 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("Accept")?.Value;
         }
+        private List<string> GetListUserRole()
+        {
+            var key = User.FindFirst("auth")?.Value;
+            return key.Split(',').ToList();
+        }
         [Authorize(Roles = RolesConstants.ADMIN)]
 
 
@@ -317,7 +322,8 @@ namespace BFF.Web.ProductSvc
                 try
                 {
                     var checkMerchant = GetAcces();
-                    if(checkMerchant.ToLower()=="true")
+                    var role = GetListUserRole();
+                    if(checkMerchant.ToLower()=="true"|| role.Contains(RolesConstants.ADMIN))
                     {
                         request.UserId = Guid.Parse(GetUserIdFromContext());
                     }
