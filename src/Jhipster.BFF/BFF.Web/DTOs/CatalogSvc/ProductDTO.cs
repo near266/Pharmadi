@@ -1,4 +1,5 @@
-﻿using Module.Catalog.Domain.Entities;
+﻿using Module.Catalog.Application.Commands.ProductDisountCm;
+using Module.Catalog.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -70,6 +71,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public string? BannerProduct2 { get; set; }
         public string? Different { get; set; }
         public string? ClinicalResearch { get; set; }
+        public List<AddProductDiscountCommand>? productDiscountCommand { get; set; }
 
 
     }
@@ -159,6 +161,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public string? BannerProduct2 { get; set; }
         public string? Different { get; set; }
         public string? ClinicalResearch { get; set; }
+        public List<UpdateProductDiscountCommand>? productDiscountCommand { get; set; }
 
 
     }

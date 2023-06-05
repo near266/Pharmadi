@@ -54,6 +54,7 @@ namespace Module.Catalog.Shared.DTOs
         public IEnumerable<TagProduct> TagProducts { get; set; }
         public IEnumerable<CategoryProduct> CategoryProducts { get; set; }
         public IEnumerable<WarehouseProduct> WarehouseProducts { get; set; }
+        public List<ProductDiscount> ProductDiscounts { get; set; }
     }
     public class ProductSearchDTO
     {
