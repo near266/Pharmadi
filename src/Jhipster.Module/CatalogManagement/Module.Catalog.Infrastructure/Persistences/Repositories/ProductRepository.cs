@@ -14,6 +14,7 @@ using Jhipster.Infrastructure.Migrations;
 using System.Text;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Security.Cryptography;
+using System;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -372,7 +373,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             result.TotalCount = query.Count();
             return result;
         }
-        public async Task<PagedList<SearchMcProductDTO>> SearchProduct(string? keyword, List<Guid> categoryIds, List<Guid> cateLevel2Ids, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
+        public async Task<PagedList<SearchMcProductDTO>> SearchProduct(string? keyword, List<Guid> categoryIds, List<Guid> cateLevel2Ids, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId,DateTime? StartDate,DateTime? EndDate)
         {
             var result = new PagedList<SearchMcProductDTO>();
             var query = _context.Products.Include(i => i.Brand).Where(i => i.Archived == false).AsQueryable();
@@ -382,7 +383,11 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 query = query.Where(i => i.SKU.ToLower().Contains(keyword) || i.ProductName.ToLower().Contains(keyword));
             }
 
-
+            if(StartDate != null && EndDate !=null)
+            {
+                
+               query =query.Where(i=> i.LastModifiedDate >=StartDate || i.CreatedDate >= StartDate  && i.CreatedDate <=EndDate || i.LastModifiedDate <=EndDate );
+            }
             if (categoryIds != null && categoryIds.Count() > 0)
             {
 
