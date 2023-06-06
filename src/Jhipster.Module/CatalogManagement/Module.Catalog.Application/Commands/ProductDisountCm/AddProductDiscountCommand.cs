@@ -18,7 +18,7 @@ namespace Module.Catalog.Application.Commands.ProductDisountCm
         public float Discount { get; set; }
         public string Unit { get; set; }
         [JsonIgnore]
-        public string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
 
     }
     public class AddProductDiscountCommandHandler : IRequestHandler<AddProductDiscountCommand, int>
