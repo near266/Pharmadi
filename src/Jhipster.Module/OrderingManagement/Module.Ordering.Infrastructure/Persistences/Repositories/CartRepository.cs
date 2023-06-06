@@ -67,11 +67,11 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         }
 
 
-        public async Task<ViewCartDTO> GetAllByUser(int page, int pageSize, Guid userId , int ? check)
+        public async Task<ViewCartDTO> GetAllByUser(int page, int pageSize, Guid userId, int? check)
         {
-             
+
             var view = new ViewCartDTO();
-          
+
             var res = new List<ViewCartByBrandDTO>();
             var q1 = new List<Guid>();
             if (check == null || check == 0)
@@ -99,10 +99,10 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 }
                 foreach (var item in query)
                 {
-                   if( item.Product.ShortName == null)
+                    if (item.Product.ShortName == null)
                     {
                         item.Product.ShortName = item.Product.ProductName.Substring(0, 25);
-                    }    
+                    }
                 }
 
                 foreach (var item in q1)
@@ -285,7 +285,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
 
             foreach (var item in data)
             {
-                var checkPrice = item.Product.SuggestPrice != null ? item.Product. SuggestPrice : item.Product.SalePrice;
+                var checkPrice = item.Product.SuggestPrice != null ? item.Product.SuggestPrice : item.Product.SalePrice;
+                // tính Giá theo từng sản phẩm 
                 var summ = (int)(item.Quantity * checkPrice);
                 res.TotalPrice += summ;
 
@@ -297,6 +298,27 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             return res;
 
         }
+        private DiscountDTO ProductDiscount(Guid userId, Guid productId)
+        {
+            var s = new DiscountDTO();
+            var checkCart = _context.Carts.Where(i => i.UserId == userId && i.ProductId == productId).FirstOrDefault().Quantity;
+            var checkProduct = _context.productDiscounts.Where(i => i.ProductId == productId).OrderBy(i => i.Max);
+            foreach (var item in checkProduct)
+            {
+                if (item.Max > checkCart)
+                {
+                    s.Discount = item.Discount;
+                    s.unit = item.Unit;
+                    break;
+                }
+            }
+            return s;
+        }
+        private class DiscountDTO
+        {
+            public float Discount { get; set; }
 
+            public string unit { get; set; }
+        }
     }
 }
