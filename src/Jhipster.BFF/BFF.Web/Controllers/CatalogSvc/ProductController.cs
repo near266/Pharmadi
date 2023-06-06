@@ -189,7 +189,7 @@ namespace BFF.Web.ProductSvc
 
                         var ListDisPro = new List<AddProductDiscountCommand>();
                         // với điều kiện List này được sắp xếp theo đúng thứ tự khoảng
-                        for (int i = 0; i < request.productDiscountCommand.Count; i++)
+                        for (int i = 0; i < request.productDiscountCommand.Count - 1; i++)
                         {
                             // await _mediator.Send(request.productDiscountCommand[0]);
                             var item1 = request.productDiscountCommand[i];
@@ -336,7 +336,7 @@ namespace BFF.Web.ProductSvc
 
                         var ListDisPro = new List<UpdateProductDiscountCommand>();
                         // với điều kiện List này được sắp xếp theo đúng thứ tự khoảng
-                        for (int i = 0; i < request.productDiscountCommand.Count; i++)
+                        for (int i = 0; i < request.productDiscountCommand.Count - 1; i++)
                         {
                             // await _mediator.Send(request.productDiscountCommand[0]);
                             var item1 = request.productDiscountCommand[i];
