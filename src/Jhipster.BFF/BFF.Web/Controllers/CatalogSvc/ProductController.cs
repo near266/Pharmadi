@@ -218,7 +218,11 @@ namespace BFF.Web.ProductSvc
                     }
                     catch (Exception ex)
                     {
-                        return StatusCode(200, ex.Message);
+                        var errorObject = new
+                        {
+                            ErrorMessage = ex.Message
+                        };
+                        return StatusCode(200, errorObject);
                     }
                 }
                 return Ok(1);
@@ -226,7 +230,11 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to add Product fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
+                var errorObject = new
+                {
+                    ErrorMessage = ex.Message
+                };
+                return StatusCode(500, errorObject);
             }
         }
 
@@ -370,7 +378,11 @@ namespace BFF.Web.ProductSvc
                     }
                     catch (Exception ex)
                     {
-                        return StatusCode(200, ex.Message);
+                        var errorObject = new
+                        {
+                            ErrorMessage = ex.Message
+                        };
+                        return StatusCode(200, errorObject);
                     }
                 }
                 return Ok(result);
@@ -378,7 +390,11 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to update Product fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
+                var errorObject = new
+                {
+                    ErrorMessage = ex.Message
+                };
+                return StatusCode(500, errorObject);
             }
         }
         [Authorize(Roles = RolesConstants.ADMIN)]
