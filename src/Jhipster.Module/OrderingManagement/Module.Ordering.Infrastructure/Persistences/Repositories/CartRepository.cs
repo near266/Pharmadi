@@ -280,6 +280,8 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         public async Task<CartResultDTO> CartResultSum(Guid userId)
         {
             var res = new CartResultDTO();
+            res.TotalPrice = 0;
+            res.TotalPayment = 0;
             var data = await _context.Carts.Include(i => i.Product).Where(i => i.UserId == userId && i.IsChoice == true).ToListAsync();
             res.Quantity = (int)data.Sum(i => i.Quantity);
 
@@ -287,30 +289,66 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
             {
                 var checkPrice = item.Product.SuggestPrice != null ? item.Product.SuggestPrice : item.Product.SalePrice;
                 // tính Giá theo từng sản phẩm 
-                var summ = (int)(item.Quantity * checkPrice);
-                res.TotalPrice += summ;
-
-                var summ1 = (int)(item.Quantity * item.Product.SalePrice);
-                res.TotalPayment += summ1;
-
-
+                var dis = ProductDiscount(item.UserId, item.ProductId);
+                if (dis.unit == "%")
+                {
+                    var summ = item.Quantity * item.Product.SalePrice;
+                    res.TotalPrice += summ;
+                    var summ1 = item.Quantity * item.Product.SalePrice * (decimal)(100 - dis.Discount) / 100;
+                    res.TotalPayment += summ1;
+                }
+                if (dis.unit.ToLower() == "VND".ToLower())
+                {
+                    var summ = item.Quantity * item.Product.SalePrice;
+                    res.TotalPrice += summ;
+                    var summ1 = item.Quantity * item.Product.SalePrice - (decimal)(dis.Discount);
+                    res.TotalPayment += summ1;
+                }
+                if (dis.unit == "0")
+                {
+                    var summ = item.Quantity * item.Product.SalePrice;
+                    res.TotalPrice += summ;
+                    var summ1 = item.Quantity * item.Product.SalePrice;
+                    res.TotalPayment += summ1;
+                }
             }
+            res.economicalPrice = res.TotalPrice - res.TotalPayment;
             return res;
 
         }
-        private DiscountDTO ProductDiscount(Guid userId, Guid productId)
+        private DiscountDTO ProductDiscount(Guid? userId, Guid? productId)
         {
             var s = new DiscountDTO();
             var checkCart = _context.Carts.Where(i => i.UserId == userId && i.ProductId == productId).FirstOrDefault().Quantity;
             var checkProduct = _context.productDiscounts.Where(i => i.ProductId == productId).OrderBy(i => i.Max);
-            foreach (var item in checkProduct)
+            if (checkProduct.Any())
             {
-                if (item.Max > checkCart)
+                foreach (var item in checkProduct)
                 {
-                    s.Discount = item.Discount;
-                    s.unit = item.Unit;
-                    break;
+                    if (item.Min > checkCart)
+                    {
+                        s.Discount = 0;
+                        s.unit = "0";
+                        break;
+                    }
+                    if (item.Min <= checkCart && checkCart <= item.Max)
+                    {
+                        s.Discount = item.Discount;
+                        s.unit = item.Unit;
+                        break;
+                    }
+
                 }
+                if (s.unit == null)
+                {
+                    s.Discount = checkProduct.OrderByDescending(i => i.Max).FirstOrDefault().Discount;
+                    s.unit = checkProduct.FirstOrDefault().Unit;
+                }
+            }
+            else
+            {
+                s.Discount = 0;
+                s.unit = "0";
             }
             return s;
         }
