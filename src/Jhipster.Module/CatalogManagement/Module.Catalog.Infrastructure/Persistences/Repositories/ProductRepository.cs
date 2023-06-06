@@ -709,8 +709,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
         public async Task<int> DeleteDiscountProduct(Guid id)
         {
-            var check = await _context.productDiscounts.FirstOrDefaultAsync(i => i.ProductId == id);
-            _context.productDiscounts.Remove(check);
+            var check = await _context.productDiscounts.Where(i => i.ProductId == id).ToListAsync();
+            _context.productDiscounts.RemoveRange(check);
             return await _context.SaveChangesAsync();
         }
         public async Task<int> UpdateProductDiscount(ProductDiscount rq)
