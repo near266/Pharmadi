@@ -209,6 +209,7 @@ namespace BFF.Web.ProductSvc
                         foreach (var item in ListDisPro)
                         {
                             item.ProductId = request.Id;
+                            item.CreatedBy = GetUserIdFromContext();
                             await _mediator.Send(item);
 
                         }
@@ -360,7 +361,8 @@ namespace BFF.Web.ProductSvc
                         await _mediator.Send(delete);
                         foreach (var item in ListDisPro)
                         {
-
+                            item.ProductId=request.Id;
+                            item.CreatedBy = GetUserIdFromContext();
                             await _mediator.Send(item);
 
                         }
