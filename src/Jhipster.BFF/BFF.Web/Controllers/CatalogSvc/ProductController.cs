@@ -328,7 +328,7 @@ namespace BFF.Web.ProductSvc
                     }
                 }
                 //add discount product
-                if (request.productDiscountCommand != null || request.productDiscountCommand.Count == 0)
+                if (request.productDiscountCommand != null && request.productDiscountCommand.Count != 0)
                 {
                     try
                     {
