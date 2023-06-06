@@ -142,7 +142,9 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 value.SalePrice = Price(obj.SalePrice);
                 value.SuggestPrice = Price(obj.SuggestPrice);
             }
-            value.ProductDiscounts = await _context.productDiscounts.Where(i => i.ProductId == Id).ToListAsync();
+            value.ProductDiscounts = await _context.productDiscounts.Where(i => i.ProductId == Id)
+                .OrderBy(i=>i.Max)
+                .ToListAsync();
             return value;
         }
 
