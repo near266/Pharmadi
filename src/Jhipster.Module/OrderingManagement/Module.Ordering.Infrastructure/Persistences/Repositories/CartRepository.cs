@@ -297,7 +297,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                     var summ1 = item.Quantity * item.Product.SalePrice * (decimal)(100 - dis.Discount) / 100;
                     res.TotalPayment += summ1;
                 }
-                if (dis.unit.ToLower() == "VND".ToLower())
+                if (dis.unit.ToLower() == "VNĐ".ToLower())
                 {
                     var summ = item.Quantity * item.Product.SalePrice;
                     res.TotalPrice += summ;
