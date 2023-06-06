@@ -161,7 +161,7 @@ namespace BFF.Web.DTOs.CatalogSvc
         public string? BannerProduct2 { get; set; }
         public string? Different { get; set; }
         public string? ClinicalResearch { get; set; }
-        public List<UpdateProductDiscountCommand>? productDiscountCommand { get; set; }
+        public List<AddProductDiscountCommand>? productDiscountCommand { get; set; }
 
 
     }

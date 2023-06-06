@@ -181,7 +181,7 @@ namespace BFF.Web.ProductSvc
                     }
                 }
                 //add discount product
-                if (request.productDiscountCommand != null && request.productDiscountCommand.Count != 0)
+                if (request.productDiscountCommand != null || request.productDiscountCommand.Count == 0)
                 {
                     try
                     {
@@ -189,7 +189,7 @@ namespace BFF.Web.ProductSvc
 
                         var ListDisPro = new List<AddProductDiscountCommand>();
                         // với điều kiện List này được sắp xếp theo đúng thứ tự khoảng
-                        for (int i = 0; i < request.productDiscountCommand.Count - 1; i++)
+                        for (int i = 0; i < request.productDiscountCommand.Count; i++)
                         {
                             // await _mediator.Send(request.productDiscountCommand[0]);
                             var item1 = request.productDiscountCommand[i];
@@ -209,7 +209,6 @@ namespace BFF.Web.ProductSvc
                         foreach (var item in ListDisPro)
                         {
                             item.ProductId = request.Id;
-                            item.CreatedBy = GetUserIdFromContext();
                             await _mediator.Send(item);
 
                         }
@@ -329,15 +328,15 @@ namespace BFF.Web.ProductSvc
                     }
                 }
                 //add discount product
-                if (request.productDiscountCommand != null && request.productDiscountCommand.Count != 0)
+                if (request.productDiscountCommand != null || request.productDiscountCommand.Count == 0)
                 {
                     try
                     {
                         //add discount product
 
-                        var ListDisPro = new List<UpdateProductDiscountCommand>();
+                        var ListDisPro = new List<AddProductDiscountCommand>();
                         // với điều kiện List này được sắp xếp theo đúng thứ tự khoảng
-                        for (int i = 0; i < request.productDiscountCommand.Count - 1; i++)
+                        for (int i = 0; i < request.productDiscountCommand.Count; i++)
                         {
                             // await _mediator.Send(request.productDiscountCommand[0]);
                             var item1 = request.productDiscountCommand[i];
@@ -361,8 +360,7 @@ namespace BFF.Web.ProductSvc
                         await _mediator.Send(delete);
                         foreach (var item in ListDisPro)
                         {
-                            item.ProductId=request.Id;
-                            item.CreatedBy = GetUserIdFromContext();
+
                             await _mediator.Send(item);
 
                         }
