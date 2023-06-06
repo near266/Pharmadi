@@ -335,7 +335,7 @@ namespace BFF.Web.ProductSvc
                     {
                         //add discount product
 
-                        var ListDisPro = new List<UpdateProductDiscountCommand>();
+                        var ListDisPro = new List<AddProductDiscountCommand>();
                         // với điều kiện List này được sắp xếp theo đúng thứ tự khoảng
                         for (int i = 0; i < request.productDiscountCommand.Count - 1; i++)
                         {
@@ -354,14 +354,9 @@ namespace BFF.Web.ProductSvc
                                 throw new Exception("Thực hiện thành công nhưng nhập sai productDiscount vui lòng cập nhật lại ở phiên bản sắp tới");
                             }
                         }
-                        var delete = new DeleteProductDiscountCommand()
-                        {
-                            Id = request.Id
-                        };
-                        await _mediator.Send(delete);
                         foreach (var item in ListDisPro)
                         {
-                            item.ProductId=request.Id;
+                            item.ProductId = request.Id;
                             item.CreatedBy = GetUserIdFromContext();
                             await _mediator.Send(item);
 
