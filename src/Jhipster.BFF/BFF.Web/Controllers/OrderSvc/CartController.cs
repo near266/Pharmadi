@@ -45,7 +45,11 @@ namespace BFF.Web.ProductSvc
             catch (Exception ex)
             {
                 _logger.LogError($"REST request to add Cart fail: {ex.Message}");
-                return StatusCode(500, ex.Message);
+                var errorObject = new
+                {
+                    ErrorMessage = ex.Message
+                };
+                return StatusCode(500, errorObject);
             }
         }
         [HttpPost("Update")]
