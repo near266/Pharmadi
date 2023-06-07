@@ -27,22 +27,28 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
         {
             try
             {
-                var obj = await _context.Carts.FirstOrDefaultAsync(i => i.UserId == request.UserId && i.ProductId == request.ProductId);
-                if (obj != null)
+                var checkPrduct = await _context.Products.FirstOrDefaultAsync(i => i.Status == 2 && i.Archived == false && i.CanOrder == true && i.Id == request.ProductId);
+                if (checkPrduct == null) throw new Exception("Sản phẩm đang đợi kiểm duyệt, không cho phép đặt hàng ");
+                else
                 {
-                    request.Id = obj.Id;
-                    request.Quantity = obj.Quantity + request.Quantity;
-                    if (request.Quantity == 0)
+                    var obj = await _context.Carts.FirstOrDefaultAsync(i => i.UserId == request.UserId && i.ProductId == request.ProductId);
+                    if (obj != null)
                     {
-                        _context.Carts.Remove(obj);
-                        return await _context.SaveChangesAsync();
-                    }
-                    obj = _mapper.Map<Cart, Cart>(request, obj);
+                        request.Id = obj.Id;
+                        request.Quantity = obj.Quantity + request.Quantity;
+                        if (request.Quantity == 0)
+                        {
+                            _context.Carts.Remove(obj);
+                            return await _context.SaveChangesAsync();
+                        }
+                        obj = _mapper.Map<Cart, Cart>(request, obj);
 
-                    return await _context.SaveChangesAsync(default);
+                        return await _context.SaveChangesAsync(default);
+                    }
+                    await _context.Carts.AddAsync(request);
+                    return await _context.SaveChangesAsync();
                 }
-                await _context.Carts.AddAsync(request);
-                return await _context.SaveChangesAsync();
+                
             }
             catch (Exception e)
             {
