@@ -19,6 +19,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
         public int page { get; set; }
         public int pageSize { get; set; }
         public Guid? userId { get; set; }
+
     }
     public class SearchProductQueryHandler : IRequestHandler<SearchProductQuery, PagedList<SearchMcProductDTO>>
     {

@@ -49,5 +49,6 @@ namespace Module.Catalog.Domain.Entities
         public IEnumerable<TagProduct> TagProducts { get; set; }
         public IEnumerable<CategoryProduct> CategoryProducts { get; set; }
         public IEnumerable<WarehouseProduct> WarehouseProducts { get; set; }
+        public IEnumerable<ProductDiscount> ProductDiscounts { get; set; }
     }
 }
