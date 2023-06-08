@@ -194,8 +194,6 @@ namespace BFF.Web.ProductSvc
                             // await _mediator.Send(request.productDiscountCommand[0]);
                             var item1 = request.productDiscountCommand[i];
                             var item2 = request.productDiscountCommand[i + 1];
-                            ListDisPro.Add(request.productDiscountCommand[0]);
-
                             if (item1.Max + 1 == item2.Min && item2.Min < item2.Max)
                             {
                                 ListDisPro.Add(item2);
@@ -349,8 +347,6 @@ namespace BFF.Web.ProductSvc
                             // await _mediator.Send(request.productDiscountCommand[0]);
                             var item1 = request.productDiscountCommand[i];
                             var item2 = request.productDiscountCommand[i + 1];
-                            ListDisPro.Add(request.productDiscountCommand[0]);
-
                             if (item1.Max + 1 == item2.Min && item2.Min < item2.Max)
                             {
                                 ListDisPro.Add(item2);
