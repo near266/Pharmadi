@@ -14,6 +14,7 @@ using Jhipster.Infrastructure.Migrations;
 using System.Text;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Security.Cryptography;
+using System;
 
 namespace Module.Catalog.Infrastructure.Persistence.Repositories
 {
@@ -79,11 +80,16 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU, string? ProductName, int? status)
+        public async Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU, string? ProductName, int? status, DateTime? StartDate, DateTime? EndDate)
         {
             var result = new PagedList<Product>();
             var query1 = _context.Products.Where(i => i.Archived == false).Include(i => i.Brand)
                 .Include(i => i.CategoryProducts).ThenInclude(a => a.Category).AsQueryable();
+            if (StartDate != null && EndDate != null)
+            {
+
+                query1 = query1.Where(i => i.LastModifiedDate >= StartDate || i.CreatedDate >= StartDate && i.CreatedDate <= EndDate || i.LastModifiedDate <= EndDate);
+            }
             if (SKU != null)
             {
                 SKU = SKU.ToLower();
@@ -121,7 +127,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<ProductDetail> ViewDetail(Guid Id,Guid? UserId)
+        public async Task<ProductDetail> ViewDetail(Guid Id, Guid? UserId)
         {
             var obj = await _context.Products
                                     .Include(p => p.Brand).Include(p => p.PostContent)
@@ -135,12 +141,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 value.SalePrice = obj.SalePrice.ToString();
                 value.SuggestPrice = obj.SuggestPrice.ToString();
-            }   
+            }
             else
             {
-                value.SalePrice = Price(obj.SalePrice);
-                value.SuggestPrice = Price(obj.SuggestPrice);
-            }    
+                value.SalePrice = Price(obj.SalePrice, obj.SalePrice);
+                value.SuggestPrice = Price(obj.SuggestPrice, obj.SalePrice);
+            }
+            value.productDiscountCommand = await _context.productDiscounts.Where(i => i.ProductId == Id)
+                .OrderBy(i => i.Max)
+                .ToListAsync();
             return value;
         }
 
@@ -148,7 +157,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ProductSearchDTO>> ViewProductForU(string? keyword, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ProductSearchDTO>();
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
+            var query = _context.Products.Where(i => i.Archived == false && i.Status == 2).AsQueryable();
             if (keyword != null)
             {
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
@@ -157,8 +166,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
-                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
+                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice, i.SalePrice),
+                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice, i.SalePrice),
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
@@ -168,7 +177,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                ShortName = i.ShortName != null ? i.ShortName : (i.ProductName.Length > 25 ? i.ProductName.Substring(0, 25) : i.ProductName),
                 BannerProduct1 = i.BannerProduct1,
                 BannerProduct2 = i.BannerProduct2
 
@@ -212,14 +221,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             //result.TotalCount = query.Count();
             // return result;
             var result = new PagedList<SaleProductDTO>();
-            var query = await _context.Products.Where(i => i.Archived == false).AsNoTracking().ToListAsync();
+            var query = await _context.Products.Where(i => i.Archived == false && i.Status == 2).AsNoTracking().ToListAsync();
 
             var query2 = query.Select(i => new SaleProductDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
-                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
+                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice, i.SalePrice),
+                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice, i.SalePrice),
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
@@ -235,7 +244,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     .Select(a => a.Quantity)
                     .SingleOrDefault(),
                 CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                ShortName = i.ShortName != null ? i.ShortName : (i.ProductName.Length > 25 ? i.ProductName.Substring(0, 25) : i.ProductName),
                 sellingProducts = i.sellingProducts != null ? i.sellingProducts : 0,
                 BannerProduct1 = i.BannerProduct1,
                 BannerProduct2 = i.BannerProduct2
@@ -250,9 +259,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
             return result;
         }
-        public string Price(decimal? x)
+        public string Price(decimal? suggestPrice, decimal? salePrice)
         {
-            var sup = x.ToString();
+            var price = suggestPrice ?? salePrice ?? 0;
+            var sup = price.ToString();
             StringBuilder sb = new StringBuilder(sup);
             char replaceChar = 'x';
             for (int i = 1; i < sb.Length; i++)
@@ -264,14 +274,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<NewProductDTO>> ViewProductNew(int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<NewProductDTO>();
-            var query = await _context.Products.Where(i => i.Archived == false).AsQueryable().ToListAsync();
+            var query = await _context.Products.Where(i => i.Archived == false && i.Status == 2).AsQueryable().ToListAsync();
 
             var query2 = query.Select(i => new NewProductDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
-                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
+                SuggestPrice = (userId != null) ? (i.SuggestPrice != null ? i.SuggestPrice.ToString() : i.SalePrice.ToString()) : Price(i.SuggestPrice, i.SalePrice),
+                SalePrice = (userId != null) ? (i.SalePrice != null ? i.SalePrice.ToString() : Price(i.SalePrice, i.SalePrice)) : Price(i.SalePrice, i.SalePrice),
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
@@ -281,11 +291,11 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                ShortName = i.ShortName != null ? i.ShortName : (i.ProductName.Length > 25 ? i.ProductName.Substring(0, 25) : i.ProductName),
                 NewProduct = i.NewProduct != null ? i.NewProduct : 0,
                 BannerProduct1 = i.BannerProduct1,
                 BannerProduct2 = i.BannerProduct2,
-                Ingredient=i.Ingredient,
+                Ingredient = i.Ingredient,
 
             }).OrderByDescending(i => i.NewProduct).Skip(pageSize * (page - 1))
                         .Take(pageSize)
@@ -298,19 +308,19 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ViewProductPromotionDTO>> ViewProductPromotion(string? keyword, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ViewProductPromotionDTO>();
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
+            var query = _context.Products.Where(i => i.Archived == false && i.Status == 2).AsQueryable();
             if (keyword != null)
             {
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
             }
             var listPro = await query.ToListAsync();
 
-            var query2 =  listPro.Select(i => new ViewProductPromotionDTO
+            var query2 = listPro.Select(i => new ViewProductPromotionDTO
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
-                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
+                SuggestPrice = (userId != null) ? (i.SuggestPrice != null ? i.SuggestPrice.ToString() : i.SalePrice.ToString()) : Price(i.SuggestPrice, i.SalePrice),
+                SalePrice = (userId != null) ? (i.SalePrice != null ? i.SalePrice.ToString() : Price(i.SalePrice, i.SalePrice)) : Price(i.SalePrice, i.SalePrice),
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
@@ -321,7 +331,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(i => i.Label).Where(i => i.ProductId == i.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                ShortName = i.ShortName != null ? i.ShortName : (i.ProductName.Length > 25 ? i.ProductName.Substring(0, 25) : i.ProductName),
                 Country = i.Country,
                 BannerProduct1 = i.BannerProduct1,
                 BannerProduct2 = i.BannerProduct2
@@ -337,7 +347,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ViewProductForeignDTO>> ViewProductForeign(string? keyword, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ViewProductForeignDTO>();
-            var query = _context.Products.Where(i => i.Archived == false && i.Country.ToLower() != "việt nam").AsQueryable();
+            var query = _context.Products.Where(i => i.Archived == false && i.Country.ToLower() != "việt nam" && i.Status == 2).AsQueryable();
             if (keyword != null)
             {
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
@@ -347,8 +357,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 Id = p.Id,
                 SKU = p.SKU,
-                SuggestPrice = (userId != null) ? p.SuggestPrice.ToString() : Price(p.SuggestPrice),
-                SalePrice = (userId != null) ? p.SalePrice.ToString() : Price(p.SalePrice),
+                SuggestPrice = (userId != null) ? (p.SuggestPrice != null ? p.SuggestPrice.ToString() : p.SalePrice.ToString()) : Price(p.SuggestPrice, p.SalePrice),
+                SalePrice = (userId != null) ? (p.SalePrice != null ? p.SalePrice.ToString() : Price(p.SalePrice, p.SalePrice)) : Price(p.SalePrice, p.SalePrice),
                 ProductName = p.ProductName,
                 UnitName = p.UnitName,
                 Image = p.Image,
@@ -359,7 +369,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LabelProducts = _context.LabelProducts.Include(lp => lp.Label).Where(lp => lp.ProductId == p.Id).AsEnumerable(),
                 CartNumber = (userId != null) ? _context.Carts.Where(c => c.UserId == userId && c.ProductId == p.Id).Select(c => c.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = p.CanOrder,
-                ShortName = p.ShortName != null ? p.ShortName : p.ProductName.Substring(0, 25),
+                ShortName = p.ShortName != null ? p.ShortName : (p.ProductName.Length > 25 ? p.ProductName.Substring(0, 25) : p.ProductName),
                 Country = p.Country != null ? p.Country : " ",
                 ImportedProducts = p.ImportedProducts != null ? p.ImportedProducts : 0,
                 BannerProduct1 = p.BannerProduct1,
@@ -375,14 +385,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<SearchMcProductDTO>> SearchProduct(string? keyword, List<Guid> categoryIds, List<Guid> cateLevel2Ids, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<SearchMcProductDTO>();
-            var query = _context.Products.Include(i => i.Brand).Where(i => i.Archived == false).AsQueryable();
+            var query = _context.Products.Include(i => i.Brand).Where(i => i.Archived == false && i.Status == 2).AsQueryable();
             if (keyword != null)
             {
                 keyword = keyword.ToLower();
                 query = query.Where(i => i.SKU.ToLower().Contains(keyword) || i.ProductName.ToLower().Contains(keyword));
             }
 
-
+          
             if (categoryIds != null && categoryIds.Count() > 0)
             {
 
@@ -428,8 +438,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
-                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
+                SuggestPrice = (userId != null) ? (i.SuggestPrice != null ? i.SuggestPrice.ToString() : i.SalePrice.ToString()) : Price(i.SuggestPrice, i.SalePrice),
+                SalePrice = (userId != null) ? (i.SalePrice != null ? i.SalePrice.ToString() : Price(i.SalePrice, i.SalePrice)) : Price(i.SalePrice, i.SalePrice),
                 ProductName = i.ProductName,
                 Brand = i.Brand,
                 UnitName = i.UnitName,
@@ -438,9 +448,10 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 SaleNumber = _context.ProductSales.Where(a => a.ProductId == i.Id).Select(a => a.Quantity).FirstOrDefault(),
                 LabelProducts = _context.LabelProducts.Include(a => a.Label).Where(a => a.ProductId == i.Id).AsEnumerable(),
                 Archived = i.Archived,
+                Ingredient = i.Ingredient,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25)
+                ShortName = i.ShortName != null ? i.ShortName : (i.ProductName.Length > 25 ? i.ProductName.Substring(0, 25) : i.ProductName),
 
             }).Skip(pageSize * (page - 1))
                         .Take(pageSize).ToList();
@@ -464,7 +475,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<ProductSearchDTO>> ViewListProductWithBrand(Guid Id, Guid? userId)
         {
-            var query = _context.Products.Where(i => i.Archived == false).AsQueryable();
+            var query = _context.Products.Where(i => i.Archived == false && i.Status == 2).AsQueryable();
             var obj = query.FirstOrDefault(c => c.Id == Id);
             if (obj != null)
             {
@@ -476,8 +487,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             {
                 Id = i.Id,
                 SKU = i.SKU,
-                SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
-                SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
+                SuggestPrice = (userId != null) ? (i.SuggestPrice != null ? i.SuggestPrice.ToString() : i.SalePrice.ToString()) : Price(i.SuggestPrice, i.SalePrice),
+                SalePrice = (userId != null) ? (i.SalePrice != null ? i.SalePrice.ToString() : Price(i.SalePrice, i.SalePrice)) : Price(i.SalePrice, i.SalePrice),
                 ProductName = i.ProductName,
                 UnitName = i.UnitName,
                 Image = i.Image,
@@ -487,7 +498,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 Archived = i.Archived,
                 CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
                 CanOrder = i.CanOrder,
-                ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                ShortName = i.ShortName != null ? i.ShortName : (i.ProductName.Length > 25 ? i.ProductName.Substring(0, 25) : i.ProductName),
                 BannerProduct1 = i.BannerProduct1,
                 BannerProduct2 = i.BannerProduct2
 
@@ -512,8 +523,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 {
                     Id = i.Id,
                     SKU = i.SKU,
-                    SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
-                    SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
+                    SuggestPrice = (userId != null) ? (i.SuggestPrice != null ? i.SuggestPrice.ToString() : i.SalePrice.ToString()) : Price(i.SuggestPrice, i.SalePrice),
+                    SalePrice = (userId != null) ? (i.SalePrice != null ? i.SalePrice.ToString() : Price(i.SalePrice, i.SalePrice)) : Price(i.SalePrice, i.SalePrice),
                     ProductName = i.ProductName,
                     UnitName = i.UnitName,
                     Image = i.Image,
@@ -524,7 +535,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     CartNumber = (userId != null) ? _context.Carts.Where(a => a.UserId == userId && a.ProductId == i.Id).Select(i => i.Quantity).FirstOrDefault().ToString() : "0",
 
                     CanOrder = i.CanOrder,
-                    ShortName = i.ShortName != null ? i.ShortName : i.ProductName.Substring(0, 25),
+                    ShortName = i.ShortName != null ? i.ShortName : (i.ProductName.Length > 25 ? i.ProductName.Substring(0, 25) : i.ProductName),
                     BannerProduct1 = i.BannerProduct1,
                     BannerProduct2 = i.BannerProduct2
 
@@ -541,8 +552,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 {
                     Id = i.Id,
                     SKU = i.SKU,
-                    SuggestPrice = (userId != null) ? i.SuggestPrice.ToString() : Price(i.SuggestPrice),
-                    SalePrice = (userId != null) ? i.SalePrice.ToString() : Price(i.SalePrice),
+                    SuggestPrice = (userId != null) ? (i.SuggestPrice != null ? i.SuggestPrice.ToString() : i.SalePrice.ToString()) : Price(i.SuggestPrice, i.SalePrice),
+                    SalePrice = (userId != null) ? (i.SalePrice != null ? i.SalePrice.ToString() : Price(i.SalePrice, i.SalePrice)) : Price(i.SalePrice, i.SalePrice),
                     ProductName = i.ProductName,
                     UnitName = i.UnitName,
                     Image = i.Image,
@@ -666,7 +677,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             var query = _context.Products.AsQueryable();
             if (Type == 1)
             {
-                var listpro = query.Where(i => i.ImportedProducts >= 1 && i.Archived == false).Distinct()
+                var listpro = query.Where(i => i.ImportedProducts >= 1 && i.Archived == false && i.Status == 2).Distinct()
                     .Select(i => new ProductClassificationByCountryDTO
                     {
                         IdBrand = i.BrandId,
@@ -679,7 +690,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             if (Type == 2)
             {
-                var listpro = query.Where(i => i.ImportedProducts == 0 && i.Archived == false).Distinct()
+                var listpro = query.Where(i => i.ImportedProducts == 0 && i.Archived == false && i.Status == 2).Distinct()
                     .Select(i => new ProductClassificationByCountryDTO
                     {
                         IdBrand = i.BrandId,
@@ -702,12 +713,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<List<ProductDiscount>> ViewDiscountByUserId(Guid id)
         {
             return await _context.productDiscounts.Where(i => i.ProductId == id)
-                         .OrderBy(i => i.Range).ToListAsync();
+                         .OrderBy(i => i.Max).ToListAsync();
         }
         public async Task<int> DeleteDiscountProduct(Guid id)
         {
-            var check = await _context.productDiscounts.FirstOrDefaultAsync(i => i.Id == id);
-            _context.productDiscounts.Remove(check);
+            var check = await _context.productDiscounts.Where(i => i.ProductId == id).ToListAsync();
+            if (check != null)
+            {
+                _context.productDiscounts.RemoveRange(check);
+            }
             return await _context.SaveChangesAsync();
         }
         public async Task<int> UpdateProductDiscount(ProductDiscount rq)

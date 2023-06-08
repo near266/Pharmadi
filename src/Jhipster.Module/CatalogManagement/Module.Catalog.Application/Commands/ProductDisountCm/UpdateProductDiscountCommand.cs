@@ -12,12 +12,13 @@ namespace Module.Catalog.Application.Commands.ProductDisountCm
 {
     public class UpdateProductDiscountCommand : IRequest<int>
     {
-        public Guid ProductId { get; set; }
-        public int Range { get; set; }
+        public Guid? ProductId { get; set; }
+        public int Min { get; set; }
+        public int Max { get; set; }
         public float Discount { get; set; }
         public string Unit { get; set; }
         [JsonIgnore]
-        public string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
 
     }
     public class UpdateProductDiscountCommandHandler : IRequestHandler<UpdateProductDiscountCommand, int>
@@ -31,8 +32,9 @@ namespace Module.Catalog.Application.Commands.ProductDisountCm
         public async Task<int> Handle(UpdateProductDiscountCommand request, CancellationToken cancellationToken)
         {
             var map = new ProductDiscount();
-            map.ProductId = request.ProductId;
-            map.Range = request.Range;
+            map.ProductId = (Guid)request.ProductId;
+            map.Min = request.Min;
+            map.Max = request.Max;
             map.Discount = request.Discount;
             map.Unit = request.Unit;
             map.LastModifiedDate = DateTime.Now;

@@ -54,6 +54,7 @@ namespace Module.Catalog.Shared.DTOs
         public IEnumerable<TagProduct> TagProducts { get; set; }
         public IEnumerable<CategoryProduct> CategoryProducts { get; set; }
         public IEnumerable<WarehouseProduct> WarehouseProducts { get; set; }
+        public List<ProductDiscount> productDiscountCommand { get; set; }
     }
     public class ProductSearchDTO
     {
@@ -102,6 +103,7 @@ namespace Module.Catalog.Shared.DTOs
         public IEnumerable<CategoryProduct>? CategoryProducts { get; set; }
         public Brand? Brands { get; set; }
         public int? SaleNumber { get; set; }
+        public string? Ingredient { get; set; }
         public string CartNumber { get; set; } = "0";
         public bool? Archived { get; set; }
         [JsonIgnore]

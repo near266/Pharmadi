@@ -11,9 +11,9 @@ namespace Module.Ordering.Shared.DTOs
     public class CartResultDTO
     {
         public int Quantity { get; set; }
-        public int TotalPrice { get; set; }
-
-        public int TotalPayment { get; set; }
+        public decimal? TotalPrice { get; set; }
+        public decimal? economicalPrice { get;set; }
+        public decimal? TotalPayment { get; set; }
     }
 
     public class ViewCartByBrandDTO

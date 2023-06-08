@@ -52,7 +52,7 @@ namespace BFF.Web.Controllers.CatalogSvc
             }
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteProductDiscount([FromBody] UpdateProductDiscountCommand rq)
+        public async Task<IActionResult> DeleteProductDiscount([FromBody] DeleteProductDiscountCommand rq)
         {
             _logger.LogInformation($"REST request DeleteProductDiscount : {JsonConvert.SerializeObject(rq)}");
             try

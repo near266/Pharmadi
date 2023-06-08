@@ -15,6 +15,8 @@ namespace Module.Catalog.Application.Queries.ProductQ
         public int? status { get; set; }
         public int page { get; set; }
         public int pageSize { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
     public class ProductGetAllProductQueryHandler : IRequestHandler<ProductGetAllAdminQuery, PagedList<Product>>
     {
@@ -27,7 +29,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
         }
         public async Task<PagedList<Product>> Handle(ProductGetAllAdminQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.GetAllAdmin(request.page, request.pageSize,request.SKU,request.ProductName,request.status);
+            return await _repo.GetAllAdmin(request.page, request.pageSize,request.SKU,request.ProductName,request.status,request.StartDate,request.EndDate);
         }
     }
 
