@@ -19,8 +19,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
         public int page { get; set; }
         public int pageSize { get; set; }
         public Guid? userId { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set;}
+
     }
     public class SearchProductQueryHandler : IRequestHandler<SearchProductQuery, PagedList<SearchMcProductDTO>>
     {
@@ -33,7 +32,7 @@ namespace Module.Catalog.Application.Queries.ProductQ
         }
         public async Task<PagedList<SearchMcProductDTO>> Handle(SearchProductQuery request, CancellationToken cancellationToken)
         {
-            return await _repo.SearchProduct(request.keyword, request.categoryIds,request.cateLevel2Ids, request.brandIds, request.tagIds,request.page, request.pageSize, request.userId,request.StartDate,request.EndDate);
+            return await _repo.SearchProduct(request.keyword, request.categoryIds,request.cateLevel2Ids, request.brandIds, request.tagIds,request.page, request.pageSize, request.userId);
         }
     }
 
