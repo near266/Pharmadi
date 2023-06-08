@@ -80,11 +80,16 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU, string? ProductName, int? status)
+        public async Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU, string? ProductName, int? status, DateTime? StartDate, DateTime? EndDate)
         {
             var result = new PagedList<Product>();
             var query1 = _context.Products.Where(i => i.Archived == false).Include(i => i.Brand)
                 .Include(i => i.CategoryProducts).ThenInclude(a => a.Category).AsQueryable();
+            if (StartDate != null && EndDate != null)
+            {
+
+                query1 = query1.Where(i => i.LastModifiedDate >= StartDate || i.CreatedDate >= StartDate && i.CreatedDate <= EndDate || i.LastModifiedDate <= EndDate);
+            }
             if (SKU != null)
             {
                 SKU = SKU.ToLower();
@@ -377,7 +382,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             result.TotalCount = query.Count();
             return result;
         }
-        public async Task<PagedList<SearchMcProductDTO>> SearchProduct(string? keyword, List<Guid> categoryIds, List<Guid> cateLevel2Ids, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId, DateTime? StartDate, DateTime? EndDate)
+        public async Task<PagedList<SearchMcProductDTO>> SearchProduct(string? keyword, List<Guid> categoryIds, List<Guid> cateLevel2Ids, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<SearchMcProductDTO>();
             var query = _context.Products.Include(i => i.Brand).Where(i => i.Archived == false && i.Status == 2).AsQueryable();
@@ -387,11 +392,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 query = query.Where(i => i.SKU.ToLower().Contains(keyword) || i.ProductName.ToLower().Contains(keyword));
             }
 
-            if (StartDate != null && EndDate != null)
-            {
-
-                query = query.Where(i => i.LastModifiedDate >= StartDate || i.CreatedDate >= StartDate && i.CreatedDate <= EndDate || i.LastModifiedDate <= EndDate);
-            }
+          
             if (categoryIds != null && categoryIds.Count() > 0)
             {
 
