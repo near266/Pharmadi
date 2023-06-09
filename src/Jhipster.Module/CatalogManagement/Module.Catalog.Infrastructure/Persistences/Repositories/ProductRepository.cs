@@ -88,7 +88,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if (StartDate != null && EndDate != null)
             {
 
-                query1 = query1.Where(i => i.LastModifiedDate >= StartDate || i.CreatedDate >= StartDate && i.CreatedDate <= EndDate || i.LastModifiedDate <= EndDate);
+                query1 = query1.Where(i => i.CreatedDate >= StartDate && i.CreatedDate <= EndDate );
             }
             if (SKU != null)
             {
