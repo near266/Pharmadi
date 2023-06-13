@@ -88,7 +88,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if (StartDate != null && EndDate != null)
             {
 
-                query1 = query1.Where(i => i.CreatedDate >= StartDate && i.CreatedDate <= EndDate );
+                query1 = query1.Where(i => i.CreatedDate >= StartDate && i.CreatedDate <= EndDate);
             }
             if (SKU != null)
             {
@@ -308,7 +308,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<ViewProductPromotionDTO>> ViewProductPromotion(string? keyword, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<ViewProductPromotionDTO>();
-            var query = _context.Products.Where(i => i.Archived == false && i.Status == 2).AsQueryable();
+            var query = _context.Products.Where(i => i.Archived == false && i.Status == 2 && i.HideProduct == true).AsQueryable();
             if (keyword != null)
             {
                 query = query.Where(i => i.ProductName.ToLower().Contains(keyword.ToLower()));
@@ -385,14 +385,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<PagedList<SearchMcProductDTO>> SearchProduct(string? keyword, List<Guid> categoryIds, List<Guid> cateLevel2Ids, List<Guid?>? brandIds, List<Guid?>? tagIds, int page, int pageSize, Guid? userId)
         {
             var result = new PagedList<SearchMcProductDTO>();
-            var query = _context.Products.Include(i => i.Brand).Where(i => i.Archived == false && i.Status == 2).AsQueryable();
+            var query = _context.Products.Include(i => i.Brand).Where(i => i.Archived == false && i.Status == 2 && i.HideProduct == true).AsQueryable();
             if (keyword != null)
             {
                 keyword = keyword.ToLower();
                 query = query.Where(i => i.SKU.ToLower().Contains(keyword) || i.ProductName.ToLower().Contains(keyword));
             }
 
-          
+
             if (categoryIds != null && categoryIds.Count() > 0)
             {
 
