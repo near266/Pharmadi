@@ -117,6 +117,7 @@ namespace Module.Factor.Infrastructure.Persistence.Repositories
                 PhoneNumber = i.Merchant.PhoneNumber,
                 ContactName = i.Merchant.ContactName,
                 ContractNumber = i.Merchant.ContractNumber,
+                LinkShipping=i.LinkShipping,
                 ShippingFee = i.ShippingFee,
                 TaxCode = i.Merchant.TaxCode,
                 Status= i.Status,

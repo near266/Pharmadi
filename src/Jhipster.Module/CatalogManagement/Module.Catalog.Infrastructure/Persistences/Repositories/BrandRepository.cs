@@ -30,8 +30,15 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         public async Task<int> Delete(Guid id)
         {
             var obj = await _context.Brands.FirstOrDefaultAsync(i => i.Id.Equals(id));
+            var productBrand = await _context.Products.Where(i => i.BrandId == obj.Id).ToListAsync();
+
             if (obj != null)
             {
+                if (productBrand != null && productBrand.Count == 0)
+                {
+                    _context.Products.RemoveRange(productBrand);
+                    await _context.SaveChangesAsync();
+                }
                 _context.Brands.Remove(obj);
                 return await _context.SaveChangesAsync();
             }
@@ -133,7 +140,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         }
         public string Price(string? sup)
         {
-            
+
             StringBuilder sb = new StringBuilder(sup);
             char replaceChar = 'x';
             for (int i = 1; i < sb.Length; i++)

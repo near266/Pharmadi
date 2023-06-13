@@ -15,6 +15,7 @@ namespace Module.Ordering.Application.Commands.PurchaseOrderCm
         public string? ContactName { get; set; }
         public string? ContractNumber { get; set; }
         public Decimal ShippingFee { get; set; }
+        public string? LinkShipping { get; set; }
         public Decimal TotalPrice { get; set; }
         public Decimal TotalPayment { get; set; }
         public int Status { get; set; }
