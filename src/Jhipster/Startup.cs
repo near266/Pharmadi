@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Jhipster.Infrastructure.Data;
 using Jhipster.Configuration;
 using Jhipster.Infrastructure.Configuration;
@@ -22,6 +22,7 @@ using Jhipster.Domain.Repositories.Interfaces;
 using Jhipster.Infrastructure.Data.Repositories;
 using Module.Redis;
 using Module.Email;
+using Microsoft.AspNetCore.Http.Features;
 
 [assembly: ApiController]
 
@@ -41,6 +42,10 @@ namespace Jhipster
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 10485760; // Dung lượng tối đa cho mỗi yêu cầu là 10MB (10 * 1024 * 1024 bytes)
+            });
             services
                 .AddAppSettingsModule(Configuration);
 
@@ -125,7 +130,6 @@ namespace Jhipster
             services.AddOrderingModule(Configuration);
             services.AddEmailModule(Configuration);
             services.AddScoped(typeof(IAccountService), typeof(AccountServices));
-
             //services.AddBasketModule(Configuration);
             //// Redis
             services.AddRedisModule(Configuration);
