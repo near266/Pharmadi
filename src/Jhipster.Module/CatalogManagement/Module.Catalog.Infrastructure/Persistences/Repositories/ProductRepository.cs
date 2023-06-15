@@ -80,13 +80,13 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             return 0;
         }
 
-        public async Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU, string? ProductName, int? status,string? BrandName,string? CatalogName, DateTime? StartDate, DateTime? EndDate)
+        public async Task<PagedList<Product>> GetAllAdmin(int page, int pageSize, string? SKU, string? ProductName, int? status, string? BrandName, string? CatalogName, DateTime? StartDate, DateTime? EndDate)
         {
             var result = new PagedList<Product>();
             var query1 = _context.Products.Where(i => i.Archived == false)
                 .Include(i => i.Brand)
                 .Include(i => i.CategoryProducts).ThenInclude(a => a.Category).AsQueryable();
-           
+
             if (StartDate != null && EndDate != null)
             {
 
@@ -104,9 +104,29 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             if (status != null)
             {
-                query1 = query1.Where(i => i.Status == status);
+                if (status == 11) // ẩn
+                {
+                    query1 = query1.Where(i => i.HideProduct == false);
+                }
+                else if (status == 12) // hiện
+                {
+                    query1 = query1.Where(i => i.HideProduct == true);
+                }
+                else if (status == 13) // đặt
+                {
+                    query1 = query1.Where(i => i.CanOrder == true);
+                }
+                else if (status == 14) // không đặt
+                {
+                    query1 = query1.Where(i => i.CanOrder == false);
+                }
+                else
+                {
+                    query1 = query1.Where(i => i.Status == status);
+                }
             }
-            if(BrandName!=null)
+
+            if (BrandName != null)
             {
                 var lowerBrandName = BrandName.ToLower();
                 var CheckBrandName = await _context.Brands.FirstOrDefaultAsync(i => i.BrandName.ToLower().Contains(lowerBrandName));
@@ -115,19 +135,19 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     var BrandId = CheckBrandName.Id;
                     query1 = query1.Where(i => i.BrandId == BrandId);
                 }
-               
-            }    
-            if(CatalogName!=null)
+
+            }
+            if (CatalogName != null)
             {
                 var lowerCateName = CatalogName.ToLower();
                 var checkCate = await _context.Categories.FirstOrDefaultAsync(i => i.CategoryName.ToLower().Contains(lowerCateName));
-                if(checkCate !=null)
+                if (checkCate != null)
                 {
                     var CateId = checkCate.Id;
-                    var checkProductCate = await _context.CategoryProducts.Where(i => i.CategoryId == CateId).Select(i=>i.ProductId).ToListAsync();
+                    var checkProductCate = await _context.CategoryProducts.Where(i => i.CategoryId == CateId).Select(i => i.ProductId).ToListAsync();
                     query1 = query1.Where(i => checkProductCate.Contains(i.Id));
-                }    
-            }    
+                }
+            }
             var data = await query1
                         .OrderByDescending(i => i.SKU)
                         .Skip(pageSize * (page - 1))
