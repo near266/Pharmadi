@@ -195,7 +195,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 result.TotalCount = data.Count();
                 return result;
             }
-            if (type == 2)
+            else if (type == 2)
             {
                 var brId = _context.Brands.Where(i => i.GroupBrandId == null && i.Archived == false).Select(i => i.Id).ToList();
                 var data = await query.Where(i => i.GroupBrandId == null && i.Archived == false).Include(i => i.GroupBrand).Select(i => new IsHaveGroupDTO
@@ -233,7 +233,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 result.TotalCount = data.Count();
                 return result;
             }
-            if (type == 3)
+            else if (type == 3)
             {
                 var brId = _context.Brands.Where(i => i.Pin == true && i.Archived == false).Select(i => i.Id).ToList();
                 var data = await query.Where(i => i.Pin == true && i.Archived == false).Include(i => i.GroupBrand).Select(i => new IsHaveGroupDTO
@@ -270,7 +270,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 result.TotalCount = data.Count();
                 return result;
             }
-            if (type == 4)
+            else if (type == 4)
             {
                 var listpro = _context.Products.Where(i => i.Country.ToLower() == "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.BrandId).Distinct();
                 var pro = _context.Products.Where(i => i.Country.ToLower() == "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.Id);
@@ -309,7 +309,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 result.TotalCount = data.Count();
                 return result;
             }
-            if (type == 5)
+            else if (type == 5)
             {
                 var listpro = _context.Products.Where(i => i.Country.ToLower() != "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.BrandId).Distinct();
                 var pro = _context.Products.Where(i => i.Country.ToLower() != "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.Id);
