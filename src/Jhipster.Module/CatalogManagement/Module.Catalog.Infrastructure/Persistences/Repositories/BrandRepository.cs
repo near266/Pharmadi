@@ -278,8 +278,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             else if (type == 4)
             {
-                var listpro =await _context.Products.Where(i => i.Country.ToLower() == "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.BrandId).Distinct().ToListAsync();
-                var pro =await _context.Products.Where(i => i.Country.ToLower() == "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.Id).ToListAsync();
+                var listpro =await _context.Products.Where(i => i.Country.ToLower() == "VIETNAM".ToLower() && i.Archived == false).Select(i => i.BrandId).Distinct().ToListAsync();
+                var pro =await _context.Products.Where(i => i.Country.ToLower() == "VIETNAM".ToLower() && i.Archived == false).Select(i => i.Id).ToListAsync();
                 var brId =await _context.Brands.Where(i => listpro.Contains(i.Id) && i.Archived == false).Select(i => i.Id).ToListAsync();
                 var data = await query.Where(i => i.Archived == false && listpro.Contains(i.Id)).Include(i => i.GroupBrand).Select(i => new IsHaveGroupDTO
                 {
@@ -317,8 +317,8 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             }
             else if (type == 5)
             {
-                var listpro =await _context.Products.Where(i => i.Country.ToLower() != "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.BrandId).Distinct().ToListAsync();
-                var pro =await _context.Products.Where(i => i.Country.ToLower() != "VIỆT NAM".ToLower() && i.Archived == false).Select(i => i.Id).ToListAsync();
+                var listpro =await _context.Products.Where(i => i.Country.ToLower() != "VIETNAM".ToLower() && i.Archived == false).Select(i => i.BrandId).Distinct().ToListAsync();
+                var pro =await _context.Products.Where(i => i.Country.ToLower() != "VIETNAM".ToLower() && i.Archived == false).Select(i => i.Id).ToListAsync();
                 var brId =await _context.Brands.Where(i => listpro.Contains(i.Id) && i.Archived == false).Select(i => i.Id).ToListAsync();
                 var data = await query.Where(i => i.Archived == false && listpro.Contains(i.Id)).Include(i => i.GroupBrand).Select(i => new IsHaveGroupDTO
                 {
