@@ -172,14 +172,17 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     LogoBrand = i.LogoBrand,
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).Count(),
-                    products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList())
+                    //SumProduct = _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).Count(),
+                    //products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList())
 
 
 
                 }).ToListAsync();
                 foreach (var item in data)
                 {
+                    var listProd = await _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).CountAsync();
+                    item.SumProduct = listProd;
+                    item.products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(i => (Guid)i.BrandId== item.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList());
                     foreach (var produt in item.products)
                     {
                         if (UserId == null)
@@ -212,28 +215,31 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     LogoBrand = i.LogoBrand,
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).Count(),
+                    //SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).Count(),
                     //    products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList())
 
                 });
                 var datapro = await data.ToListAsync();
-                //foreach (var item in datapro)
-                //{
-                //    foreach (var produt in item.products)
-                //    {
-                //        if (UserId == null)
-                //        {
-                //            produt.SalePrice = Price(produt.SalePrice);
-                //            produt.SuggestPrice = Price(produt.SuggestPrice);
-                //        }
-                //        else
-                //        {
+                foreach (var item in datapro)
+                {
+                    var listProd = await _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).CountAsync();
+                    item.SumProduct = listProd;
+                    item.products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(i => (Guid)i.BrandId == item.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList());
+                    foreach (var produt in item.products)
+                    {
+                        if (UserId == null)
+                        {
+                            produt.SalePrice = Price(produt.SalePrice);
+                            produt.SuggestPrice = Price(produt.SuggestPrice);
+                        }
+                        else
+                        {
 
-                //            produt.SalePrice = produt.SalePrice;
-                //            produt.SuggestPrice = produt.SuggestPrice;
-                //        }
-                //    }
-                //}
+                            produt.SalePrice = produt.SalePrice;
+                            produt.SuggestPrice = produt.SuggestPrice;
+                        }
+                    }
+                }
                 result.Data = datapro.Skip(pageSize * (page - 1))
                   .Take(pageSize);
                 result.TotalCount = datapro.Count();
@@ -251,11 +257,14 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                     LogoBrand = i.LogoBrand,
                     Pin = i.Pin,
                     GroupBrand = i.GroupBrand,
-                    SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).Count(),
-                    products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList())
+                //    SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).Count(),
+                //    products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList())
                 }).ToListAsync();
                 foreach (var item in data)
                 {
+                    var listProd = await _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).CountAsync();
+                    item.SumProduct = listProd;
+                    item.products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(i => (Guid)i.BrandId == item.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList());
                     foreach (var produt in item.products)
                     {
                         if (UserId == null)
