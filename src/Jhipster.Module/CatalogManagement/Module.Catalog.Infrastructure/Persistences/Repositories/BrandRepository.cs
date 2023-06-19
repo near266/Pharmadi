@@ -113,13 +113,18 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 LogoBrand = i.LogoBrand,
                 Pin = i.Pin,
                 GroupBrand = i.GroupBrand,
-                SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).Count(),
-                products = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).AsEnumerable()
+                //SumProduct = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).Count(),
+               // products = _context.Products.Where(a => a.BrandId == (Guid?)i.Id && i.Archived == false).AsEnumerable()
 
 
 
             }).Skip(pageSize * (page - 1))
                  .Take(pageSize).ToListAsync();
+            foreach(var item in data)
+            {
+                var product =await _context.Products.Where(a => a.BrandId == (Guid?)item.Id && a.Archived == false).ToListAsync();
+                item.SumProduct = product.Count();
+            }    
             result.Data = data;
             result.TotalCount = query.Count();
             return result;
