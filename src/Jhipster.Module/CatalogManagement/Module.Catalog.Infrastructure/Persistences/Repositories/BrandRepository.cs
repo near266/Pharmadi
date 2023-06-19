@@ -103,7 +103,7 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
         {
             var result = new PagedList<BrandDTO>();
             var query = _context.Brands.AsQueryable();
-            var data = await query.Where(i => i.Archived == false).Include(i => i.GroupBrand).Select(i => new BrandDTO
+            var data = await query.Where(i => i.Archived == false).OrderByDescending(i=>i.LastModifiedDate).Include(i => i.GroupBrand).Select(i => new BrandDTO
             {
 
                 Id = i.Id,
