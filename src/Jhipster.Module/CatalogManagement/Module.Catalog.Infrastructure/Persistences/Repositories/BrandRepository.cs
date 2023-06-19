@@ -184,21 +184,21 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 {
                     var listProd = await _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).CountAsync();
                     item.SumProduct = listProd;
-                    item.products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(i => (Guid)i.BrandId== item.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList());
-                    foreach (var produt in item.products)
-                    {
-                        if (UserId == null)
-                        {
-                            produt.SalePrice = Price(produt.SalePrice);
-                            produt.SuggestPrice = Price(produt.SuggestPrice);
-                        }
-                        else
-                        {
+                    //item.products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(i => (Guid)i.BrandId== item.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList());
+                    //foreach (var produt in item.products)
+                    //{
+                    //    if (UserId == null)
+                    //    {
+                    //        produt.SalePrice = Price(produt.SalePrice);
+                    //        produt.SuggestPrice = Price(produt.SuggestPrice);
+                    //    }
+                    //    else
+                    //    {
 
-                            produt.SalePrice = produt.SalePrice;
-                            produt.SuggestPrice = produt.SuggestPrice;
-                        }
-                    }
+                    //        produt.SalePrice = produt.SalePrice;
+                    //        produt.SuggestPrice = produt.SuggestPrice;
+                    //    }
+                    //}
                 }
                 result.Data = data.Skip(pageSize * (page - 1))
                   .Take(pageSize);
@@ -226,21 +226,21 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 {
                     var listProd = await _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).CountAsync();
                     item.SumProduct = listProd;
-                    item.products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(i => (Guid)i.BrandId == item.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList());
-                    foreach (var produt in item.products)
-                    {
-                        if (UserId == null)
-                        {
-                            produt.SalePrice = Price(produt.SalePrice);
-                            produt.SuggestPrice = Price(produt.SuggestPrice);
-                        }
-                        else
-                        {
+                    //item.products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(i => (Guid)i.BrandId == item.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList());
+                    //foreach (var produt in item.products)
+                    //{
+                    //    if (UserId == null)
+                    //    {
+                    //        produt.SalePrice = Price(produt.SalePrice);
+                    //        produt.SuggestPrice = Price(produt.SuggestPrice);
+                    //    }
+                    //    else
+                    //    {
 
-                            produt.SalePrice = produt.SalePrice;
-                            produt.SuggestPrice = produt.SuggestPrice;
-                        }
-                    }
+                    //        produt.SalePrice = produt.SalePrice;
+                    //        produt.SuggestPrice = produt.SuggestPrice;
+                    //    }
+                    //}
                 }
                 result.Data = datapro.Skip(pageSize * (page - 1))
                   .Take(pageSize);
@@ -266,21 +266,21 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
                 {
                     var listProd = await _context.Products.Where(i => brId.Contains((Guid)i.BrandId) && i.Archived == false).CountAsync();
                     item.SumProduct = listProd;
-                    item.products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(i => (Guid)i.BrandId == item.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList());
-                    foreach (var produt in item.products)
-                    {
-                        if (UserId == null)
-                        {
-                            produt.SalePrice = Price(produt.SalePrice);
-                            produt.SuggestPrice = Price(produt.SuggestPrice);
-                        }
-                        else
-                        {
+                    //item.products = _mapper.Map<List<ProductDetail>>(_context.Products.Where(i => (Guid)i.BrandId == item.Id && i.Archived == false).OrderByDescending(i => i.LastModifiedDate).ToList());
+                    //foreach (var produt in item.products)
+                    //{
+                    //    if (UserId == null)
+                    //    {
+                    //        produt.SalePrice = Price(produt.SalePrice);
+                    //        produt.SuggestPrice = Price(produt.SuggestPrice);
+                    //    }
+                    //    else
+                    //    {
 
-                            produt.SalePrice = produt.SalePrice;
-                            produt.SuggestPrice = produt.SuggestPrice;
-                        }
-                    }
+                    //        produt.SalePrice = produt.SalePrice;
+                    //        produt.SuggestPrice = produt.SuggestPrice;
+                    //    }
+                    //}
                 }
                 result.Data = data.Skip(pageSize * (page - 1))
                   .Take(pageSize);
