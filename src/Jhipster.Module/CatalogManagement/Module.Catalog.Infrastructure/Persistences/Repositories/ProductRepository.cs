@@ -129,22 +129,28 @@ namespace Module.Catalog.Infrastructure.Persistence.Repositories
             if (BrandName != null)
             {
                 var lowerBrandName = BrandName.ToLower();
-                var CheckBrandName = await _context.Brands.FirstOrDefaultAsync(i => i.BrandName.ToLower().Contains(lowerBrandName));
+                var CheckBrandName = await _context.Brands
+                                     .Where(i => i.BrandName.ToLower().Contains(lowerBrandName))
+                                     .Select(i => i.Id)
+                                     .FirstOrDefaultAsync();
                 if (CheckBrandName != null)
                 {
-                    var BrandId = CheckBrandName.Id;
-                    query1 = query1.Where(i => i.BrandId == BrandId);
+
+                    query1 = query1.Where(i => i.BrandId == CheckBrandName);
                 }
 
             }
             if (CatalogName != null)
             {
                 var lowerCateName = CatalogName.ToLower();
-                var checkCate = await _context.Categories.FirstOrDefaultAsync(i => i.CategoryName.ToLower().Contains(lowerCateName));
+                var checkCate = await _context.Categories
+                                              .Where(i => i.CategoryName.ToLower().Contains(lowerCateName))
+                                              .Select(i => i.Id)
+                                              .FirstOrDefaultAsync();
                 if (checkCate != null)
                 {
-                    var CateId = checkCate.Id;
-                    var checkProductCate = await _context.CategoryProducts.Where(i => i.CategoryId == CateId).Select(i => i.ProductId).ToListAsync();
+
+                    var checkProductCate = await _context.CategoryProducts.Where(i => i.CategoryId == checkCate).Select(i => i.ProductId).ToListAsync();
                     query1 = query1.Where(i => checkProductCate.Contains(i.Id));
                 }
             }
