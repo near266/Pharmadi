@@ -76,7 +76,7 @@ namespace BFF.Web.Controllers.FactorSvc
                 if (CheckString.CheckValidPassword(request.Password) == false) { throw new Exception("Mật khẩu phải có tối thiểu 6 kí tự"); }
                 if (request.Password != request.ConfirmPassword) { throw new Exception("Mật khẩu không khớp ,vui lòng kiểm tra lại"); }
                 if (request.Password == null || request.Password.Length == 0) { throw new Exception("Không để mật khẩu trống"); }
-                if (request.Pdf == null || request.Pdf.Count == 0) { throw new Exception("Không để trống giấy phép GPP, vui lòng điền đầy đủ thông tin"); }
+               
                 // role merchant
                 var AddRole = new HashSet<string>();
                 AddRole.Add("ROLE_MERCHANT");
