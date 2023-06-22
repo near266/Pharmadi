@@ -28,7 +28,10 @@ namespace BFF.Web.ProductSvc
         {
             return User.FindFirst("UserId")?.Value;
         }
-
+        private string CheckUser()
+        {
+            return User.FindFirst("Accept")?.Value;
+        }
 
         [HttpPost("Add")]
         public async Task<ActionResult<int>> Add([FromBody] CartAddCommand request)
@@ -36,6 +39,7 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request add Cart : {JsonConvert.SerializeObject(request)}");
             try
             {
+                if (CheckUser() != "true") throw new Exception("Chưa kích hoạt");
                 request.Id = Guid.NewGuid();
                 request.UserId = new Guid(GetUserIdFromContext());
                 request.LastModifiedDate = DateTime.Now;
@@ -58,6 +62,8 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request update Cart : {JsonConvert.SerializeObject(request)}");
             try
             {
+                if (CheckUser() != "true") throw new Exception("Chưa kích hoạt");
+
                 request.UserId = Guid.Parse(GetUserIdFromContext());
                 request.LastModifiedDate = DateTime.Now;
                 var result = await _mediator.Send(request);
@@ -76,6 +82,8 @@ namespace BFF.Web.ProductSvc
             _logger.LogInformation($"REST request delete Cart : {JsonConvert.SerializeObject(request)}");
             try
             {
+                if (CheckUser() != "true") throw new Exception("Chưa kích hoạt");
+
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
@@ -111,7 +119,7 @@ namespace BFF.Web.ProductSvc
             try
             {
                 if (request == null || request.userId == null || request.userId == Guid.Empty)
-                request.userId = new Guid(GetUserIdFromContext());
+                    request.userId = new Guid(GetUserIdFromContext());
                 var result = await _mediator.Send(request);
                 return Ok(result);
             }
